@@ -2,12 +2,12 @@
 
 namespace app\middlewares;
 
-use app\core\HttpStatusCode;
-use app\core\RespostaHttp;
+use Slim\Psr7\Response;
+use app\classes\http\RespostaHttp;
+use app\classes\http\HttpStatusCode;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Slim\Psr7\Response;
 
 class CorpoRequisicaoMiddleware {
     private string $formato;

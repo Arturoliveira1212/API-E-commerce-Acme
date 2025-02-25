@@ -2,10 +2,8 @@
 
 namespace app\controllers;
 
-use app\classes\Administrador;
-use app\core\HttpStatusCode;
-use app\exceptions\NaoAutorizadoException;
-use app\services\AdministradorService;
+use app\controllers\Controller;
+use app\classes\http\HttpStatusCode;
 
 class AdministradorController extends Controller {
 

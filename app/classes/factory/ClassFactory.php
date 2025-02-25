@@ -1,6 +1,6 @@
 <?php
 
-namespace app\core;
+namespace app\classes\factory;
 
 use app\databases\BancoDadosRelacional;
 use InvalidArgumentException;

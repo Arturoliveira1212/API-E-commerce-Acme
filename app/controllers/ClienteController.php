@@ -2,8 +2,9 @@
 
 namespace app\controllers;
 
-use app\core\HttpStatusCode;
+use app\controllers\Controller;
 use app\services\ClienteService;
+use app\classes\http\HttpStatusCode;
 
 class ClienteController extends Controller {
 

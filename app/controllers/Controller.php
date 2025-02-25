@@ -2,11 +2,11 @@
 
 namespace app\controllers;
 
-use app\classes\Model;
-use app\core\HttpStatusCode;
-use app\services\Service;
 use DateTime;
 use Throwable;
+use app\classes\http\HttpStatusCode;
+use app\classes\Model;
+use app\services\Service;
 
 abstract class Controller {
     protected Service $service;

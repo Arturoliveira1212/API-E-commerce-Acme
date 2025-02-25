@@ -1,6 +1,6 @@
 <?php
 
-namespace app\core;
+namespace app\classes\http;
 
 abstract class HttpStatusCode {
     public const OK = 200;

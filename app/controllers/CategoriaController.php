@@ -3,7 +3,8 @@
 namespace app\controllers;
 
 use app\classes\Categoria;
-use app\core\HttpStatusCode;
+use app\controllers\Controller;
+use app\classes\http\HttpStatusCode;
 use app\exceptions\NaoEncontradoException;
 
 class CategoriaController extends Controller {

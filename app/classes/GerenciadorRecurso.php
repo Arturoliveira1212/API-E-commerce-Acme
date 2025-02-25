@@ -1,13 +1,16 @@
 <?php
 
-namespace app\core;
+namespace app\classes;
 
-use app\exceptions\NaoAutorizadoException;
-use app\exceptions\NaoEncontradoException;
-use app\exceptions\ServiceException;
+use Throwable;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
-use Throwable;
+use app\classes\http\RespostaHttp;
+use app\classes\http\HttpStatusCode;
+use app\exceptions\ServiceException;
+use app\classes\factory\ClassFactory;
+use app\exceptions\NaoAutorizadoException;
+use app\exceptions\NaoEncontradoException;
 
 abstract class GerenciadorRecurso {
     public static function executar( string $controller, string $metodo, Request $request, Response $response, $args ){

@@ -1,8 +1,8 @@
 <?php
 
+use app\classes\GerenciadorRecurso;
 use app\controllers\AdministradorController;
 use app\controllers\CategoriaController;
-use app\core\GerenciadorRecurso;
 use app\middlewares\CorpoRequisicaoMiddleware;
 
 const CONTENT_TYPE = 'application/json';

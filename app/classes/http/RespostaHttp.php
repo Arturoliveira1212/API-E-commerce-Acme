@@ -1,6 +1,6 @@
 <?php
 
-namespace app\core;
+namespace app\classes\http;
 
 use Slim\Psr7\Response;
 

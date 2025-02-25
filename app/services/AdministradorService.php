@@ -2,15 +2,13 @@
 
 namespace app\services;
 
-use app\classes\Administrador;
-use app\classes\jwt\AutenticacaoJWT;
-use app\classes\jwt\TokenJWT;
-// use app\classes\TokenJWT as ClassesTokenJWT;
-use app\classes\Validador;
-use app\exceptions\NaoAutorizadoException;
-// use App\Services\TokenJWT;
 use Exception;
-// use Twig\Token;
+use app\services\Service;
+use app\classes\jwt\TokenJWT;
+use app\classes\Administrador;
+use app\classes\utils\Validador;
+use app\classes\jwt\AutenticacaoJWT;
+use app\exceptions\NaoAutorizadoException;
 
 class AdministradorService extends Service {
 

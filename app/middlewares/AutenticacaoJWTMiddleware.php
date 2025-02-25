@@ -2,14 +2,14 @@
 
 namespace app\middlewares;
 
-use app\classes\jwt\AutenticacaoJWT;
+use Slim\Psr7\Response;
 use app\classes\jwt\PayloadJWT;
-use app\core\HttpStatusCode;
-use app\core\RespostaHttp;
+use app\classes\http\RespostaHttp;
+use app\classes\http\HttpStatusCode;
+use app\classes\jwt\AutenticacaoJWT;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Slim\Psr7\Response;
 
 class AutenticacaoJWTMiddleware {
 
