@@ -10,5 +10,13 @@
         "psr-4": {
             "app\\" : "app"
         }
+    },
+    "require-dev": {
+        "robmorgan/phinx": "^0.16.6",
+        "kahlan/kahlan": "^6.0",
+        "mockery/mockery": "^1.6"
+    },
+    "scripts": {
+        "phinx": "vendor/bin/phinx"
     }
 }
