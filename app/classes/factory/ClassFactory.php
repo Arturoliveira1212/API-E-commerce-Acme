@@ -2,8 +2,8 @@
 
 namespace app\classes\factory;
 
-use app\databases\BancoDadosRelacional;
 use InvalidArgumentException;
+use app\databases\BancoDadosRelacional;
 
 abstract class ClassFactory {
     const CAMINHO_CONTROLLER = 'app\\controllers\\';

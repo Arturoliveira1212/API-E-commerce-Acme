@@ -54,7 +54,7 @@ abstract class Controller {
 
     protected function resposta( int $status = HttpStatusCode::OK, array $data = [] ){
         return [
-            'status' => HttpStatusCode::CREATED,
+            'status' => $status,
             'data' => $data
         ];
     }

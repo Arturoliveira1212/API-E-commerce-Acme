@@ -4,6 +4,25 @@ namespace app\classes\utils;
 
 class Validador {
 
+    /**
+     * Método responsável por validar o tamanho do texto.
+     *
+     * @param string $texto
+     * @param integer $tamanhoMinimo
+     * @param integer $tamanhoMaximo
+     * @return integer  -1 => Tamanho fora dos limites | 0 => Texto vazio | 1 => Tamanho ok
+     */
+    public static function validarTamanhoTexto( string $texto, int $tamanhoMinimo, int $tamanhoMaximo ){
+        $tamanhoTexto = mb_strlen( $texto );
+        if( $tamanhoTexto == 0 ){
+            return 0;
+        } elseif( $tamanhoTexto > $tamanhoMaximo || $tamanhoTexto < $tamanhoMinimo ){
+            return -1;
+        }
+
+        return 1;
+    }
+
     public static function validarCPF( string $cpf ): bool {
         $formatoCpf = '/^[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}$/';
         if( ! preg_match( $formatoCpf, $cpf ) ){
@@ -38,7 +57,25 @@ class Validador {
 
     // Valida E-mail
     public static function validarEmail(string $email): bool {
-        return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+         // Verifica se o e-mail tem um formato básico válido
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return false;
+        }
+
+        // Expressão regular para validar a estrutura do e-mail (domínio)
+        $pattern = '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
+
+        if (!preg_match($pattern, $email)) {
+            return false;
+        }
+
+        // Verifica se o domínio é válido e se o e-mail pode ser resolvido
+        $domain = substr(strrchr($email, "@"), 1);
+        if (!checkdnsrr($domain, "MX")) {
+            return false;
+        }
+
+        return true;
     }
 
     // Valida Data (Formato: dd/mm/yyyy)

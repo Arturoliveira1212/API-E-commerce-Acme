@@ -31,7 +31,7 @@ abstract class GerenciadorRecurso {
             ] );
         } catch( ServiceException $e ){
             $resposta = RespostaHttp::enviarResposta( $response, HttpStatusCode::BAD_REQUEST, [
-                'erros' => explode( '', $e->getMessage() )
+                'erros' => json_decode( $e->getMessage(), true )
             ] );
         } catch( NaoAutorizadoException $e ){
             $resposta = RespostaHttp::enviarResposta( $response, HttpStatusCode::UNAUTHORIZED, [

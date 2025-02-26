@@ -2,17 +2,17 @@
 
 namespace app\middlewares;
 
-use app\core\HttpStatusCode;
-use app\core\RespostaHttp;
-use Slim\Exception\HttpException;
-use Slim\Psr7\Request;
-use Slim\Psr7\Response;
-use Slim\Exception\HttpBadRequestException;
-use Slim\Exception\HttpForbiddenException;
-use Slim\Exception\HttpMethodNotAllowedException;
-use Slim\Exception\HttpNotFoundException;
-use Slim\Exception\HttpUnauthorizedException;
 use Throwable;
+use Slim\Psr7\Response;
+use Slim\Exception\HttpException;
+use app\classes\http\RespostaHttp;
+use app\classes\http\HttpStatusCode;
+use Slim\Exception\HttpNotFoundException;
+use Slim\Exception\HttpForbiddenException;
+use Slim\Exception\HttpBadRequestException;
+use Slim\Exception\HttpUnauthorizedException;
+use Slim\Exception\HttpMethodNotAllowedException;
+use Slim\Psr7\Request;
 
 class ErrorHandlerMiddleware {
     public function __invoke( Request $request, Throwable $e, bool $displayErrorDetails ){

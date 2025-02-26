@@ -13,11 +13,11 @@ class ClienteService extends Service {
     public function autenticar( string $email, string $senha ){
         $cliente = $this->obterComEmail( $email );
         if( ! $cliente instanceof Cliente ){
-            throw new NaoAutorizadoException( 'E-mail não encontrado.' );
+            throw new NaoAutorizadoException( 'Email não encontrado.' );
         }
 
         if( ! password_verify( $cliente->getSenha(), $senha ) ){
-            throw new NaoAutorizadoException( 'E-mail ou senha inválidos.' );
+            throw new NaoAutorizadoException( 'Email ou senha inválidos.' );
         }
 
         $token = 'gera token';

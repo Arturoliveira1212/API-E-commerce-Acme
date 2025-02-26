@@ -24,13 +24,15 @@ class CorpoRequisicaoMiddleware {
 
         if( ! $this->validarFormato( $contentType ) || empty( $corpoRequisicao ) ){
             return RespostaHttp::enviarResposta( new Response(), HttpStatusCode::BAD_REQUEST, [
-                'erro' => 'O corpo da requisição deve ser em JSON.'
+                'erro' => 'O corpo da requisição deve ser em JSON válido.'
             ] );
         }
 
         $erros = $this->validarCampos( $corpoRequisicao );
         if( ! empty( $erros ) ){
-            return RespostaHttp::enviarResposta( new Response(), HttpStatusCode::BAD_REQUEST, $erros );
+            return RespostaHttp::enviarResposta( new Response(), HttpStatusCode::BAD_REQUEST, [
+                'erros' => $erros
+            ] );
         }
 
         return $handler->handle( $request );

@@ -23,22 +23,16 @@ abstract class Service {
 
     abstract protected function validar( Model $objeto, array &$erro = [] );
 
-    protected function validarTexto( string $texto, int $tamanhoMinimo, int $tamanhoMaximo, string $nomeAtributo, array &$erro ){
-        $tamanhoTexto = mb_strlen( $texto );
-        if( $tamanhoTexto == 0 ){
-            $erro[ $nomeAtributo ] = "Preencha o campo {$nomeAtributo}.";
-        } elseif( $tamanhoTexto > $tamanhoMaximo || $tamanhoTexto < $tamanhoMinimo ){
-            $erro[ $nomeAtributo ] = "O campo {$nomeAtributo} deve ter entre {$tamanhoMinimo} e {$tamanhoMaximo} caracteres.";
-        }
-    }
-
-    public function salvar( Model $objeto ){
+    protected function preSalvar( Model $objeto ){
         $erro = [];
         $this->validar( $objeto, $erro );
         if( ! empty( $erro ) ){
             throw new ServiceException( json_encode( $erro ) );
         }
+    }
 
+    public function salvar( Model $objeto ){
+        $this->preSalvar( $objeto );
         return $this->getDao()->salvar( $objeto );
     }
 
@@ -54,7 +48,23 @@ abstract class Service {
         return $this->getDao()->obterComId( $id );
     }
 
+    public function camposOrdenaveis(){
+        // TO DO => Implementar orderBy
+        return [ 'id '];
+    }
+
     public function obterComRestricoes( array $restricoes ){
+        $this->filtrarRestricoes( $restricoes );
         return $this->getDao()->obterComRestricoes( $restricoes );
+    }
+
+    private function filtrarRestricoes( array &$restricoes ){
+        if( isset( $restricoes['limit'] ) && ! empty( $restricoes['limit'] ) && ! is_numeric( $restricoes['limit'] ) ){
+            unset( $restricoes['limit'] );
+        }
+
+        if( isset( $restricoes['offset'] ) && ! empty( $restricoes['offset'] ) && ! is_numeric( $restricoes['offset'] ) ){
+            unset( $restricoes['offset'] );
+        }
     }
 }

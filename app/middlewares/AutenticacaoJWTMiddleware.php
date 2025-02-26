@@ -12,7 +12,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 class AutenticacaoJWTMiddleware {
-
     public function __invoke( ServerRequestInterface $request, RequestHandlerInterface $handler ): ResponseInterface {
         $autorization = $request->getHeaderLine('Authorization');
         if( ! $autorization || ! preg_match( '/Bearer\s(\S+)/', $autorization, $matches ) ){
