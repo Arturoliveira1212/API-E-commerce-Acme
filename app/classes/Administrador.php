@@ -7,10 +7,13 @@ class Administrador extends Model {
     private string $nome = '';
     private string $email = '';
     private string $senha = '';
-    private array $direitos = [];
 
-    const TAMANHO_MINIMO_NOME = 1;
-    const TAMANHO_MAXIMO_NOME = 100;
+    public function __construct( int $id = 0, string $nome = '', string $email = '', string $senha = '' ){
+        $this->setId( $id );
+        $this->setNome( $nome );
+        $this->setEmail( $email );
+        $this->setSenha( $senha );
+    }
 
     public function getId(){
         return $this->id;
@@ -44,11 +47,11 @@ class Administrador extends Model {
         $this->senha = $senha;
     }
 
-    public function getDireitos(){
-        return $this->direitos;
-    }
-
-    public function setDireitos( array $direitos ){
-        $this->direitos = $direitos;
+    public function emArray() :array {
+        return [
+            'id' => $this->getId(),
+            'nome' => $this->getNome(),
+            'email' => $this->getEmail()
+        ];
     }
 }
