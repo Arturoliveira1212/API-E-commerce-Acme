@@ -2,7 +2,7 @@
 
 use app\classes\GerenciadorRecurso;
 use app\controllers\CategoriaController;
-use app\middlewares\AutenticacaoJWTMiddleware;
+use app\middlewares\AutenticacaoMiddleware;
 use app\middlewares\CorpoRequisicaoMiddleware;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
@@ -11,7 +11,7 @@ $app->group( '/categorias', function( $group ){
     $group->post( '', function( Request $request, Response $response, $args ){
         return GerenciadorRecurso::executar( CategoriaController::class, 'novo', $request, $response, $args );
     } )
-    ->add( new AutenticacaoJWTMiddleware() )
+    ->add( new AutenticacaoMiddleware() )
     ->add( new CorpoRequisicaoMiddleware( CONTENT_TYPE, [
         'nome' => 'string',
         'descricao' => 'string'
@@ -20,7 +20,7 @@ $app->group( '/categorias', function( $group ){
     $group->put( '/{id}', function( Request $request, Response $response, $args ){
         return GerenciadorRecurso::executar( CategoriaController::class, 'editar', $request, $response, $args );
     } )
-    ->add( new AutenticacaoJWTMiddleware() )
+    ->add( new AutenticacaoMiddleware() )
     ->add( new CorpoRequisicaoMiddleware( CONTENT_TYPE, [
         'nome' => 'string',
         'descricao' => 'string'
@@ -37,5 +37,5 @@ $app->group( '/categorias', function( $group ){
     $group->delete( '/{id}', function( Request $request, Response $response, $args ){
         return GerenciadorRecurso::executar( CategoriaController::class, 'exluirComId', $request, $response, $args );
     } )
-    ->add( new AutenticacaoJWTMiddleware() );
+    ->add( new AutenticacaoMiddleware() );
 } );

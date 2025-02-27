@@ -2,7 +2,7 @@
 
 use app\classes\GerenciadorRecurso;
 use app\controllers\AdministradorController;
-use app\middlewares\AutenticacaoJWTMiddleware;
+use app\middlewares\AutenticacaoMiddleware;
 use app\middlewares\CorpoRequisicaoMiddleware;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
@@ -28,7 +28,7 @@ $app->group( '/administradores', function( $group ){
     $group->put( '/{id}', function( Request $request, Response $response, $args ){
         return GerenciadorRecurso::executar( AdministradorController::class, 'editar', $request, $response, $args );
     } )
-    ->add( new AutenticacaoJWTMiddleware() )
+    ->add( new AutenticacaoMiddleware() )
     ->add( new CorpoRequisicaoMiddleware( CONTENT_TYPE, [
         'nome' => 'string',
         'email' => 'string',
@@ -46,5 +46,5 @@ $app->group( '/administradores', function( $group ){
     $group->delete( '/{id}', function( Request $request, Response $response, $args ){
         return GerenciadorRecurso::executar( AdministradorController::class, 'excluirComId', $request, $response, $args );
     } )
-    ->add( new AutenticacaoJWTMiddleware() );
+    ->add( new AutenticacaoMiddleware() );
 } );

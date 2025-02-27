@@ -6,12 +6,14 @@ use Slim\Psr7\Response;
 use app\classes\jwt\PayloadJWT;
 use app\classes\http\RespostaHttp;
 use app\classes\http\HttpStatusCode;
-use app\classes\jwt\AutenticacaoJWT;
+use app\traits\Autenticavel;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class AutenticacaoJWTMiddleware {
+class AutenticacaoMiddleware {
+    use Autenticavel;
+
     public function __invoke( ServerRequestInterface $request, RequestHandlerInterface $handler ): ResponseInterface {
         $autorization = $request->getHeaderLine('Authorization');
         if( ! $autorization || ! preg_match( '/^Bearer\s(\S+)/', $autorization, $matches ) ){
@@ -22,8 +24,7 @@ class AutenticacaoJWTMiddleware {
 
         $token = $matches[1];
 
-        $autenticacaoJWT = new AutenticacaoJWT();
-        $payloadJWT = $autenticacaoJWT->decodificarToken( $token );
+        $payloadJWT = $this->decodificarToken( $token );
 
         if( ! $payloadJWT instanceof PayloadJWT ){
             return RespostaHttp::enviarResposta( new Response(), HttpStatusCode::UNAUTHORIZED, [
