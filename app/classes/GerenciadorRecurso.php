@@ -21,8 +21,9 @@ abstract class GerenciadorRecurso {
 
             $corpoRequisicao = (array) $request->getParsedBody();
             $parametros = (array) $request->getQueryParams();
+            $payloadJWT = $request->getAttribute('payloadJWT');
 
-            $retorno = $controller->$metodo( $corpoRequisicao, $args, $parametros );
+            $retorno = $controller->$metodo( $corpoRequisicao, $args, $parametros, $payloadJWT );
 
             $resposta = RespostaHttp::enviarResposta( $response, $retorno['status'] ?? HttpStatusCode::OK, $retorno['data'] ?? [] );
         } catch( NaoEncontradoException $e ){

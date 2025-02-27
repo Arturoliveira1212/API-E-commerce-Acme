@@ -14,7 +14,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 class AutenticacaoJWTMiddleware {
     public function __invoke( ServerRequestInterface $request, RequestHandlerInterface $handler ): ResponseInterface {
         $autorization = $request->getHeaderLine('Authorization');
-        if( ! $autorization || ! preg_match( '/Bearer\s(\S+)/', $autorization, $matches ) ){
+        if( ! $autorization || ! preg_match( '/^Bearer\s(\S+)/', $autorization, $matches ) ){
             return RespostaHttp::enviarResposta( new Response(), HttpStatusCode::UNAUTHORIZED, [
                 'erro' => 'Token de autenticação não foi enviado.'
             ] );
@@ -31,7 +31,7 @@ class AutenticacaoJWTMiddleware {
             ] );
         }
 
-        $request->withAttribute( 'payloadJWT', $payloadJWT );
+        $request = $request->withAttribute( 'payloadJWT', $payloadJWT );
 
         return $handler->handle( $request );
     }

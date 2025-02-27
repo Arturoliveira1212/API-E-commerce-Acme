@@ -21,13 +21,13 @@ class AutenticacaoJWT {
      * @param array $payload Dados que serão incluídos no token
      * @return TokenJWT Token JWT gerado
      */
-    public function gerarToken( string $id, string $nome, string $papel, int $tempoExpiracaoEmSegundos = 3600 ){
+    public function gerarToken( string $id, string $nome, string $papel, int $duracaoEmSegundos = 3600 ){
         $criadoEm = time();
-        $expiraEm = $criadoEm + $tempoExpiracaoEmSegundos;
+        $expiraEm = $criadoEm + $duracaoEmSegundos;
 
         $payloadJWT = new PayloadJWT( $id, $nome, $papel, $criadoEm, $expiraEm );
         $token =  JWT::encode( $payloadJWT->toArray(), $this->secretKey, $this->algoritimoDeCriptografia );
-        $tokenJWT = new TokenJWT( $token, $expiraEm );
+        $tokenJWT = new TokenJWT( $token, $duracaoEmSegundos );
 
         return $tokenJWT;
     }

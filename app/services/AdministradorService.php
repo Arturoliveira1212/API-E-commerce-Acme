@@ -8,7 +8,9 @@ use app\classes\jwt\TokenJWT;
 use app\classes\Administrador;
 use app\classes\utils\Validador;
 use app\classes\jwt\AutenticacaoJWT;
+use app\classes\jwt\PayloadJWT;
 use app\classes\Model;
+use app\databases\BancoDadosRelacional;
 use app\exceptions\NaoAutorizadoException;
 use app\traits\Criptografavel;
 
@@ -27,10 +29,6 @@ class AdministradorService extends Service {
         $senha = $administrador->getSenha();
         $senhaCriptografada = $this->gerarHash( $senha );
         $administrador->setSenha( $senhaCriptografada );
-    }
-
-    private function gerarHashParaSenha( string $senha ){
-        return password_hash( $senha, PASSWORD_DEFAULT );
     }
 
     protected function validar( $administrador, array &$erro = [] ){
@@ -56,7 +54,7 @@ class AdministradorService extends Service {
             $erro['email'] = 'O email deve ter entre ' . self::TAMANHO_MINIMO_EMAIL . ' e ' . self::TAMANHO_MAXIMO_EMAIL . ' caracteres.';
         } else if( ! Validador::validarEmail( $administrador->getEmail() ) ){
             $erro['email'] = 'Email inválido.';
-        } else if( $this->getDao()->existe( 'email', $administrador->getEmail() ) ){
+        } else if( $administrador->getId() == BancoDadosRelacional::ID_INEXISTENTE && $this->getDao()->existe( 'email', $administrador->getEmail() ) ){
             $erro['email'] = 'Email já pertence a um administrador.';
         }
     }
@@ -76,7 +74,7 @@ class AdministradorService extends Service {
             throw new NaoAutorizadoException( 'Email não encontrado.' );
         }
 
-        if( ! password_verify( $administrador->getSenha(), $senha ) ){
+        if( ! $this->verificarSenha( $senha, $administrador->getSenha() ) ){
             throw new NaoAutorizadoException( 'Email ou senha inválidos.' );
         }
 
@@ -96,6 +94,8 @@ class AdministradorService extends Service {
 
     public function obterComEmail( string $email ){
         $restricoes = [ 'email' => $email ];
-        return array_shift( $this->obterComRestricoes( $restricoes ) );
+        $administradores = $this->obterComRestricoes( $restricoes );
+
+        return array_shift( $administradores );
     }
 }

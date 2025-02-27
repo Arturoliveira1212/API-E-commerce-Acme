@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\classes\Administrador;
 use app\controllers\Controller;
 use app\classes\http\HttpStatusCode;
+use app\classes\jwt\TokenJWT;
 use app\exceptions\NaoEncontradoException;
 use app\services\AdministradorService;
 
@@ -32,10 +33,12 @@ class AdministradorController extends Controller {
 
         /** @var AdministradorService */
         $administradorService = $this->getService();
-        $token = $administradorService->autenticar( $email, $senha );
+        /** @var TokenJWT */
+        $tokenJWT = $administradorService->autenticar( $email, $senha );
 
         return $this->resposta( HttpStatusCode::OK, [
-            'Token' => $token
+            'Token' => $tokenJWT->codigo(),
+            'Duração' => $tokenJWT->validadeTokenFormatada()
         ] );
     }
 
@@ -48,6 +51,7 @@ class AdministradorController extends Controller {
         }
 
         $administrador = $this->criar( $corpoRequisicao );
+        $administrador->setId( $id );
         $this->getService()->salvar( $administrador );
 
         return $this->resposta( HttpStatusCode::OK, [
