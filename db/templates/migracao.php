@@ -8,12 +8,14 @@ final class $className extends $baseClassName {
 
     public function up(): void {
         $sql = <<<'SQL'
-            CREATE TABLE exemplo (
-                id INT NOT NULL AUTO_INCREMENT,
-                nome VARCHAR(100) NOT NULL
-                CONSTRAINT pk_exemplo PRIMARY KEY( id ),
-                CONSTRAINT unq_exemplo__nome UNIQUE( nome )
-            ) ENGINE=INNODB
+            CREATE TABLE pedidos (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                idAdministrador INT,
+                descricao VARCHAR(255),
+                valor DECIMAL(10, 2),
+                CONSTRAINT fk__id_administrador FOREIGN KEY (idAdministrador) REFERENCES administrador(id)
+                    ON DELETE CASCADE ON UPDATE NO ACTION
+            ) ENGINE=INNODB;
         SQL;
         $this->execute( $sql );
     }
