@@ -7,15 +7,14 @@ use app\services\Service;
 use app\classes\jwt\TokenJWT;
 use app\classes\Administrador;
 use app\classes\utils\Validador;
-use app\classes\jwt\AutenticacaoJWT;
-use app\classes\jwt\PayloadJWT;
-use app\classes\Model;
 use app\databases\BancoDadosRelacional;
 use app\exceptions\NaoAutorizadoException;
+use app\traits\Autenticavel;
 use app\traits\Criptografavel;
 
 class AdministradorService extends Service {
     use Criptografavel;
+    use Autenticavel;
 
     const TAMANHO_MINIMO_NOME = 1;
     const TAMANHO_MAXIMO_NOME = 100;
@@ -78,8 +77,7 @@ class AdministradorService extends Service {
             throw new NaoAutorizadoException( 'Email ou senha inválidos.' );
         }
 
-        $autenticacaoJWT = new AutenticacaoJWT();
-        $tokenJWT = $autenticacaoJWT->gerarToken(
+        $tokenJWT = $this->gerarToken(
             $administrador->getId(),
             $administrador->getNome(),
             'admin'
