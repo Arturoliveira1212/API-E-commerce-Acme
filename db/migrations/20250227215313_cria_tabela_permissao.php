@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 use Phinx\Migration\AbstractMigration;
 
-final class CriaTabelaAdministrador extends AbstractMigration {
+final class CriaTabelaPermissao extends AbstractMigration {
 
     public function up(): void {
         $sql = <<<'SQL'
-            CREATE TABLE administrador (
+            CREATE TABLE permissao (
                 id INT PRIMARY KEY AUTO_INCREMENT,
-                nome VARCHAR(100) NOT NULL,
-                email VARCHAR(200) NOT NULL UNIQUE,
-                senha VARCHAR(255) NOT NULL,
+                descricao VARCHAR(100) NOT NULL,
                 ativo TINYINT(1) DEFAULT 1
             ) ENGINE=INNODB;
         SQL;
@@ -20,6 +18,6 @@ final class CriaTabelaAdministrador extends AbstractMigration {
     }
 
     public function down(): void {
-        $this->execute( 'DROP TABLE administrador' );
+        $this->execute( 'DROP TABLE permissao' );
     }
 }
