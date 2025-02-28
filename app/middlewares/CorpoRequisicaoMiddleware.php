@@ -23,19 +23,23 @@ class CorpoRequisicaoMiddleware {
         $corpoRequisicao = (array) $request->getParsedBody();
 
         if( ! $this->validarFormato( $contentType ) || empty( $corpoRequisicao ) ){
-            return RespostaHttp::enviarResposta( new Response(), HttpStatusCode::BAD_REQUEST, [
+            return $this->corpoRequisicaoInvalido( [
                 'erro' => 'O corpo da requisição deve ser em JSON válido.'
             ] );
         }
 
         $erros = $this->validarCampos( $corpoRequisicao );
         if( ! empty( $erros ) ){
-            return RespostaHttp::enviarResposta( new Response(), HttpStatusCode::BAD_REQUEST, [
+            return $this->corpoRequisicaoInvalido( [
                 'erros' => $erros
             ] );
         }
 
         return $handler->handle( $request );
+    }
+
+    private function corpoRequisicaoInvalido( array $data ){
+        return RespostaHttp::enviarResposta( new Response(), HttpStatusCode::BAD_REQUEST, $data );
     }
 
     private function validarFormato( string $contentType ){

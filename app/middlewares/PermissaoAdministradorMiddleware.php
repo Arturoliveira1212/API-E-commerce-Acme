@@ -27,19 +27,21 @@ class PermissaoAdministradorMiddleware {
         $administradorService = ClassFactory::makeService( Administrador::class );
         $administrador = $administradorService->obterComId( $payloadJWT->sub() );
         if( ! $administrador instanceof Administrador ){
-            return RespostaHttp::enviarResposta( new Response(), HttpStatusCode::FORBIDDEN, [
-                'erro' => 'Você não tem permissão para realizar essa ação.'
-            ] );
+            return $this->administradorSemPermissao();
         }
 
         foreach( $this->permissoesNecessarias as $permissao ){
             if( ! $administrador->possuiPermissao( $permissao ) ){
-                return RespostaHttp::enviarResposta( new Response(), HttpStatusCode::FORBIDDEN, [
-                    'erro' => 'Você não tem permissão para realizar essa ação.'
-                ] );
+                return $this->administradorSemPermissao();
             }
         }
 
         return $handler->handle( $request );
+    }
+
+    private function administradorSemPermissao( string $mensagem = 'Você não tem permissão para realizar essa ação.' ){
+        return RespostaHttp::enviarResposta( new Response(), HttpStatusCode::FORBIDDEN, [
+            'erro' => $mensagem
+        ] );
     }
 }

@@ -17,9 +17,7 @@ class AutenticacaoMiddleware {
     public function __invoke( ServerRequestInterface $request, RequestHandlerInterface $handler ): ResponseInterface {
         $autorization = $request->getHeaderLine('Authorization');
         if( ! $autorization || ! preg_match( '/^Bearer\s(\S+)/', $autorization, $matches ) ){
-            return RespostaHttp::enviarResposta( new Response(), HttpStatusCode::UNAUTHORIZED, [
-                'erro' => 'Token de autenticação não foi enviado.'
-            ] );
+            return $this->administradorNaoAutenticado( 'Token de autenticação não foi enviado.' );
         }
 
         $token = $matches[1];
@@ -27,13 +25,17 @@ class AutenticacaoMiddleware {
         $payloadJWT = $this->decodificarToken( $token );
 
         if( ! $payloadJWT instanceof PayloadJWT ){
-            return RespostaHttp::enviarResposta( new Response(), HttpStatusCode::UNAUTHORIZED, [
-                'erro' => 'Token de autenticação inválido.'
-            ] );
+            return $this->administradorNaoAutenticado();
         }
 
         $request = $request->withAttribute( 'payloadJWT', $payloadJWT );
 
         return $handler->handle( $request );
+    }
+
+    private function administradorNaoAutenticado( string $mensagem = 'Token de autenticação inválido.' ){
+        return RespostaHttp::enviarResposta( new Response(), HttpStatusCode::UNAUTHORIZED, [
+            'erro' => $mensagem
+        ] );
     }
 }
