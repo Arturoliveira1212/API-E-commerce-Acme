@@ -7,12 +7,14 @@ class Administrador extends Model {
     private string $nome = '';
     private string $email = '';
     private string $senha = '';
+    private array $permissoes = [];
 
-    public function __construct( int $id = 0, string $nome = '', string $email = '', string $senha = '' ){
+    public function __construct( int $id = 0, string $nome = '', string $email = '', string $senha = '', array $permissoes = [] ){
         $this->setId( $id );
         $this->setNome( $nome );
         $this->setEmail( $email );
         $this->setSenha( $senha );
+        $this->setPermissoes( $permissoes );
     }
 
     public function getId(){
@@ -45,6 +47,18 @@ class Administrador extends Model {
 
     public function setSenha( string $senha ){
         $this->senha = $senha;
+    }
+
+    public function getPermissoes(){
+        return $this->permissoes;
+    }
+
+    public function setPermissoes( array $permissoes ){
+        $this->permissoes = $permissoes;
+    }
+
+    public function possuiPermissao( string $permissao ){
+        return in_array( $permissao, $this->getPermissoes() );
     }
 
     public function emArray() :array {

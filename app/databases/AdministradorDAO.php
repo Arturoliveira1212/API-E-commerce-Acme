@@ -10,18 +10,21 @@ class AdministradorDAO extends DAOEmBDR {
         return 'administrador';
     }
 
-    protected function adicionarNovo( $categoria ){
+    protected function adicionarNovo( $administrador ){
         $comando = "INSERT INTO {$this->nomeTabela()} ( id, nome, email, senha ) VALUES ( :id, :nome, :email, :senha )";
-        $this->getBancoDados()->executar( $comando, $this->parametros( $categoria ) );
+        $this->getBancoDados()->executar( $comando, $this->parametros( $administrador ) );
     }
 
-    protected function atualizar( $categoria ){
+    protected function atualizar( $administrador ){
         $comando = "UPDATE {$this->nomeTabela()} SET nome = :nome, email = :email, senha = :senha WHERE id = :id";
-        $this->getBancoDados()->executar( $comando, $this->parametros( $categoria ) );
+        $this->getBancoDados()->executar( $comando, $this->parametros( $administrador ) );
     }
 
-    protected function parametros( $categoria ){
-        return ConversorDados::converterEmArray( $categoria );
+    protected function parametros( $administrador ){
+        $parametros = ConversorDados::converterEmArray( $administrador );
+        unset( $parametros['permissoes'] );
+
+        return $parametros;
     }
 
     protected function obterQuery( array $restricoes, array &$parametros ){
@@ -52,7 +55,33 @@ class AdministradorDAO extends DAOEmBDR {
     }
 
     protected function transformarEmObjeto( array $linhas ){
-        return ConversorDados::converterEmObjeto( Administrador::class, $linhas );
+        /** @var Administrador */
+        $administrador = ConversorDados::converterEmObjeto( Administrador::class, $linhas );
+
+        $permissoes = $this->permissoesDoAdministrador( $administrador ) ;
+        $administrador->setPermissoes( $permissoes );
+
+        return $administrador;
+    }
+
+    protected function permissoesDoAdministrador( Administrador $administrador ){
+        $comando = "SELECT permissao.descricao FROM permissao_administrador
+            JOIN permissao ON permissao.id = permissao_administrador.idPermissao
+                WHERE idAdministrador = :idAdministrador
+                AND permissao_administrador.ativo = :ativo";
+        $parametros = [
+            'idAdministrador' => $administrador->getId(),
+            'ativo' => 1
+        ];
+
+        $permissoes = $this->getBancoDados()->consultar( $comando, $parametros );
+        if( ! empty( $permissoes ) ){
+            return array_map( function( $permissao ){
+                return $permissao['descricao'];
+            }, $permissoes );
+        }
+
+        return [];
     }
 }
 
