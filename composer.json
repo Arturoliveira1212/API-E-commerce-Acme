@@ -17,6 +17,7 @@
         "mockery/mockery": "^1.6"
     },
     "scripts": {
-        "phinx": "vendor/bin/phinx"
+        "phinx": "vendor/bin/phinx",
+        "kahlan": "vendor/bin/kahlan"
     }
 }
