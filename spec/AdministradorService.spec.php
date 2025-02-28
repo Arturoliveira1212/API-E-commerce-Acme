@@ -1,6 +1,5 @@
 <?php
 
-use Mockery;
 use app\databases\DAOEmBDR;
 use app\exceptions\ServiceException;
 use app\classes\Administrador;

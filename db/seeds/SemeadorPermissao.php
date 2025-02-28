@@ -15,9 +15,8 @@ class SemeadorPermissao extends AbstractSeed {
             INSERT INTO permissao ( id, descricao ) VALUES
                 ( 1, 'Cadastrar Administrador' ),
                 ( 2, 'Editar Administrador' ),
-                ( 3, 'Visualizar Administrador' ),
-                ( 4, 'Excluir Administrador' ),
-                ( 5, 'Adicionar Permissão para Administrador' );
+                ( 3, 'Excluir Administrador' ),
+                ( 4, 'Adicionar Permissão para Administrador' );
         SQL;
         $this->execute( $sql );
     }

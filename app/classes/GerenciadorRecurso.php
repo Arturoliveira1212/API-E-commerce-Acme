@@ -15,9 +15,7 @@ use app\exceptions\NaoEncontradoException;
 abstract class GerenciadorRecurso {
     public static function executar( string $controller, string $metodo, Request $request, Response $response, $args ){
         try {
-            $nomeController = substr( strrchr( $controller, '\\' ), 1 );
-            $classe = str_replace( 'Controller', '', $nomeController );
-            $controller = ClassFactory::makeController( $classe );
+            $controller = ClassFactory::makeController( $controller );
 
             $corpoRequisicao = (array) $request->getParsedBody();
             $parametros = (array) $request->getQueryParams();
@@ -40,7 +38,7 @@ abstract class GerenciadorRecurso {
             ] );
         } catch( Throwable $e ){
             $resposta = RespostaHttp::enviarResposta( $response, HttpStatusCode::INTERNAL_SERVER_ERROR, [
-                'erro' => 'Houve um erro interno.' . $e->getMessage()
+                'erro' => 'Houve um erro interno.' . $e
             ] );
         } finally {
             return $resposta;
