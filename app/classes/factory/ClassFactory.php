@@ -18,7 +18,8 @@ abstract class ClassFactory {
      * @return Controller
      */
     public static function makeController( string $classe ){
-        $controller = self::CAMINHO_CONTROLLER . $classe . 'Controller';
+        $nomeController = substr( strrchr( $classe, '\\' ), 1 );
+        $controller = self::CAMINHO_CONTROLLER . $nomeController . 'Controller';
         if( ! class_exists( $controller ) ){
             throw new InvalidArgumentException( "Controller $controller não encontrado." );
         }
@@ -34,7 +35,8 @@ abstract class ClassFactory {
      * @return Service
      */
     public static function makeService( string $classe ){
-        $service = self::CAMINHO_SERVICE . $classe . 'Service';
+        $nomeService = substr( strrchr( $classe, '\\' ), 1 );
+        $service = self::CAMINHO_SERVICE . $nomeService . 'Service';
         if( ! class_exists( $service ) ){
             throw new InvalidArgumentException( "Service $service não encontrado." );
         }
@@ -50,7 +52,8 @@ abstract class ClassFactory {
      * @return DAO
      */
     public static function makeDAO( string $classe ){
-        $DAO = self::CAMINHO_DAO . $classe . 'DAO';
+        $nomeDAO = substr( strrchr( $classe, '\\' ), 1 );
+        $DAO = self::CAMINHO_DAO . $nomeDAO . 'DAO';
         if( ! class_exists( $DAO ) ){
             throw new InvalidArgumentException( "DAO $classe não encontrado." );
         }
