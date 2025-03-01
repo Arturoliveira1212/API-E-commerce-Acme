@@ -25,4 +25,17 @@ abstract class HttpStatusCode {
     public const BAD_GATEWAY = 502;
     public const SERVICE_UNAVAILABLE = 503;
     public const GATEWAY_TIMEOUT = 504;
+
+    public static function statusSucesso(){
+        return [
+            self::OK,
+            self::CREATED,
+            self::ACCEPTED,
+            self::NO_CONTENT
+        ];
+    }
+
+    public static function statusEhSucesso( int $status ){
+        return in_array( $status, self::statusSucesso() );
+    }
 }

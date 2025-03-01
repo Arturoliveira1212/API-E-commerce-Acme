@@ -20,7 +20,7 @@ class ErrorHandlerMiddleware {
         $mensagem = $this->obterMensagemErroDeAcordoComExceptionSlim($e);
 
         return RespostaHttp::enviarResposta( new Response(), $status, [
-            'erro' => $mensagem . $e->getMessage()
+            'message' => $mensagem . $e->getMessage()
         ] );
     }
 

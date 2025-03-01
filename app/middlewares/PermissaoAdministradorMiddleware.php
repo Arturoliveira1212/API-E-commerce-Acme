@@ -41,7 +41,7 @@ class PermissaoAdministradorMiddleware {
 
     private function administradorSemPermissao( string $mensagem = 'Você não tem permissão para realizar essa ação.' ){
         return RespostaHttp::enviarResposta( new Response(), HttpStatusCode::FORBIDDEN, [
-            'erro' => $mensagem
+            'message' => $mensagem
         ] );
     }
 }

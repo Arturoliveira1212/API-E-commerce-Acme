@@ -26,19 +26,22 @@ abstract class GerenciadorRecurso {
             $resposta = RespostaHttp::enviarResposta( $response, $retorno['status'] ?? HttpStatusCode::OK, $retorno['data'] ?? [] );
         } catch( NaoEncontradoException $e ){
             $resposta = RespostaHttp::enviarResposta( $response, HttpStatusCode::NOT_FOUND, [
-                'erro' => $e->getMessage()
+                'message' => $e->getMessage()
             ] );
         } catch( ServiceException $e ){
             $resposta = RespostaHttp::enviarResposta( $response, HttpStatusCode::BAD_REQUEST, [
-                'erros' => json_decode( $e->getMessage(), true )
+                'message' => 'Os dados enviados são inválidos.',
+                'data' => [
+                    'erros' => json_decode( $e->getMessage(), true )
+                ]
             ] );
         } catch( NaoAutorizadoException $e ){
             $resposta = RespostaHttp::enviarResposta( $response, HttpStatusCode::UNAUTHORIZED, [
-                'erro' => $e->getMessage()
+                'message' => $e->getMessage()
             ] );
         } catch( Throwable $e ){
             $resposta = RespostaHttp::enviarResposta( $response, HttpStatusCode::INTERNAL_SERVER_ERROR, [
-                'erro' => 'Houve um erro interno.' . $e
+                'message' => 'Houve um erro interno.' . $e
             ] );
         } finally {
             return $resposta;

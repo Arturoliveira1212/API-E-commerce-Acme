@@ -35,7 +35,7 @@ class AutenticacaoMiddleware {
 
     private function administradorNaoAutenticado( string $mensagem = 'Token de autenticação inválido.' ){
         return RespostaHttp::enviarResposta( new Response(), HttpStatusCode::UNAUTHORIZED, [
-            'erro' => $mensagem
+            'message' => $mensagem
         ] );
     }
 }

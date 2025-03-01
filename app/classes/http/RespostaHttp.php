@@ -17,7 +17,10 @@ abstract class RespostaHttp {
         }
 
         if( ! empty( $data ) ){
-            $response->getBody()->write( json_encode( $data ) );
+            $response->getBody()->write( json_encode( [
+                'sucess' => HttpStatusCode::statusEhSucesso( $status ),
+                ... $data
+            ] ) );
         }
 
         return $response->withStatus( $status );

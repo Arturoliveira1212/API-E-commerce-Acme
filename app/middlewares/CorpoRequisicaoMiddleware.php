@@ -20,18 +20,21 @@ class CorpoRequisicaoMiddleware {
 
     public function __invoke( ServerRequestInterface $request, RequestHandlerInterface $handler ): ResponseInterface {
         $contentType = $request->getHeaderLine('Content-Type');
-        $corpoRequisicao = (array) $request->getParsedBody();
+        $corpoRequisicao = $request->getParsedBody();
 
         if( ! $this->validarFormato( $contentType ) || empty( $corpoRequisicao ) ){
             return $this->corpoRequisicaoInvalido( [
-                'erro' => 'O corpo da requisição deve ser em JSON válido.'
+                'message' => 'O corpo da requisição deve ser em JSON válido.'
             ] );
         }
 
         $erros = $this->validarCampos( $corpoRequisicao );
         if( ! empty( $erros ) ){
             return $this->corpoRequisicaoInvalido( [
-                'erros' => $erros
+                'message' => 'O corpo da requisição é inválido.',
+                'data' => [
+                    'erros' => $erros
+                ]
             ] );
         }
 
@@ -53,7 +56,7 @@ class CorpoRequisicaoMiddleware {
             if( ! isset( $corpoRequisicao[ $campo ] ) ){
                 $erros[ $campo ] = "Campo {$campo} não foi enviado.";
             } else if( ! $this->tipoValido( $corpoRequisicao[ $campo ], $tipo ) ){
-                $erros[ $campo ] = "Campo {$campo} deve ser {$tipo}";
+                $erros[ $campo ] = "Campo {$campo} deve ser do tipo {$tipo}.";
             }
         }
 

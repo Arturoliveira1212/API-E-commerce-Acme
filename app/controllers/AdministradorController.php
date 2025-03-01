@@ -24,7 +24,7 @@ class AdministradorController extends Controller {
         $this->getService()->salvar( $administrador );
 
         return $this->resposta( HttpStatusCode::CREATED, [
-            'mensagem' => "Administrador cadastrado com sucesso"
+            'message' => "Administrador cadastrado com sucesso"
         ] );
     }
 
@@ -37,8 +37,11 @@ class AdministradorController extends Controller {
         $tokenJWT = $administradorService->autenticar( $email, $senha );
 
         return $this->resposta( HttpStatusCode::OK, [
-            'Token' => $tokenJWT->codigo(),
-            'Duração' => $tokenJWT->validadeTokenFormatada()
+            'message' => 'Administrador autenticado com sucesso.',
+            'data' => [
+                'Token' => $tokenJWT->codigo(),
+                'Duração' => $tokenJWT->validadeTokenFormatada()
+            ]
         ] );
     }
 
@@ -55,14 +58,19 @@ class AdministradorController extends Controller {
         $this->getService()->salvar( $administrador );
 
         return $this->resposta( HttpStatusCode::OK, [
-            'mensagem' => 'Administrador atualizado com suceso.'
+            'message' => 'Administrador atualizado com suceso.'
         ] );
     }
 
     public function obterTodos( array $corpoRequisicao, $args, array $parametros ){
         $administradores = $this->getService()->obterComRestricoes( $parametros );
 
-        return $this->resposta( HttpStatusCode::OK, (array) $administradores );
+        return $this->resposta( HttpStatusCode::OK, [
+            'message' => 'Administradores obtidos com sucesso.',
+            'data' => [
+                $administradores
+            ]
+        ] );
     }
 
     public function obterComId( array $corpoRequisicao, $args ){
@@ -72,6 +80,13 @@ class AdministradorController extends Controller {
         if( ! $administrador instanceof Administrador ){
             throw new NaoEncontradoException( 'Administrador não encontrado.' );
         }
+
+        return $this->resposta( HttpStatusCode::OK, [
+            'message' => 'Administrador obtido com sucesso.',
+            'data' => [
+                $administrador
+            ]
+        ] );
 
         return $this->resposta( HttpStatusCode::OK, [ $administrador ] );
     }
