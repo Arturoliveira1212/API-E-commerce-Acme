@@ -40,6 +40,10 @@ abstract class Service {
         return $this->getDao()->desativarComId( $id );
     }
 
+    public function excluirComId( int $id ){
+        return $this->getDao()->excluirComId( $id );
+    }
+
     public function existe( string $campo, string $valor ){
         return $this->getDao()->existe( $campo, $valor );
     }
