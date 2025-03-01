@@ -24,7 +24,7 @@ class AdministradorController extends Controller {
         $this->getService()->salvar( $administrador );
 
         return $this->resposta( HttpStatusCode::CREATED, [
-            'message' => "Administrador cadastrado com sucesso"
+            'message' => 'Administrador cadastrado com sucesso.'
         ] );
     }
 
@@ -87,8 +87,6 @@ class AdministradorController extends Controller {
                 $administrador
             ]
         ] );
-
-        return $this->resposta( HttpStatusCode::OK, [ $administrador ] );
     }
 
     public function excluirComId( array $corpoRequisicao, $args ){
@@ -99,7 +97,7 @@ class AdministradorController extends Controller {
             throw new NaoEncontradoException( 'Administrador não encontrado.' );
         }
 
-        $this->getService()->desativarComId( $id );
+        $this->getService()->excluirComId( $id );
 
         return $this->resposta( HttpStatusCode::NO_CONTENT );
     }

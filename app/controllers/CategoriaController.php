@@ -78,7 +78,7 @@ class CategoriaController extends Controller {
             throw new NaoEncontradoException( 'Categoria não encontrada.' );
         }
 
-        $this->getService()->desativarComId( $id );
+        $this->getService()->excluirComId( $id );
 
         return $this->resposta( HttpStatusCode::NO_CONTENT );
     }
