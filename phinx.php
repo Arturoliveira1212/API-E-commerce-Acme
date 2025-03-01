@@ -1,9 +1,8 @@
 <?php
 
-use app\databases\PDOSingleton;
-
 require 'bootstrap.php';
 
+use app\databases\PDOSingleton;
 
 $pdo = PDOSingleton::get();
 

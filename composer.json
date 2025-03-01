@@ -18,6 +18,6 @@
     },
     "scripts": {
         "phinx": "vendor/bin/phinx",
-        "kahlan": "vendor/bin/kahlan"
+        "test": "vendor/bin/kahlan"
     }
 }
