@@ -23,6 +23,6 @@ final class CriaTabelaPermissaoAdministrador extends AbstractMigration {
     }
 
     public function down(): void {
-        $this->execute( 'DROP TABLE permissaoAdministrador' );
+        $this->execute( 'DROP TABLE permissao_administrador' );
     }
 }
