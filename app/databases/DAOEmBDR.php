@@ -58,7 +58,25 @@ abstract class DAOEmBDR implements DAO {
     public function obterComRestricoes( array $restricoes ){
         $parametros = [];
         $query = $this->obterQuery( $restricoes, $parametros );
-        return $this->obterObjetos( $query, [ $this, 'transformarEmObjeto' ], $parametros );
+        $this->preencherLimitEOffset( $query, $restricoes );
+        $objetos = $this->obterObjetos( $query, [ $this, 'transformarEmObjeto' ], $parametros );
+
+        return $objetos;
+    }
+
+    protected function preencherLimitEOffset( string &$query, array $restricoes ){
+        $limit = '';
+        $offset = '';
+
+        if( isset( $restricoes['limit'] ) && is_numeric( $restricoes['limit'] ) ){
+            $limit = " LIMIT {$restricoes['limit']} ";
+
+            if( isset( $restricoes['offset'] ) && is_numeric( $restricoes['offset'] ) ){
+                $offset = " OFFSET {$restricoes['offset']} ";
+            }
+        }
+
+        $query = $query . $limit . $offset;
     }
 
     public function obterObjetos( string $comando, array $callback, array $parametros = [] ){
