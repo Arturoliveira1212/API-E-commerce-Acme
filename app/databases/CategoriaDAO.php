@@ -2,6 +2,9 @@
 
 namespace app\databases;
 
+use app\classes\Categoria;
+use app\classes\utils\ConversorDados;
+
 class CategoriaDAO extends DAOEmBDR {
 
     protected function nomeTabela(){
@@ -19,7 +22,7 @@ class CategoriaDAO extends DAOEmBDR {
     }
 
     protected function parametros( $categoria ){
-        return [];
+        return ConversorDados::converterEmArray( $categoria );
     }
 
     protected function obterQuery( array $restricoes, array &$parametros ){
@@ -29,37 +32,17 @@ class CategoriaDAO extends DAOEmBDR {
         $where = ' WHERE ativo = 1 ';
         $join = '';
         $orderBy = '';
-        $limit = '';
-        $offset = '';
 
-        // $restricoes = $queryParams->getRestricoes();
-        // if( ! empty( $restricoes ) ){
-        //     if( isset( $restricoes['id'] ) ){
-        //         $where .= " AND $nomeTabela.id = :id";
-        //         $parametros['id'] = $restricoes['id'];
-        //     }
-        // }
+        if( isset( $restricoes['nome'] ) ){
+            $where .= " AND {$nomeTabela}.nome = :nome ";
+            $parametros['nome'] = $restricoes['nome'];
+        }
 
-        // $orderByQuery = $queryParams->getOrderBy();
-        // if( ! empty( $orderByQuery ) ){
-        //     $orderBy = " ORDER BY {$orderByQuery}";
-        // }
-
-        // $limitQuery = $queryParams->getLimit();
-        // if( ! empty( $limitQuery ) && is_numeric( $limitQuery ) ){
-        //     $limit = " LIMIT {$limitQuery} ";
-
-        //     $offsetQuery = $queryParams->getOffset();
-        //     if( ! empty( $offsetQuery ) && is_numeric( $offsetQuery ) ){
-        //         $offset = " OFFSET {$offsetQuery} ";
-        //     }
-        // }
-
-        $comando = $select . $join . $where . $orderBy . $limit . $offset;
+        $comando = $select . $join . $where . $orderBy;
         return $comando;
     }
 
     protected function transformarEmObjeto( array $linhas ){
-        // return $this->converterEmObjeto( Categoria::class, $linhas );
+        return ConversorDados::converterEmObjeto( Categoria::class, $linhas );
     }
 }

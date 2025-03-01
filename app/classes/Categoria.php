@@ -7,10 +7,11 @@ class Categoria extends Model {
     private string $nome = '';
     private string $descricao = '';
 
-    const TAMANHO_MINIMO_NOME = 1;
-    const TAMANHO_MAXIMO_NOME = 100;
-    const TAMANHO_MINIMO_DESCRICAO = 1;
-    const TAMANHO_MAXIMO_DESCRICAO = 500;
+    public function __construct( int $id = 0, string $nome = '', string $descricao = '' ){
+        $this->setId( $id );
+        $this->setNome( $nome );
+        $this->setDescricao( $descricao );
+    }
 
     public function getId(){
         return $this->id;
@@ -34,5 +35,13 @@ class Categoria extends Model {
 
     public function setDescricao( string $descricao ){
         $this->descricao = $descricao;
+    }
+
+    public function emArray() :array {
+        return [
+            'id' => $this->getId(),
+            'nome' => $this->getNome(),
+            'descricao' => $this->getDescricao()
+        ];
     }
 }

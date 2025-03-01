@@ -8,16 +8,21 @@ use app\classes\http\HttpStatusCode;
 use app\exceptions\NaoEncontradoException;
 
 class CategoriaController extends Controller {
+
     protected function criar( array $corpoRequisicao ){
-        return new Categoria();
+        $categoria = new Categoria();
+        $camposSimples = [ 'nome', 'descricao' ];
+        $this->povoarSimples( $categoria, $camposSimples, $corpoRequisicao );
+
+        return $categoria;
     }
 
     public function novo( array $corpoRequisicao ){
         $categoria = $this->criar( $corpoRequisicao );
-        $id = $this->getService()->salvar( $categoria );
+        $this->getService()->salvar( $categoria );
 
         return $this->resposta( HttpStatusCode::CREATED, [
-            "Id {$id} cadastrado com sucesso"
+            'message' => "Categoria cadastrada com sucesso."
         ] );
     }
 
@@ -26,13 +31,26 @@ class CategoriaController extends Controller {
 
         $categoria = $this->getService()->obterComId( $id );
         if( ! $categoria instanceof Categoria ){
-            throw new NaoEncontradoException( 'Categoria não encontrada' );
+            throw new NaoEncontradoException( 'Categoria não encontrada.' );
         }
 
+        $categoria = $this->criar( $corpoRequisicao );
+        $categoria->setId( $id );
         $this->getService()->salvar( $categoria );
 
         return $this->resposta( HttpStatusCode::OK, [
-            'Registro atualizado com suceso.'
+            'message' => 'Categoria atualizada com suceso.'
+        ] );
+    }
+
+    public function obterTodos( array $corpoRequisicao, $args, array $parametros ){
+        $categoriaes = $this->getService()->obterComRestricoes( $parametros );
+
+        return $this->resposta( HttpStatusCode::OK, [
+            'message' => 'Categoriaes obtidas com sucesso.',
+            'data' => [
+                $categoriaes
+            ]
         ] );
     }
 
@@ -41,16 +59,15 @@ class CategoriaController extends Controller {
 
         $categoria = $this->getService()->obterComId( $id );
         if( ! $categoria instanceof Categoria ){
-            throw new NaoEncontradoException( 'Categoria não encontrada' );
+            throw new NaoEncontradoException( 'Categoria não encontrada.' );
         }
 
-        return $this->resposta( HttpStatusCode::OK, [ $categoria ] );
-    }
-
-    public function obterTodos( array $corpoRequisicao, $args, array $parametros ){
-        $categorias = $this->getService()->obterComRestricoes( $parametros );
-
-        return $this->resposta( HttpStatusCode::OK, (array) $categorias );
+        return $this->resposta( HttpStatusCode::OK, [
+            'message' => 'Categoria obtida com sucesso.',
+            'data' => [
+                $categoria
+            ]
+        ] );
     }
 
     public function excluirComId( array $corpoRequisicao, $args ){
@@ -58,7 +75,7 @@ class CategoriaController extends Controller {
 
         $categoria = $this->getService()->obterComId( $id );
         if( ! $categoria instanceof Categoria ){
-            throw new NaoEncontradoException( 'Categoria não encontrada' );
+            throw new NaoEncontradoException( 'Categoria não encontrada.' );
         }
 
         $this->getService()->desativarComId( $id );
