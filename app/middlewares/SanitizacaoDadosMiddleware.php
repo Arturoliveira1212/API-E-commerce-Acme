@@ -17,7 +17,7 @@ class SanitizacaoDadosMiddleware {
         $parametros = $request->getQueryParams();
         if( is_array( $parametros ) ){
             $this->limparArray( $parametros );
-            $request = $request->withParsedBody( $parametros );
+            $request = $request->withQueryParams( $parametros );
         }
 
         return $handler->handle( $request );
