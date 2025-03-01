@@ -6,21 +6,11 @@ use Psr\Http\Server\RequestHandlerInterface;
 use app\middlewares\CorpoRequisicaoMiddleware;
 use Slim\Psr7\Response;
 
-describe('CorpoRequisicaoMiddleware', function() {
+describe( 'CorpoRequisicaoMiddleware', function() {
     beforeEach(function () {
         $this->request = Mockery::mock( ServerRequestInterface::class );
         $this->handler = Mockery::mock( RequestHandlerInterface::class );
     });
-
-    function validarErroMiddleware( $response, int $status, array $respostaEmArrayEsperada ){
-        $respostaEmArray = json_decode( $response->getBody(), true );
-
-        expect( $response )->toBeAnInstanceOf( Response::class );
-        expect( $response->getStatusCode() )->toEqual( $status );
-        expect( $respostaEmArray )->toBeA( 'array' );
-        expect( $respostaEmArray)->toContainKeys( array_keys( $respostaEmArrayEsperada ) );
-        expect( $respostaEmArray )->toEqual( $respostaEmArrayEsperada );
-    }
 
     it( 'Deve retornar erro(400) quando o Content-Type é inválido.', function(){
         $middleware = new CorpoRequisicaoMiddleware( 'application/json', [ 'nome' => 'string' ] );

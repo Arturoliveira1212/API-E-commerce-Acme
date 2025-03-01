@@ -16,16 +16,6 @@ describe( 'AutenticacaoMiddleware', function(){
         $this->payloadJWT = Mockery::mock( PayloadJWT::class );
     });
 
-    function validarErroMiddleware( $response, int $status, array $respostaEmArrayEsperada ){
-        $respostaEmArray = json_decode( $response->getBody(), true );
-
-        expect( $response )->toBeAnInstanceOf( Response::class );
-        expect( $response->getStatusCode() )->toEqual( $status );
-        expect( $respostaEmArray )->toBeA( 'array' );
-        expect( $respostaEmArray)->toContainKeys( array_keys( $respostaEmArrayEsperada ) );
-        expect( $respostaEmArray )->toEqual( $respostaEmArrayEsperada );
-    }
-
     it( 'Deve retornar erro(403) quando o administrador não é encontrado', function(){
         $administradorService = Mockery::mock( AdministradorService::class );
         $middleware = new PermissaoAdministradorMiddleware( [], $administradorService );
