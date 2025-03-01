@@ -34,23 +34,13 @@ class AdministradorDAO extends DAOEmBDR {
         $where = ' WHERE ativo = 1 ';
         $join = '';
         $orderBy = '';
-        $limit = '';
-        $offset = '';
 
         if( isset( $restricoes['email'] ) ){
             $where .= " AND {$nomeTabela}.email = :email ";
             $parametros['email'] = $restricoes['email'];
         }
 
-        if( isset( $restricoes['limit'] ) && is_numeric( $restricoes['limit'] ) ){
-            $limit = " LIMIT {$restricoes['limit']} ";
-
-            if( isset( $restricoes['offset'] ) && is_numeric( $restricoes['offset'] ) ){
-                $offset = " OFFSET {$restricoes['offset']} ";
-            }
-        }
-
-        $comando = $select . $join . $where . $orderBy . $limit . $offset;
+        $comando = $select . $join . $where . $orderBy;
         return $comando;
     }
 
