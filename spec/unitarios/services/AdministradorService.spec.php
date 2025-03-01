@@ -3,6 +3,8 @@
 use app\databases\DAOEmBDR;
 use app\exceptions\ServiceException;
 use app\classes\Administrador;
+use app\classes\jwt\TokenJWT;
+use app\exceptions\NaoAutorizadoException;
 use app\services\AdministradorService;
 
 describe( 'AdministradorService', function () {
@@ -118,5 +120,47 @@ describe( 'AdministradorService', function () {
                 validarErroSalvar( $e, 'senha', 'A senha deve ter ' . AdministradorService::TAMANHO_SENHA . ' caracteres.' );
             }
         });
-    } );
+    });
+
+    describe( 'Autenticar', function(){
+        it( 'Lança exceção quando administrador não é encontrado', function() {
+            $this->dao->shouldReceive('obterComRestricoes')->andReturn( [] );
+
+            expect( function(){
+                $this->service->autenticar( 'artur@gmail', 'aaa' );
+            } )->toThrow( new NaoAutorizadoException( 'Email não encontrado.' ) );
+        });
+
+        it( 'Lança exceção quando email ou senha são inválidos', function(){
+            $administrador = new Administrador( 1, 'Artur', 'artur@gmail', '12345678' );
+            $this->dao->shouldReceive('obterComRestricoes')->andReturn( [ $administrador ] );
+
+            expect( function(){
+                $this->service->autenticar( 'artur@gmail', 'aaa' );
+            } )->toThrow( new NaoAutorizadoException( 'Email ou senha inválidos.' ) );
+        });
+
+        it( 'Lança exceção ao gerar token inválido', function(){
+            $administrador = new Administrador( 1, 'Artur', 'artur@gmail', '12345678' );
+            $this->dao->shouldReceive('obterComRestricoes')->andReturn( [ $administrador ] );
+
+            allow( $this->service )->toReceive('verificarSenha')->andReturn( true );
+            allow( $this->service )->toReceive('gerarToken')->andReturn( null );
+
+            expect( function(){
+                $this->service->autenticar( 'artur@gmail', '12345678' );
+            } )->toThrow( new Exception( 'Houve um erro ao gerar o token de acesso.' ) );
+        });
+
+        it( 'Autentica administrador corretamente gerando o token', function(){
+            $administrador = new Administrador( 1, 'Artur', 'artur@gmail', '12345678' );
+            $this->dao->shouldReceive('obterComRestricoes')->andReturn( [ $administrador ] );
+
+            allow( $this->service )->toReceive('verificarSenha')->andReturn( true );
+            allow( $this->service )->toReceive('gerarToken')->andReturn( new TokenJWT( 'aaaaa', 3600 ) );
+
+            $token = $this->service->autenticar( 'artur@gmail', '12345678' );
+            expect( $token )->toBeAnInstanceOf( TokenJWT::class );
+        });
+    });
 });

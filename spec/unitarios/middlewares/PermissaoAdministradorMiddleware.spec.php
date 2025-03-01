@@ -16,7 +16,7 @@ describe( 'AutenticacaoMiddleware', function(){
         $this->payloadJWT = Mockery::mock( PayloadJWT::class );
     });
 
-    it( 'Deve retornar erro(403) quando o administrador não é encontrado', function(){
+    it( 'Retorna erro(403) quando o administrador não é encontrado', function(){
         $administradorService = Mockery::mock( AdministradorService::class );
         $middleware = new PermissaoAdministradorMiddleware( [], $administradorService );
         $payloadJWT = new PayloadJWT( 0, 'name', 'role', 1, 1 );
@@ -32,7 +32,7 @@ describe( 'AutenticacaoMiddleware', function(){
         ] );
     });
 
-    it( 'Deve retornar erro(403) quando o administrador não possui as permissões necessárias', function(){
+    it( 'Retorna erro(403) quando o administrador não possui as permissões necessárias', function(){
         $permissoesNecessarias = [ 'Cadastrar Administrador' ];
         $permissoesDoAdministrador = [];
 

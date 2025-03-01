@@ -12,7 +12,7 @@ describe( 'CorpoRequisicaoMiddleware', function() {
         $this->handler = Mockery::mock( RequestHandlerInterface::class );
     });
 
-    it( 'Deve retornar erro(400) quando o Content-Type é inválido.', function(){
+    it( 'Retorna erro(400) quando o Content-Type é inválido.', function(){
         $middleware = new CorpoRequisicaoMiddleware( 'application/json', [ 'nome' => 'string' ] );
 
         $this->request->shouldReceive('getHeaderLine')->with('Content-Type')->andReturn('application/xml');
@@ -25,7 +25,7 @@ describe( 'CorpoRequisicaoMiddleware', function() {
         ] );
     });
 
-    it( 'Deve retornar erro(400) quando o corpo de requisição é vazio.', function(){
+    it( 'Retorna erro(400) quando o corpo de requisição é vazio.', function(){
         $middleware = new CorpoRequisicaoMiddleware( 'application/json', [ 'nome' => 'string' ] );
 
         $this->request->shouldReceive('getHeaderLine')->with('Content-Type')->andReturn('application/json');
@@ -38,7 +38,7 @@ describe( 'CorpoRequisicaoMiddleware', function() {
         ] );
     });
 
-    it( 'Deve retornar erro(400) quando o corpo de requisição não tem os campos obrigatórios.', function(){
+    it( 'Retorna erro(400) quando o corpo de requisição não tem os campos obrigatórios.', function(){
         $middleware = new CorpoRequisicaoMiddleware( 'application/json', [ 'nome' => 'string' ] );
 
         $this->request->shouldReceive('getHeaderLine')->with('Content-Type')->andReturn('application/json');
@@ -56,7 +56,7 @@ describe( 'CorpoRequisicaoMiddleware', function() {
         ] );
     });
 
-    it( 'Deve retornar erro(400) quando o corpo de requisição tem os campos obrigatórios mas de tipos inválidos.', function(){
+    it( 'Retorna erro(400) quando o corpo de requisição tem os campos obrigatórios mas de tipos inválidos.', function(){
         $middleware = new CorpoRequisicaoMiddleware( 'application/json', [ 'nome' => 'string' ] );
 
         $this->request->shouldReceive('getHeaderLine')->with('Content-Type')->andReturn('application/json');

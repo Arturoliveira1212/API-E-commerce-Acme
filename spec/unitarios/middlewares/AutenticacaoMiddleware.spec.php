@@ -25,7 +25,7 @@ describe( 'AutenticacaoMiddleware', function(){
         expect( $respostaEmArray )->toEqual( $respostaEmArrayEsperada );
     }
 
-    it( 'Deve retornar erro(401) quando o token não é enviado', function(){
+    it( 'Retorna erro(401) quando o token não é enviado', function(){
         $this->request->shouldReceive('getHeaderLine')->with('Authorization')->andReturn('');
         $response = $this->middleware( $this->request, $this->handler );
 
@@ -35,7 +35,7 @@ describe( 'AutenticacaoMiddleware', function(){
         ] );
     });
 
-    it( 'Deve retornar erro(401) quando token fora do padrão é enviado', function(){
+    it( 'Retorna erro(401) quando token fora do padrão é enviado', function(){
         $this->request->shouldReceive('getHeaderLine')->with('Authorization')->andReturn('Bearer');
         $response = $this->middleware( $this->request, $this->handler );
 
@@ -45,7 +45,7 @@ describe( 'AutenticacaoMiddleware', function(){
         ] );
     });
 
-    it( 'Deve retornar erro(401) quando token é inválido', function(){
+    it( 'Retorna erro(401) quando token é inválido', function(){
         $this->request->shouldReceive('getHeaderLine')->with('Authorization')->andReturn('Bearer Token Inválido');
         allow( $this->middleware )->toReceive('decodificarToken')->andReturn( null );
         $response = $this->middleware( $this->request, $this->handler );
