@@ -2,7 +2,6 @@
 namespace app\middlewares;
 
 use app\classes\Administrador;
-use app\classes\factory\ClassFactory;
 use Slim\Psr7\Response;
 use app\classes\jwt\PayloadJWT;
 use app\classes\http\RespostaHttp;
@@ -14,18 +13,18 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class PermissaoAdministradorMiddleware {
     private $permissoesNecessarias;
+    private $administradorService;
 
-    public function __construct( array $permissoesNecessarias ){
+    public function __construct( array $permissoesNecessarias, AdministradorService $administradorService ){
         $this->permissoesNecessarias = $permissoesNecessarias;
+        $this->administradorService = $administradorService;
     }
 
     public function __invoke( ServerRequestInterface $request, RequestHandlerInterface $handler ): ResponseInterface {
         /** @var PayloadJWT */
         $payloadJWT = $request->getAttribute('payloadJWT');
 
-        /** @var AdministradorService */
-        $administradorService = ClassFactory::makeService( Administrador::class );
-        $administrador = $administradorService->obterComId( $payloadJWT->sub() );
+        $administrador = $this->administradorService->obterComId( $payloadJWT->sub() );
         if( ! $administrador instanceof Administrador ){
             return $this->administradorSemPermissao();
         }

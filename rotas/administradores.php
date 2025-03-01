@@ -1,14 +1,18 @@
 <?php
 
 use app\classes\Administrador;
+use app\classes\factory\ClassFactory;
 use app\classes\GerenciadorRecurso;
 use app\middlewares\AutenticacaoMiddleware;
 use app\middlewares\CorpoRequisicaoMiddleware;
 use app\middlewares\PermissaoAdministradorMiddleware;
+use app\services\AdministradorService;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 
 $app->group( '/administradores', function( $group ){
+    /** @var AdministradorService */
+    $administradorService = ClassFactory::makeService( Administrador::class );
 
     $group->post( '', function( Request $request, Response $response, $args ){
         return GerenciadorRecurso::executar( Administrador::class, 'novo', $request, $response, $args );
@@ -18,7 +22,7 @@ $app->group( '/administradores', function( $group ){
         'email' => 'string',
         'senha' => 'string'
     ] ) )
-    ->add( new PermissaoAdministradorMiddleware( [ 'Cadastrar Administrador' ] ) )
+    ->add( new PermissaoAdministradorMiddleware( [ 'Cadastrar Administrador' ], $administradorService ) )
     ->add( new AutenticacaoMiddleware() );
 
     $group->post( '/login', function( $request, $response, $args ){
@@ -37,7 +41,7 @@ $app->group( '/administradores', function( $group ){
         'email' => 'string',
         'senha' => 'string'
     ] ) )
-    ->add( new PermissaoAdministradorMiddleware( [ 'Editar Administrador' ] ) )
+    ->add( new PermissaoAdministradorMiddleware( [ 'Editar Administrador' ], $administradorService ) )
     ->add( new AutenticacaoMiddleware() );
 
     $group->get( '', function( Request $request, Response $response, $args ){
@@ -51,7 +55,7 @@ $app->group( '/administradores', function( $group ){
     $group->delete( '/{id}', function( Request $request, Response $response, $args ){
         return GerenciadorRecurso::executar( Administrador::class, 'excluirComId', $request, $response, $args );
     } )
-    ->add( new PermissaoAdministradorMiddleware( [ 'Excluir Administrador' ] ) )
+    ->add( new PermissaoAdministradorMiddleware( [ 'Excluir Administrador' ], $administradorService ) )
     ->add( new AutenticacaoMiddleware() );
 
 } );
