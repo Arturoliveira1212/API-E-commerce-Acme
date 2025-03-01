@@ -23,6 +23,30 @@ class Validador {
         return 1;
     }
 
+    /**
+     * Método responsável por validar email.
+     *
+     * @param string $email
+     * @return boolean
+     */
+    public static function validarEmail( string $email ){
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return false;
+        }
+
+        $pattern = '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
+        if (!preg_match($pattern, $email)) {
+            return false;
+        }
+
+        $domain = substr(strrchr($email, "@"), 1);
+        if (!checkdnsrr($domain, "MX")) {
+            return false;
+        }
+
+        return true;
+    }
+
     public static function validarCPF( string $cpf ): bool {
         $formatoCpf = '/^[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}$/';
         if( ! preg_match( $formatoCpf, $cpf ) ){
@@ -53,29 +77,6 @@ class Validador {
         $digito2 = $resto2 < 2 ? 0 : 11 - $resto2;
 
         return $cpf[9] == $digito1 && $cpf[10] == $digito2;
-    }
-
-    // Valida E-mail
-    public static function validarEmail(string $email): bool {
-         // Verifica se o e-mail tem um formato básico válido
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return false;
-        }
-
-        // Expressão regular para validar a estrutura do e-mail (domínio)
-        $pattern = '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
-
-        if (!preg_match($pattern, $email)) {
-            return false;
-        }
-
-        // Verifica se o domínio é válido e se o e-mail pode ser resolvido
-        $domain = substr(strrchr($email, "@"), 1);
-        if (!checkdnsrr($domain, "MX")) {
-            return false;
-        }
-
-        return true;
     }
 
     // Valida Data (Formato: dd/mm/yyyy)
