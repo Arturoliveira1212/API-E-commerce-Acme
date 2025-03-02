@@ -65,7 +65,8 @@ class Administrador extends Model {
         return [
             'id' => $this->getId(),
             'nome' => $this->getNome(),
-            'email' => $this->getEmail()
+            'email' => $this->getEmail(),
+            'permissoes' => $this->getPermissoes()
         ];
     }
 }

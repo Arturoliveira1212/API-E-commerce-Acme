@@ -18,6 +18,7 @@ class AdministradorService extends Service {
     use Criptografavel;
     use Autenticavel;
 
+    const ID_ADMINISTRADOR_MASTER = 1;
     const TAMANHO_MINIMO_NOME = 1;
     const TAMANHO_MAXIMO_NOME = 100;
     const TAMANHO_MINIMO_EMAIL = 1;
@@ -100,25 +101,32 @@ class AdministradorService extends Service {
     }
 
     public function salvarPermissoes( Administrador $administrador, array $permissoes ){
+        $erro = [];
+        $this->validarPermissoes( $administrador, $permissoes, $erro );
+        if( ! empty( $erro ) ){
+            throw new ServiceException( json_encode( $erro ) );
+        }
+
         /** @var AdministradorDAO */
         $administradorDAO = $this->getDao();
         $administradorDAO->limparPermissoes( $administrador );
 
         if( ! empty( $permissoes ) ){
-            $erro = [];
             $idsPermissao = $administradorDAO->obterIdsPermissao( $permissoes );
-            $this->validarPermissoes( $idsPermissao, $erro );
-            if( ! empty( $erro ) ){
-                throw new ServiceException( json_encode( $erro ) );
-            }
-
             $administradorDAO->salvarPermissoes( $administrador, $idsPermissao );
         }
     }
 
-    private function validarPermissoes( array $idsPermissao, array &$erro = [] ){
-        if( empty( $idsPermissao ) ){
-            $erro['permissoes'] = 'Nenhuma permissão enviada é válida.';
+    private function validarPermissoes( Administrador $administrador, array $permissoes, array &$erro = [] ){
+        if( $administrador->getId() == self::ID_ADMINISTRADOR_MASTER ){
+            $erro['permissoes'] = 'Não é permitido alterar as permissões do administrador master.';
+        } else if( ! empty( $permissoes ) ) {
+            /** @var AdministradorDAO */
+            $administradorDAO = $this->getDao();
+            $idsPermissao = $administradorDAO->obterIdsPermissao( $permissoes );
+            if( empty( $idsPermissao ) ){
+                $erro['permissoes'] = 'Nenhuma permissão enviada é válida.';
+            }
         }
     }
 }
