@@ -7,8 +7,10 @@ use app\services\Service;
 use app\classes\jwt\TokenJWT;
 use app\classes\Administrador;
 use app\classes\utils\Validador;
+use app\databases\AdministradorDAO;
 use app\databases\BancoDadosRelacional;
 use app\exceptions\NaoAutorizadoException;
+use app\exceptions\ServiceException;
 use app\traits\Autenticavel;
 use app\traits\Criptografavel;
 
@@ -95,5 +97,28 @@ class AdministradorService extends Service {
         $administradores = $this->obterComRestricoes( $restricoes );
 
         return array_shift( $administradores );
+    }
+
+    public function salvarPermissoes( Administrador $administrador, array $permissoes ){
+        /** @var AdministradorDAO */
+        $administradorDAO = $this->getDao();
+        $administradorDAO->limparPermissoes( $administrador );
+
+        if( ! empty( $permissoes ) ){
+            $erro = [];
+            $idsPermissao = $administradorDAO->obterIdsPermissao( $permissoes );
+            $this->validarPermissoes( $idsPermissao, $erro );
+            if( ! empty( $erro ) ){
+                throw new ServiceException( json_encode( $erro ) );
+            }
+
+            $administradorDAO->salvarPermissoes( $administrador, $idsPermissao );
+        }
+    }
+
+    private function validarPermissoes( array $idsPermissao, array &$erro = [] ){
+        if( empty( $idsPermissao ) ){
+            $erro['permissoes'] = 'Nenhuma permissão enviada é válida.';
+        }
     }
 }

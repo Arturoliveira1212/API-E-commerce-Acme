@@ -4,7 +4,6 @@ require_once '../bootstrap.php';
 
 use Slim\Factory\AppFactory;
 use app\middlewares\ErrorHandlerMiddleware;
-use app\middlewares\SanitizacaoDadosMiddleware;
 use Slim\Middleware\BodyParsingMiddleware;
 
 $app = AppFactory::create();

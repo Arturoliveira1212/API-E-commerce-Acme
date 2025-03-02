@@ -73,5 +73,49 @@ class AdministradorDAO extends DAOEmBDR {
 
         return [];
     }
+
+    /**
+     * Método responsável por obter o id das permissões passadas por parâmetro.
+     *
+     * @param array $permissoes
+     * @return array
+     */
+    public function obterIdsPermissao( array $permissoes ){
+        $comando = "SELECT id FROM permissao WHERE descricao IN (" . implode(',', array_fill(0, count($permissoes), '?')) . ") AND ativo = 1";
+        $ids = $this->getBancoDados()->consultar( $comando, $permissoes );
+
+        if( ! empty( $ids ) ){
+            return array_map( function( $id ){
+                return $id['id'];
+            }, $ids );
+        }
+
+        return [];
+    }
+
+    public function limparPermissoes( Administrador $administrador ){
+        $comando = 'DELETE FROM permissao_administrador WHERE idAdministrador = :idAdministrador';
+        $parametros = [
+            'idAdministrador' => $administrador->getId()
+        ];
+        return $this->getBancoDados()->executar( $comando, $parametros );
+    }
+
+    public function salvarPermissoes( Administrador $administrador, array $idsPermissao ){
+        $this->getBancoDados()->executarComTransacao( function() use( $administrador, $idsPermissao ){
+            foreach( $idsPermissao as $idPermissao ){
+                $this->adicionarPermissao( $administrador, $idPermissao );
+            }
+        } );
+    }
+
+    public function adicionarPermissao( Administrador $administrador, int $idPermissao ){
+        $comando = 'INSERT INTO permissao_administrador ( idAdministrador, idPermissao ) VALUES( :idAdministrador, :idPermissao )';
+        $parametros = [
+            'idAdministrador' => $administrador->getId(),
+            'idPermissao' => $idPermissao
+        ];
+        return $this->getBancoDados()->executar( $comando, $parametros );
+    }
 }
 

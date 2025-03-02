@@ -50,7 +50,11 @@ abstract class GerenciadorRecurso {
         $arrayLimpo = [];
 
         foreach( $array as $chave => $valor ){
-            $arrayLimpo[ $chave ] = htmlspecialchars( strip_tags( trim( $valor ) ) );
+            if( is_array( $valor ) ){
+                $arrayLimpo[ $chave ] = self::limparArray( $valor );
+            } else {
+                $arrayLimpo[ $chave ] = htmlspecialchars( strip_tags( trim( $valor ) ) );
+            }
         }
 
         return $arrayLimpo;

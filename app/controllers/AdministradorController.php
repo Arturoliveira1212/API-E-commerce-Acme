@@ -62,6 +62,25 @@ class AdministradorController extends Controller {
         ] );
     }
 
+    public function adicionarPermissoes( array $corpoRequisicao, $args ){
+        $id = intval( $args['id'] );
+
+        /** @var AdministradorService */
+        $administradorService = $this->getService();
+
+        $administrador = $administradorService->obterComId( $id );
+        if( ! $administrador instanceof Administrador ){
+            throw new NaoEncontradoException( 'Administrador não encontrado.' );
+        }
+
+        $permissoes = $corpoRequisicao['permissoes'];
+        $administradorService->salvarPermissoes( $administrador, $permissoes );
+
+        return $this->resposta( HttpStatusCode::OK, [
+            'message' => 'Permissões salvas com sucesso.'
+        ] );
+    }
+
     public function obterTodos( array $corpoRequisicao, $args, array $parametros ){
         $administradores = $this->getService()->obterComRestricoes( $parametros );
 
