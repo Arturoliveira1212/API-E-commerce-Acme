@@ -9,7 +9,6 @@ use Slim\Middleware\BodyParsingMiddleware;
 
 $app = AppFactory::create();
 
-$app->add( new SanitizacaoDadosMiddleware() );
 $app->add( new BodyParsingMiddleware() );
 
 $errorMiddleware = $app->addErrorMiddleware( true, true, true );
