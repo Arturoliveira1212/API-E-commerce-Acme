@@ -3,7 +3,9 @@
 namespace app\services;
 
 use app\classes\Model;
+use app\databases\BancoDadosRelacional;
 use app\databases\DAO;
+use app\exceptions\NaoEncontradoException;
 use app\exceptions\ServiceException;
 
 abstract class Service {
@@ -23,7 +25,12 @@ abstract class Service {
 
     abstract protected function validar( Model $objeto, array &$erro = [] );
 
-    protected function preSalvar( Model $objeto ){
+    protected function preSalvar( $objeto ){
+        $id = $objeto->getId();
+        if( $id != BancoDadosRelacional::ID_INEXISTENTE && ! $this->existe( 'id', $id ) ){
+            throw new NaoEncontradoException( 'Recurso não encontrado.' );
+        }
+
         $erro = [];
         $this->validar( $objeto, $erro );
         if( ! empty( $erro ) ){
@@ -41,6 +48,11 @@ abstract class Service {
     }
 
     public function excluirComId( int $id ){
+        $existe = $this->existe( 'id', $id );
+        if( ! $existe ){
+            throw new NaoEncontradoException( 'Recurso não encontrado.' );
+        }
+
         return $this->getDao()->excluirComId( $id );
     }
 
@@ -49,7 +61,12 @@ abstract class Service {
     }
 
     public function obterComId( int $id ){
-        return $this->getDao()->obterComId( $id );
+        $objeto = $this->getDao()->obterComId( $id );
+        if( ! $objeto instanceof Model ){
+            throw new NaoEncontradoException( 'Recurso não encontrado.' );
+        }
+
+        return $objeto;
     }
 
     public function camposOrdenaveis(){

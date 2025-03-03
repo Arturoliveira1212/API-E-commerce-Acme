@@ -40,7 +40,7 @@ $app->group( '/administradores', function( RouteCollectorProxy $group ){
     ->add( new AutenticacaoMiddleware() );
 
     $group->post( '/{id}/permissoes', function( Request $request, Response $response, $args ){
-        return GerenciadorRecurso::executar( Administrador::class, 'adicionarPermissoes', $request, $response, $args );
+        return GerenciadorRecurso::executar( Administrador::class, 'salvarPermissoes', $request, $response, $args );
     })
     ->add( new CorpoRequisicaoMiddleware( CONTENT_TYPE, $corpoRequisicaoSalvarPermissoes ) )
     ->add( new PermissaoAdministradorMiddleware( [ 'Adicionar Permissão para Administrador' ], $administradorService ) )
