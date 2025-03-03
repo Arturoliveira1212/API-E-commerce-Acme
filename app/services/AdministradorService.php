@@ -10,6 +10,7 @@ use app\classes\utils\Validador;
 use app\databases\AdministradorDAO;
 use app\databases\BancoDadosRelacional;
 use app\exceptions\NaoAutorizadoException;
+use app\exceptions\NaoEncontradoException;
 use app\exceptions\ServiceException;
 use app\traits\Autenticavel;
 use app\traits\Criptografavel;
@@ -56,9 +57,29 @@ class AdministradorService extends Service {
             $erro['email'] = 'O email deve ter entre ' . self::TAMANHO_MINIMO_EMAIL . ' e ' . self::TAMANHO_MAXIMO_EMAIL . ' caracteres.';
         } else if( ! Validador::validarEmail( $administrador->getEmail() ) ){
             $erro['email'] = 'Email inválido.';
-        } else if( $administrador->getId() == BancoDadosRelacional::ID_INEXISTENTE && $this->getDao()->existe( 'email', $administrador->getEmail() ) ){
+        } else if( $this->emailPertenceAOutroAdministrador( $administrador ) ) {
             $erro['email'] = 'Email já pertence a um administrador.';
         }
+    }
+
+    private function emailPertenceAOutroAdministrador( Administrador $administrador ){
+        $administradorCadastrado = $this->obterComEmail( $administrador->getEmail() );
+        $existeAdministrador = $administradorCadastrado instanceof Administrador;
+
+        $emailPertenceAOutroAdministrador = (
+            $administrador->getId() == BancoDadosRelacional::ID_INEXISTENTE &&
+            $existeAdministrador
+        ) || (
+            $administrador->getId() != BancoDadosRelacional::ID_INEXISTENTE &&
+            $existeAdministrador &&
+            $administrador->getId() != $administradorCadastrado->getId()
+        );
+
+        if( $emailPertenceAOutroAdministrador ){
+            return true;
+        }
+
+        return false;
     }
 
     private function validarSenha( Administrador $administrador, array &$erro ){
@@ -100,7 +121,12 @@ class AdministradorService extends Service {
         return array_shift( $administradores );
     }
 
-    public function salvarPermissoes( Administrador $administrador, array $permissoes ){
+    public function salvarPermissoes( array $permissoes, int $idAdministrador ){
+        $administrador = $this->obterComId( $idAdministrador );
+        if( ! $administrador instanceof Administrador ){
+            throw new NaoEncontradoException( 'Administrador não encontrado.' );
+        }
+
         $erro = [];
         $this->validarPermissoes( $administrador, $permissoes, $erro );
         if( ! empty( $erro ) ){

@@ -23,7 +23,7 @@ describe( 'AdministradorService', function () {
         }
 
         it('Lança exceção ao enviar nome vazio para administrador', function() {
-            $this->dao->shouldReceive('existe')->andReturn( false );
+            $this->dao->shouldReceive('obterComRestricoes')->andReturn( [] );
 
             $administrador = new Administrador( 0, '', 'arturalvesdeoliveira28@gmail.com', 12345678 );
 
@@ -35,7 +35,7 @@ describe( 'AdministradorService', function () {
         });
 
         it('Lança exceção ao enviar nome com tamanho maior que o permitido para administrador', function() {
-            $this->dao->shouldReceive('existe')->andReturn( false );
+            $this->dao->shouldReceive('obterComRestricoes')->andReturn( [] );
 
             $nomeForaDoTamanhoPermitido = str_repeat('a', AdministradorService::TAMANHO_MAXIMO_NOME + 1);
             $administrador = new Administrador( 0, $nomeForaDoTamanhoPermitido, 'arturalvesdeoliveira28@gmail.com', 12345678 );
@@ -84,8 +84,8 @@ describe( 'AdministradorService', function () {
             }
         });
 
-        it('Lança exceção ao enviar email que pertence a outro administrador', function() {
-            $this->dao->shouldReceive('existe')->andReturn( true );
+        it('Lança exceção ao enviar email já existente ao cadastrar administrador', function() {
+            $this->dao->shouldReceive('obterComRestricoes')->andReturn( [ new Administrador() ] );
 
             $administrador = new Administrador( 0, 'Artur Alves', 'arturalvesdeoliveira28@gmail.com', 12345678 );
 
@@ -96,8 +96,21 @@ describe( 'AdministradorService', function () {
             }
         });
 
+        it('Lança exceção ao enviar email já existente ao editar administrador', function() {
+            $this->dao->shouldReceive('obterComRestricoes')->andReturn( [ new Administrador( 3 ) ] );
+            $this->dao->shouldReceive('existe')->andReturn( true );
+
+            $administrador = new Administrador( 2, 'Artur Alves', 'arturalvesdeoliveira28@gmail.com', 12345678 );
+
+            try {
+                $this->service->salvar( $administrador );
+            } catch( ServiceException $e ){
+                validarErroSalvar( $e, 'email', 'Email já pertence a um administrador.' );
+            }
+        });
+
         it('Lança exceção ao enviar senha vazia para administrador', function() {
-            $this->dao->shouldReceive('existe')->andReturn( false );
+            $this->dao->shouldReceive('obterComRestricoes')->andReturn( [] );
 
             $administrador = new Administrador( 0, 'Artur Alves', 'arturalvesdeoliveira28@gmail.com', '' );
 
@@ -109,7 +122,7 @@ describe( 'AdministradorService', function () {
         });
 
         it('Lança exceção ao enviar senha com tamanho diferente que o permitido para administrador', function() {
-            $this->dao->shouldReceive('existe')->andReturn( false );
+            $this->dao->shouldReceive('obterComRestricoes')->andReturn( [] );
 
             $senhaForaDoTamanhoPermitido = str_repeat('a', AdministradorService::TAMANHO_SENHA + 1);
             $administrador = new Administrador( 0, 'Artur Alves', 'arturalvesdeoliveira28@gmail.com', $senhaForaDoTamanhoPermitido );
