@@ -18,57 +18,6 @@ class AdministradorController extends Controller {
         return $administrador;
     }
 
-    public function novo( array $dados ){
-        $administrador = $this->criar( $dados );
-        $this->getService()->salvar( $administrador );
-
-        return $this->resposta( HttpStatusCode::CREATED, [
-            'message' => 'Administrador cadastrado com sucesso.'
-        ] );
-    }
-
-    public function editar( array $dados, $args ){
-        $id = intval( $args['id'] );
-        $dados['id'] = $id;
-
-        $administrador = $this->criar( $dados );
-        $this->getService()->salvar( $administrador );
-
-        return $this->resposta( HttpStatusCode::OK, [
-            'message' => 'Administrador atualizado com suceso.'
-        ] );
-    }
-
-    public function obterTodos( array $dados, $args, array $parametros ){
-        $administradores = $this->getService()->obterComRestricoes( $parametros );
-
-        return $this->resposta( HttpStatusCode::OK, [
-            'message' => 'Administradores obtidos com sucesso.',
-            'data' => [
-                $administradores
-            ]
-        ] );
-    }
-
-    public function obterComId( array $dados, $args ){
-        $id = intval( $args['id'] );
-        $administrador = $this->getService()->obterComId( $id );
-
-        return $this->resposta( HttpStatusCode::OK, [
-            'message' => 'Administrador obtido com sucesso.',
-            'data' => [
-                $administrador
-            ]
-        ] );
-    }
-
-    public function excluirComId( array $dados, $args ){
-        $id = intval( $args['id'] );
-        $this->getService()->excluirComId( $id );
-
-        return $this->resposta( HttpStatusCode::NO_CONTENT );
-    }
-
     public function login( array $dados ){
         [ 'email' => $email, 'senha' => $senha ] = $dados;
 
