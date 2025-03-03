@@ -5,6 +5,7 @@ use app\exceptions\ServiceException;
 use app\classes\Administrador;
 use app\classes\jwt\TokenJWT;
 use app\exceptions\NaoAutorizadoException;
+use app\exceptions\NaoEncontradoException;
 use app\services\AdministradorService;
 
 describe( 'AdministradorService', function () {
@@ -21,6 +22,18 @@ describe( 'AdministradorService', function () {
             expect($erro)->toContainKey($campo);
             expect($erro[$campo])->toEqual($mensagemEsperada);
         }
+
+        it('Lança exceção ao tentar editar administrador master', function() {
+            $this->dao->shouldReceive('existe')->andReturn( true );
+
+            $administrador = new Administrador( 1, 'Admin master', 'arturalvesdeoliveira28@gmail.com', 12345678 );
+
+            try {
+                $this->service->salvar( $administrador );
+            } catch( ServiceException $e ){
+                validarErroSalvar( $e, 'administrador', 'Não é possível editar o administrador master.' );
+            }
+        });
 
         it('Lança exceção ao enviar nome vazio para administrador', function() {
             $this->dao->shouldReceive('obterComRestricoes')->andReturn( [] );
@@ -174,6 +187,78 @@ describe( 'AdministradorService', function () {
 
             $token = $this->service->autenticar( 'artur@gmail', '12345678' );
             expect( $token )->toBeAnInstanceOf( TokenJWT::class );
+        });
+    });
+
+    describe( 'SalvarPermissoes', function(){
+        it( 'Lança exceção quando administrador não é encontrado', function() {
+            $this->dao->shouldReceive('obterComId')->andReturn( [] );
+
+            expect( function(){
+                $this->service->salvarPermissoes( [], 2 );
+            } )->toThrow( new NaoEncontradoException( 'Recurso não encontrado.' ) );
+        });
+
+        it('Lança exceção ao tentar cadastrar permissões do administrador master', function() {
+            $idAdministrador = AdministradorService::ID_ADMINISTRADOR_MASTER;
+            $this->dao->shouldReceive('obterComId')->andReturn( new Administrador( $idAdministrador ) );
+            $this->dao->shouldReceive('existe')->andReturn( true );
+
+            try {
+                $this->service->salvarPermissoes( [], $idAdministrador );
+            } catch( ServiceException $e ){
+                validarErroSalvar( $e, 'permissoes', 'Não é permitido alterar as permissões do administrador master.' );
+            }
+        });
+
+        it('Lança exceção ao tentar cadastrar permissões inválidas', function() {
+            $idAdministrador = 2;
+            $this->dao->shouldReceive('obterComId')->andReturn( new Administrador( $idAdministrador ) );
+            $this->dao->shouldReceive('existe')->andReturn( true );
+            $this->dao->shouldReceive('obterIdsPermissao')->andReturn( [] );
+
+            try {
+                $this->service->salvarPermissoes( [ 'Permissão inválida' ], $idAdministrador );
+            } catch( ServiceException $e ){
+                validarErroSalvar( $e, 'permissoes', 'Nenhuma permissão enviada é válida.' );
+            }
+        });
+
+        it( 'Salva permissões do administrador', function(){
+            $idAdministrador = 2;
+            $this->dao->shouldReceive('obterComId')->andReturn( new Administrador( $idAdministrador ) );
+            $this->dao->shouldReceive('existe')->andReturn( true );
+            $this->dao->shouldReceive('obterIdsPermissao')->andReturn( [ 1,2 ] );
+            $this->dao->shouldReceive('limparPermissoes')->andReturn( true );
+            $this->dao->shouldReceive('salvarPermissoes')->andReturn( true );
+
+            expect( function() use ( $idAdministrador ){
+                $this->service->salvarPermissoes( [ 'Permissão inválida' ], $idAdministrador );
+            })->not->toThrow();
+        });
+    });
+
+    describe( 'excluirComId', function(){
+        it( 'Lança exceção ao tentar excluir administrador master', function() {
+            $idAdministrador = AdministradorService::ID_ADMINISTRADOR_MASTER;
+            $this->dao->shouldReceive('obterComId')->andReturn( new Administrador( $idAdministrador ) );
+
+            try {
+                $this->service->excluirComId( $idAdministrador );
+            } catch( ServiceException $e ){
+                validarErroSalvar( $e, 'administrador', 'Não é possível excluir o administrador master.' );
+            }
+        });
+
+        it( 'Exclui administrador', function(){
+            $idAdministrador = 2;
+            $this->dao->shouldReceive('obterComId')->andReturn( new Administrador( $idAdministrador ) );
+            $this->dao->shouldReceive('existe')->andReturn( true );
+            $this->dao->shouldReceive('excluirComId')->andReturn( true );
+
+            expect( function() use ( $idAdministrador ){
+                $this->service->excluirComId( $idAdministrador );
+            })->not->toThrow();
         });
     });
 });
