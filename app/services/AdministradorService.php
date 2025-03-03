@@ -35,9 +35,13 @@ class AdministradorService extends Service {
     }
 
     protected function validar( $administrador, array &$erro = [] ){
-        $this->validarNome( $administrador, $erro );
-        $this->validarEmail( $administrador, $erro );
-        $this->validarSenha( $administrador, $erro );
+        if( $this->administradorEhMaster( $administrador ) ){
+            $erro['administrador'] = 'Não é possível editar o administrador master.';
+        } else {
+            $this->validarNome( $administrador, $erro );
+            $this->validarEmail( $administrador, $erro );
+            $this->validarSenha( $administrador, $erro );
+        }
     }
 
     private function validarNome( Administrador $administrador, array &$erro ){
@@ -89,6 +93,20 @@ class AdministradorService extends Service {
         } else if( $validacaoTamanhoSenha == -1 ){
             $erro['senha'] = 'A senha deve ter ' . self::TAMANHO_SENHA . ' caracteres.';
         }
+    }
+
+    private function administradorEhMaster( Administrador $administrador ){
+        return $administrador->getId() == self::ID_ADMINISTRADOR_MASTER;
+    }
+
+    public function excluirComId( int $id ){
+        $administrador = $this->obterComId( $id );
+        if( $this->administradorEhMaster( $administrador ) ){
+            $erro['administrador'] = 'Não é possível excluir o administrador master.';
+            throw new ServiceException( json_encode( $erro ) );
+        }
+
+        return parent::excluirComId( $id );
     }
 
     public function autenticar( string $email, string $senha ){
@@ -144,7 +162,7 @@ class AdministradorService extends Service {
     }
 
     private function validarPermissoes( Administrador $administrador, array $permissoes, array &$erro = [] ){
-        if( $administrador->getId() == self::ID_ADMINISTRADOR_MASTER ){
+        if( $this->administradorEhMaster( $administrador ) ){
             $erro['permissoes'] = 'Não é permitido alterar as permissões do administrador master.';
         } else if( ! empty( $permissoes ) ) {
             /** @var AdministradorDAO */
