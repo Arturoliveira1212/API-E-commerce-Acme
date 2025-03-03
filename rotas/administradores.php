@@ -1,21 +1,13 @@
 <?php
 
 use app\classes\Administrador;
-use app\classes\factory\ClassFactory;
 use app\classes\GerenciadorRecurso;
-use app\controllers\AdministradorController;
-use app\middlewares\AutenticacaoMiddleware;
-use app\middlewares\CorpoRequisicaoMiddleware;
-use app\middlewares\PermissaoAdministradorMiddleware;
-use app\services\AdministradorService;
+use app\classes\factory\MiddlewareFactory;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Slim\Routing\RouteCollectorProxy;
 
 $app->group( '/administradores', function( RouteCollectorProxy $group ){
-    /** @var AdministradorService */
-    $administradorService = ClassFactory::makeService( Administrador::class );
-
     $corpoRequisicaoSalvarAdministrador = [
         'nome' => 'string',
         'email' => 'string',
@@ -35,35 +27,35 @@ $app->group( '/administradores', function( RouteCollectorProxy $group ){
     $group->post( '', function( Request $request, Response $response, $args ){
         return GerenciadorRecurso::executar( Administrador::class, 'novo', $request, $response, $args );
     } )
-    ->add( new CorpoRequisicaoMiddleware( CONTENT_TYPE, $corpoRequisicaoSalvarAdministrador ) )
-    ->add( new PermissaoAdministradorMiddleware( [ 'Cadastrar Administrador' ], $administradorService ) )
-    ->add( new AutenticacaoMiddleware() );
+        ->add( MiddlewareFactory::corpoRequisicao( $corpoRequisicaoSalvarAdministrador ) )
+        ->add( MiddlewareFactory::permissao( [ 'admin' ], [ 'Cadastrar Administrador' ] ) )
+        ->add( MiddlewareFactory::autenticacao() );
 
     $group->post( '/{id}/permissoes', function( Request $request, Response $response, $args ){
         return GerenciadorRecurso::executar( Administrador::class, 'salvarPermissoes', $request, $response, $args );
     })
-    ->add( new CorpoRequisicaoMiddleware( CONTENT_TYPE, $corpoRequisicaoSalvarPermissoes ) )
-    ->add( new PermissaoAdministradorMiddleware( [ 'Adicionar Permissão para Administrador' ], $administradorService ) )
-    ->add( new AutenticacaoMiddleware() );
+        ->add( MiddlewareFactory::corpoRequisicao( $corpoRequisicaoSalvarPermissoes ) )
+        ->add( MiddlewareFactory::permissao( [ 'admin' ], [ 'Adicionar Permissão para Administrador' ] ) )
+        ->add( MiddlewareFactory::autenticacao() );
 
     $group->put( '/{id}', function( Request $request, Response $response, $args ){
         return GerenciadorRecurso::executar( Administrador::class, 'editar', $request, $response, $args );
     } )
-    ->add( new CorpoRequisicaoMiddleware( CONTENT_TYPE, $corpoRequisicaoSalvarAdministrador ) )
-    ->add( new PermissaoAdministradorMiddleware( [ 'Editar Administrador' ], $administradorService ) )
-    ->add( new AutenticacaoMiddleware() );
+        ->add( MiddlewareFactory::corpoRequisicao( $corpoRequisicaoSalvarAdministrador ) )
+        ->add( MiddlewareFactory::permissao( [ 'admin' ], [ 'Editar Administrador' ] ) )
+        ->add( MiddlewareFactory::autenticacao() );
 
     $group->delete( '/{id}', function( Request $request, Response $response, $args ){
         return GerenciadorRecurso::executar( Administrador::class, 'excluirComId', $request, $response, $args );
     } )
-    ->add( new PermissaoAdministradorMiddleware( [ 'Excluir Administrador' ], $administradorService ) )
-    ->add( new AutenticacaoMiddleware() );
+        ->add( MiddlewareFactory::permissao( [ 'admin' ], [ 'Excluir Administrador' ] ) )
+        ->add( MiddlewareFactory::autenticacao() );
 
     // ROTAS PÚBLICAS
     $group->post( '/login', function( Request $request, Response $response, $args ){
         return GerenciadorRecurso::executar( Administrador::class, 'login', $request, $response, $args );
     } )
-    ->add( new CorpoRequisicaoMiddleware( CONTENT_TYPE, $corpoRequisicaoLogin ) );
+        ->add( MiddlewareFactory::corpoRequisicao( $corpoRequisicaoLogin ) );
 
     $group->get( '', function( Request $request, Response $response, $args ){
         return GerenciadorRecurso::executar( Administrador::class, 'obterTodos', $request, $response, $args );

@@ -1,40 +1,40 @@
 <?php
 
 use app\classes\Categoria;
-use app\classes\Administrador;
 use app\classes\GerenciadorRecurso;
-use app\classes\factory\ClassFactory;
-use app\middlewares\AutenticacaoMiddleware;
-use app\middlewares\CorpoRequisicaoMiddleware;
-use app\middlewares\PermissaoAdministradorMiddleware;
-use app\services\AdministradorService;
+use app\classes\factory\MiddlewareFactory;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
+use Slim\Routing\RouteCollectorProxy;
 
-$app->group( '/categorias', function( $group ){
-    /** @var AdministradorService */
-    $administradorService = ClassFactory::makeService( Administrador::class );
+$app->group( '/categorias', function( RouteCollectorProxy $group ){
+    $corpoRequisicaoSalvarCategoria = [
+        'nome' => 'string',
+        'descricao' => 'string'
+    ];
 
+    // ROTAS PRIVADAS
     $group->post( '', function( Request $request, Response $response, $args ){
         return GerenciadorRecurso::executar( Categoria::class, 'novo', $request, $response, $args );
     } )
-    ->add( new CorpoRequisicaoMiddleware( CONTENT_TYPE, [
-        'nome' => 'string',
-        'descricao' => 'string'
-        ] ) )
-    ->add( new PermissaoAdministradorMiddleware( [ 'Cadastrar Categoria' ], $administradorService ) )
-    ->add( new AutenticacaoMiddleware() );
+        ->add( MiddlewareFactory::corpoRequisicao( $corpoRequisicaoSalvarCategoria ) )
+        ->add( MiddlewareFactory::permissao( [ 'admin' ], [ 'Cadastrar Categoria' ] ) )
+        ->add( MiddlewareFactory::autenticacao() );
 
     $group->put( '/{id}', function( Request $request, Response $response, $args ){
         return GerenciadorRecurso::executar( Categoria::class, 'editar', $request, $response, $args );
     } )
-    ->add( new CorpoRequisicaoMiddleware( CONTENT_TYPE, [
-        'nome' => 'string',
-        'descricao' => 'string'
-        ] ) )
-    ->add( new PermissaoAdministradorMiddleware( [ 'Editar Categoria' ], $administradorService ) )
-    ->add( new AutenticacaoMiddleware() );
+        ->add( MiddlewareFactory::corpoRequisicao( $corpoRequisicaoSalvarCategoria ) )
+        ->add( MiddlewareFactory::permissao( [ 'admin' ], [ 'Editar Categoria' ] ) )
+        ->add( MiddlewareFactory::autenticacao() );
 
+    $group->delete( '/{id}', function( Request $request, Response $response, $args ){
+        return GerenciadorRecurso::executar( Categoria::class, 'excluirComId', $request, $response, $args );
+    } )
+        ->add( MiddlewareFactory::permissao( [ 'admin' ], [ 'Excluir Categoria' ] ) )
+        ->add( MiddlewareFactory::autenticacao() );
+
+    // ROTAS PÚBLICAS
     $group->get( '', function( Request $request, Response $response, $args ){
         return GerenciadorRecurso::executar( Categoria::class, 'obterTodos', $request, $response, $args );
     } );
@@ -42,9 +42,4 @@ $app->group( '/categorias', function( $group ){
     $group->get( '/{id}', function( Request $request, Response $response, $args ){
         return GerenciadorRecurso::executar( Categoria::class, 'obterComId', $request, $response, $args );
     } );
-
-    $group->delete( '/{id}', function( Request $request, Response $response, $args ){
-        return GerenciadorRecurso::executar( Categoria::class, 'excluirComId', $request, $response, $args );
-    } )
-    ->add( new AutenticacaoMiddleware() );
 } );

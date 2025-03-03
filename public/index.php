@@ -13,8 +13,6 @@ $app->add( new BodyParsingMiddleware() );
 $errorMiddleware = $app->addErrorMiddleware( true, true, true );
 $errorMiddleware->setDefaultErrorHandler( new ErrorHandlerMiddleware() );
 
-const CONTENT_TYPE = 'application/json';
-
 $rotas = glob( '../rotas/*.php' );
 foreach( $rotas as $rota ){
     require_once $rota;
