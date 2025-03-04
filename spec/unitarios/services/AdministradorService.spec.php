@@ -61,8 +61,6 @@ describe( 'AdministradorService', function () {
         });
 
         it('Lança exceção ao enviar email vazio para administrador', function() {
-            $this->dao->shouldReceive('existe')->andReturn( false );
-
             $administrador = new Administrador( 0, 'Artur Alves', '', 12345678 );
 
             try {
@@ -73,8 +71,6 @@ describe( 'AdministradorService', function () {
         });
 
         it('Lança exceção ao enviar email com tamanho maior que o permitido para administrador', function() {
-            $this->dao->shouldReceive('existe')->andReturn( false );
-
             $emailForaDoTamanhoPermitido = str_repeat('a', AdministradorService::TAMANHO_MAXIMO_EMAIL + 1);
             $administrador = new Administrador( 0, 'Artur Alves', $emailForaDoTamanhoPermitido, 12345678 );
 
@@ -86,8 +82,6 @@ describe( 'AdministradorService', function () {
         });
 
         it('Lança exceção ao enviar email inválido para administrador', function() {
-            $this->dao->shouldReceive('existe')->andReturn( false );
-
             $administrador = new Administrador( 0, 'Artur Alves', 'aaaa', 12345678 );
 
             try {
@@ -105,7 +99,7 @@ describe( 'AdministradorService', function () {
             try {
                 $this->service->salvar( $administrador );
             } catch( ServiceException $e ){
-                validarErroSalvar( $e, 'email', 'Email já pertence a um administrador.' );
+                validarErroSalvar( $e, 'email', 'Email já pertence a outro administrador.' );
             }
         });
 
@@ -118,7 +112,7 @@ describe( 'AdministradorService', function () {
             try {
                 $this->service->salvar( $administrador );
             } catch( ServiceException $e ){
-                validarErroSalvar( $e, 'email', 'Email já pertence a um administrador.' );
+                validarErroSalvar( $e, 'email', 'Email já pertence a outro administrador.' );
             }
         });
 
@@ -202,7 +196,6 @@ describe( 'AdministradorService', function () {
         it('Lança exceção ao tentar cadastrar permissões do administrador master', function() {
             $idAdministrador = AdministradorService::ID_ADMINISTRADOR_MASTER;
             $this->dao->shouldReceive('obterComId')->andReturn( new Administrador( $idAdministrador ) );
-            $this->dao->shouldReceive('existe')->andReturn( true );
 
             try {
                 $this->service->salvarPermissoes( [], $idAdministrador );
@@ -214,7 +207,6 @@ describe( 'AdministradorService', function () {
         it('Lança exceção ao tentar cadastrar permissões inválidas', function() {
             $idAdministrador = 2;
             $this->dao->shouldReceive('obterComId')->andReturn( new Administrador( $idAdministrador ) );
-            $this->dao->shouldReceive('existe')->andReturn( true );
             $this->dao->shouldReceive('obterIdsPermissao')->andReturn( [] );
 
             try {
@@ -227,7 +219,6 @@ describe( 'AdministradorService', function () {
         it( 'Salva permissões do administrador', function(){
             $idAdministrador = 2;
             $this->dao->shouldReceive('obterComId')->andReturn( new Administrador( $idAdministrador ) );
-            $this->dao->shouldReceive('existe')->andReturn( true );
             $this->dao->shouldReceive('obterIdsPermissao')->andReturn( [ 1,2 ] );
             $this->dao->shouldReceive('limparPermissoes')->andReturn( true );
             $this->dao->shouldReceive('salvarPermissoes')->andReturn( true );
