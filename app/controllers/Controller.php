@@ -23,7 +23,7 @@ abstract class Controller {
         $this->service = $service;
     }
 
-    abstract protected function criar( array $corpoRequisicao );
+    abstract protected function criar( array $dados );
 
     public function novo( array $dados ){
         $objeto = $this->criar( $dados );
@@ -76,25 +76,25 @@ abstract class Controller {
         return $this->resposta( HttpStatusCode::NO_CONTENT );
     }
 
-    protected function povoarSimples( Model $objeto, array $campos, array $corpoRequisicao ){
+    protected function povoarSimples( Model $objeto, array $campos, array $dados ){
         foreach( $campos as $campo ){
-            if( isset( $corpoRequisicao[ $campo ] ) ){
+            if( isset( $dados[ $campo ] ) ){
                 $metodo = 'set' . ucfirst( $campo );
                 if( method_exists( $objeto, $metodo ) ){
                     try{
-                        $objeto->$metodo( $corpoRequisicao[ $campo ] );
+                        $objeto->$metodo( $dados[ $campo ] );
                     } catch( Throwable $e ){}
                 }
             }
         }
     }
 
-    protected function povoarDateTime( Model $objeto, array $campos, array $corpoRequisicao ){
+    protected function povoarDateTime( Model $objeto, array $campos, array $dados ){
         foreach( $campos as $campo ){
-            if( isset( $corpoRequisicao[ $campo ] ) ){
+            if( isset( $dados[ $campo ] ) ){
                 $metodo = 'set' . ucfirst( $campo );
                 if( method_exists( $objeto, $metodo ) ){
-                    $data = DateTime::createFromFormat( 'd/m/Y', $corpoRequisicao[ $campo ] );
+                    $data = DateTime::createFromFormat( 'd/m/Y', $dados[ $campo ] );
                     if( $data ){
                         $objeto->$metodo( $data );
                     }

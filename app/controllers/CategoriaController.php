@@ -7,10 +7,10 @@ use app\controllers\Controller;
 
 class CategoriaController extends Controller {
 
-    protected function criar( array $corpoRequisicao ){
+    protected function criar( array $dados ){
         $categoria = new Categoria();
         $camposSimples = [ 'id', 'nome', 'descricao' ];
-        $this->povoarSimples( $categoria, $camposSimples, $corpoRequisicao );
+        $this->povoarSimples( $categoria, $camposSimples, $dados );
 
         return $categoria;
     }
