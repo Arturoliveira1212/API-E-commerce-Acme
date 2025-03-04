@@ -62,7 +62,7 @@ class AdministradorService extends Service {
         } else if( ! Validador::validarEmail( $administrador->getEmail() ) ){
             $erro['email'] = 'Email inválido.';
         } else if( $this->emailPertenceAOutroAdministrador( $administrador ) ) {
-            $erro['email'] = 'Email já pertence a um administrador.';
+            $erro['email'] = 'Email já pertence a outro administrador.';
         }
     }
 
@@ -70,16 +70,11 @@ class AdministradorService extends Service {
         $administradorCadastrado = $this->obterComEmail( $administrador->getEmail() );
         $existeAdministrador = $administradorCadastrado instanceof Administrador;
 
-        $emailPertenceAOutroAdministrador = (
-            $administrador->getId() == BancoDadosRelacional::ID_INEXISTENTE &&
-            $existeAdministrador
-        ) || (
-            $administrador->getId() != BancoDadosRelacional::ID_INEXISTENTE &&
-            $existeAdministrador &&
-            $administrador->getId() != $administradorCadastrado->getId()
-        );
+        if( $existeAdministrador && $administrador->getId() == BancoDadosRelacional::ID_INEXISTENTE ){
+            return true;
+        }
 
-        if( $emailPertenceAOutroAdministrador ){
+        if( $existeAdministrador && $administrador->getId() != BancoDadosRelacional::ID_INEXISTENTE && $administrador->getId() != $administradorCadastrado->getId() ){
             return true;
         }
 
