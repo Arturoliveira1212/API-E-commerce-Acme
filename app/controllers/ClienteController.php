@@ -2,29 +2,38 @@
 
 namespace app\controllers;
 
+use app\classes\Cliente;
 use app\controllers\Controller;
 use app\services\ClienteService;
 use app\classes\http\HttpStatusCode;
 
 class ClienteController extends Controller {
 
-    protected function criar( array $corpoRequisicao ){
+    protected function criar( array $dados ){
+        $cliente = new Cliente();
+        $camposSimples = [ 'id', 'nome', 'email', 'cpf', 'senha' ];
+        $this->povoarSimples( $cliente, $camposSimples, $dados );
 
+        $camposDateTime = [ 'dataNascimento' ];
+        $this->povoarDateTime( $cliente, $camposDateTime, $dados );
+
+        return $cliente;
     }
 
-    public function novo( array $corpoRequisicao ){
-
-    }
-
-    public function login( array $corpoRequisicao ){
-        [ 'email' => $email, 'senha' => $senha ] = $corpoRequisicao;
+    public function login( array $dados ){
+        [ 'email' => $email, 'senha' => $senha ] = $dados;
 
         /** @var ClienteService */
         $clienteService = $this->getService();
-        $token = $clienteService->autenticar( $email, $senha );
+        /** @var TokenJWT */
+        $tokenJWT = $clienteService->autenticar( $email, $senha );
 
         return $this->resposta( HttpStatusCode::OK, [
-            'Token' => $token
+            'message' => 'Cliente autenticado com sucesso.',
+            'data' => [
+                'Token' => $tokenJWT->codigo(),
+                'Duração' => $tokenJWT->validadeTokenFormatada()
+            ]
         ] );
     }
 }

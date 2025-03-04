@@ -2,15 +2,24 @@
 
 namespace app\classes;
 
+use DateTime;
+
 class Cliente extends Model {
     private int $id = 0;
     private string $nome = '';
-    private string $descricao = '';
+    private string $email = '';
+    private string $cpf = '';
+    private string $senha = '';
+    private ?DateTime $dataNascimento = null;
 
-    const TAMANHO_MINIMO_NOME = 1;
-    const TAMANHO_MAXIMO_NOME = 100;
-    const TAMANHO_MINIMO_DESCRICAO = 1;
-    const TAMANHO_MAXIMO_DESCRICAO = 500;
+    public function __construct( int $id = 0, string $nome = '', string $email = '', string $cpf = '', string $senha = '', ?DateTime $dataNascimento = null ){
+        $this->setId( $id );
+        $this->setNome( $nome );
+        $this->setEmail( $email );
+        $this->setCpf( $cpf );
+        $this->setSenha( $senha );
+        $this->setDataNascimento( $dataNascimento );
+    }
 
     public function getId(){
         return $this->id;
@@ -28,11 +37,48 @@ class Cliente extends Model {
         $this->nome = $nome;
     }
 
-    public function getDescricao(){
-        return $this->descricao;
+    public function getEmail(){
+        return $this->email;
     }
 
-    public function setDescricao( string $descricao ){
-        $this->descricao = $descricao;
+    public function setEmail( string $email ){
+        $this->email = $email;
+    }
+
+    public function getCpf(){
+        return $this->cpf;
+    }
+
+    public function setCpf( string $cpf ){
+        $this->cpf = $cpf;
+    }
+
+    public function getSenha(){
+        return $this->senha;
+    }
+
+    public function setSenha( string $senha ){
+        $this->senha = $senha;
+    }
+
+    public function getDataNascimento( string $formato = '' ){
+        if( ! empty( $formato ) && $this->dataNascimento instanceof DateTime ){
+            return $this->dataNascimento->format( $formato );
+        }
+        return $this->dataNascimento;
+    }
+
+    public function setDataNascimento( ?DateTime $dataNascimento ){
+        $this->dataNascimento = $dataNascimento;
+    }
+
+    public function emArray() :array {
+        return [
+            'id' => $this->getId(),
+            'nome' => $this->getNome(),
+            'email' => $this->getEmail(),
+            'cpf' => $this->getCpf(),
+            'dataNascimento' => $this->getDataNascimento( 'd/m/Y' ),
+        ];
     }
 }

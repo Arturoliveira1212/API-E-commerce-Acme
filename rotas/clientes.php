@@ -11,7 +11,9 @@ $app->group( '/clientes', function( RouteCollectorProxy $group ){
     $corpoRequisicaoSalvarCliente = [
         'nome' => 'string',
         'email' => 'string',
-        'senha' => 'string'
+        'cpf' => 'string',
+        'senha' => 'string',
+        'dataNascimento' => 'string'
     ];
 
     $corpoRequisicaoLogin = [
