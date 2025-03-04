@@ -47,7 +47,13 @@ class Validador {
         return true;
     }
 
-    public static function validarCPF( string $cpf ): bool {
+    /**
+     * Método responsável por validar CPF.
+     *
+     * @param string $cpf
+     * @return boolean
+     */
+    public static function validarCPF( string $cpf ){
         $formatoCpf = '/^[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}$/';
         if( ! preg_match( $formatoCpf, $cpf ) ){
             return false;
