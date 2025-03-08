@@ -7,7 +7,11 @@ class Categoria extends Model {
     private string $nome = '';
     private string $descricao = '';
 
-    public function __construct( int $id = 0, string $nome = '', string $descricao = '' ){
+    public function __construct(
+        int $id = 0,
+        string $nome = '',
+        string $descricao = ''
+    ){
         $this->setId( $id );
         $this->setNome( $nome );
         $this->setDescricao( $descricao );

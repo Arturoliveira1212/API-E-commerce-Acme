@@ -9,7 +9,13 @@ class Administrador extends Model {
     private string $senha = '';
     private array $permissoes = [];
 
-    public function __construct( int $id = 0, string $nome = '', string $email = '', string $senha = '', array $permissoes = [] ){
+    public function __construct(
+        int $id = 0,
+        string $nome = '',
+        string $email = '',
+        string $senha = '',
+        array $permissoes = []
+    ){
         $this->setId( $id );
         $this->setNome( $nome );
         $this->setEmail( $email );
