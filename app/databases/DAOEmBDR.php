@@ -16,15 +16,15 @@ abstract class DAOEmBDR implements DAO {
     }
 
     abstract protected function nomeTabela();
-    abstract protected function adicionarNovo( Model $objeto );
+    abstract protected function adicionarNovo( Model $objeto, ?int $idRecursoPai = null );
     abstract protected function atualizar( Model $objeto );
     abstract protected function parametros( Model $objeto );
     abstract protected function obterQuery( array $restricoes, array &$parametros );
     abstract protected function transformarEmObjeto( array $linhas );
 
-    public function salvar( $objeto ){
+    public function salvar( $objeto, ?int $idRecursoPai = null ){
         if( $objeto->getId() == BancoDadosRelacional::ID_INEXISTENTE ){
-            $this->adicionarNovo( $objeto );
+            $this->adicionarNovo( $objeto, $idRecursoPai );
         } else {
             $this->atualizar( $objeto );
         }

@@ -25,9 +25,10 @@ abstract class Controller {
 
     abstract protected function criar( array $dados );
 
-    public function novo( array $dados ){
+    public function novo( array $dados, $args ){
+        $idRecursoPai = intval( $args['idRecursoPai'] ) ?? null;
         $objeto = $this->criar( $dados );
-        $this->getService()->salvar( $objeto );
+        $this->getService()->salvar( $objeto, $idRecursoPai );
 
         return $this->resposta( HttpStatusCode::CREATED, [
             'message' => 'Cadastrado com sucesso.'

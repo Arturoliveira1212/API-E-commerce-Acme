@@ -25,7 +25,7 @@ abstract class Service {
 
     abstract protected function validar( Model $objeto, array &$erro = [] );
 
-    protected function preSalvar( $objeto ){
+    protected function preSalvar( $objeto, ?int $idRecursoPai = null ){
         $id = $objeto->getId();
         if( $id != BancoDadosRelacional::ID_INEXISTENTE && ! $this->existe( 'id', $id ) ){
             throw new NaoEncontradoException( 'Recurso não encontrado.' );
@@ -38,9 +38,9 @@ abstract class Service {
         }
     }
 
-    public function salvar( Model $objeto ){
-        $this->preSalvar( $objeto );
-        return $this->getDao()->salvar( $objeto );
+    public function salvar( Model $objeto, ?int $idRecursoPai = null ){
+        $this->preSalvar( $objeto, $idRecursoPai );
+        return $this->getDao()->salvar( $objeto, $idRecursoPai );
     }
 
     public function desativarComId( int $id ){

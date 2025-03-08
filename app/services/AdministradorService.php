@@ -26,7 +26,7 @@ class AdministradorService extends Service {
     const TAMANHO_MAXIMO_EMAIL = 200;
     const TAMANHO_SENHA = 8;
 
-    protected function preSalvar( $administrador ){
+    protected function preSalvar( $administrador, ?int $idRecursoPai = null ){
         parent::preSalvar( $administrador );
 
         $senha = $administrador->getSenha();

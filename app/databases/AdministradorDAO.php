@@ -10,7 +10,7 @@ class AdministradorDAO extends DAOEmBDR {
         return 'administrador';
     }
 
-    protected function adicionarNovo( $administrador ){
+    protected function adicionarNovo( $administrador, ?int $idRecursoPai = null ){
         $comando = "INSERT INTO {$this->nomeTabela()} ( id, nome, email, senha ) VALUES ( :id, :nome, :email, :senha )";
         $this->getBancoDados()->executar( $comando, $this->parametros( $administrador ) );
     }

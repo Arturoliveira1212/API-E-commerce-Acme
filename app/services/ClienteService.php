@@ -24,7 +24,7 @@ class ClienteService extends Service {
     const TAMANHO_CPF = 14;
     const TAMANHO_SENHA = 8;
 
-    protected function preSalvar( $cliente ){
+    protected function preSalvar( $cliente, ?int $idRecursoPai = null ){
         parent::preSalvar( $cliente );
 
         $senha = $cliente->getSenha();

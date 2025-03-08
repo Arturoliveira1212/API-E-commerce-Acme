@@ -6,12 +6,11 @@ use app\classes\Cliente;
 use app\classes\utils\ConversorDados;
 
 class ClienteDAO extends DAOEmBDR {
-
     protected function nomeTabela(){
         return 'cliente';
     }
 
-    protected function adicionarNovo( $cliente ){
+    protected function adicionarNovo( $cliente, ?int $idRecursoPai = null ){
         $comando = "INSERT INTO {$this->nomeTabela()} ( id, nome, email, cpf, senha, dataNascimento ) VALUES ( :id, :nome, :email, :cpf, :senha, :dataNascimento )";
         $this->getBancoDados()->executar( $comando, $this->parametros( $cliente ) );
     }
