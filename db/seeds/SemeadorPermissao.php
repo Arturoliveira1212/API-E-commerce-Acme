@@ -19,7 +19,10 @@ class SemeadorPermissao extends AbstractSeed {
                 ( 4, 'Adicionar Permissão para Administrador' ),
                 ( 5, 'Cadastrar Categoria' ),
                 ( 6, 'Editar Categoria' ),
-                ( 7, 'Excluir Categoria' );
+                ( 7, 'Excluir Categoria' ),
+                ( 8, 'Cadastrar Cliente' ),
+                ( 9, 'Editar Cliente' ),
+                ( 10, 'Excluir Cliente' );
         SQL;
         $this->execute( $sql );
     }
