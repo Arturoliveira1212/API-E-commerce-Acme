@@ -43,15 +43,15 @@ class PermissaoMiddleware {
         }
 
         if( $papel === 'admin' ){
-            $usuario = $this->administradorService->obterComId( $idToken );
-            if( ! $usuario instanceof Administrador || ! $this->validarPermissoes( $usuario ) ){
+            $administrador = $this->administradorService->obterComId( $idToken );
+            if( ! $administrador instanceof Administrador || ! $this->validarPermissoes( $administrador ) ){
                 return $this->semPermissao();
             }
         }
 
         if( $papel === 'cliente' ){
-            $usuario = $this->clienteService->obterComId( $idToken );
-            if( ! $usuario instanceof Cliente || $usuario->getId() !== $idUrl ){
+            $cliente = $this->clienteService->obterComId( $idToken );
+            if( ! $cliente instanceof Cliente || $cliente->getId() != $idUrl ){
                 return $this->semPermissao();
             }
         }
@@ -64,7 +64,7 @@ class PermissaoMiddleware {
         $route = $routeContext->getRoute();
         $idUrl = $route->getArguments()['id'] ?? 0;
 
-        return $idUrl;
+        return intval( $idUrl );
     }
 
     private function validarPermissoes( Administrador $administrador ): bool {
