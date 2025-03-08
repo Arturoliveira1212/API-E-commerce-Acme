@@ -17,7 +17,7 @@ class ClienteDAO extends DAOEmBDR {
     }
 
     protected function atualizar( $cliente ){
-        $comando = "UPDATE {$this->nomeTabela()} SET nome = :nome, email = :email, cpf = :cpf, senha = :senha, dataNascimento = :senha WHERE id = :id";
+        $comando = "UPDATE {$this->nomeTabela()} SET nome = :nome, email = :email, cpf = :cpf, senha = :senha, dataNascimento = :dataNascimento WHERE id = :id";
         $this->getBancoDados()->executar( $comando, $this->parametros( $cliente ) );
     }
 
