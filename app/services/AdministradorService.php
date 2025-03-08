@@ -106,11 +106,7 @@ class AdministradorService extends Service {
 
     public function autenticar( string $email, string $senha ){
         $administrador = $this->obterComEmail( $email );
-        if( ! $administrador instanceof Administrador ){
-            throw new NaoAutorizadoException( 'Email não encontrado.' );
-        }
-
-        if( ! $this->verificarSenha( $senha, $administrador->getSenha() ) ){
+        if( ! $administrador instanceof Administrador || ! $this->verificarSenha( $senha, $administrador->getSenha() ) ){
             throw new NaoAutorizadoException( 'Email ou senha inválidos.' );
         }
 

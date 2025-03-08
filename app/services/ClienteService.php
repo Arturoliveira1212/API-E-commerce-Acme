@@ -119,11 +119,7 @@ class ClienteService extends Service {
 
     public function autenticar( string $email, string $senha ){
         $cliente = $this->obterComEmail( $email );
-        if( ! $cliente instanceof Cliente ){
-            throw new NaoAutorizadoException( 'Email não encontrado.' );
-        }
-
-        if( ! $this->verificarSenha( $senha, $cliente->getSenha() ) ){
+        if( ! $cliente instanceof Cliente || ! $this->verificarSenha( $senha, $cliente->getSenha() ) ){
             throw new NaoAutorizadoException( 'Email ou senha inválidos.' );
         }
 
