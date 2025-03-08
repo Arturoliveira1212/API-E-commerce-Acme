@@ -15,14 +15,6 @@ describe( 'AdministradorService', function () {
     });
 
     describe( 'Salvar', function(){
-        function validarErroSalvar( $e, $campo, $mensagemEsperada ){
-            $erro = json_decode( $e->getMessage(), true );
-            expect($erro)->not->toBeEmpty();
-            expect($erro)->toHaveLength(1);
-            expect($erro)->toContainKey($campo);
-            expect($erro[$campo])->toEqual($mensagemEsperada);
-        }
-
         it('Lança exceção ao tentar editar administrador master', function() {
             $this->dao->shouldReceive('existe')->andReturn( true );
 
@@ -148,7 +140,7 @@ describe( 'AdministradorService', function () {
 
             expect( function(){
                 $this->service->autenticar( 'artur@gmail', 'aaa' );
-            } )->toThrow( new NaoAutorizadoException( 'Email não encontrado.' ) );
+            } )->toThrow( new NaoAutorizadoException( 'Email ou senha inválidos.' ) );
         });
 
         it( 'Lança exceção quando email ou senha são inválidos', function(){

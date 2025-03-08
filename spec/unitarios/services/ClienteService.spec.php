@@ -221,7 +221,7 @@ describe( 'ClienteService', function () {
 
             expect( function(){
                 $this->service->autenticar( 'artur@gmail', 'aaa' );
-            } )->toThrow( new NaoAutorizadoException( 'Email não encontrado.' ) );
+            } )->toThrow( new NaoAutorizadoException( 'Email ou senha inválidos.' ) );
         });
 
         it( 'Lança exceção quando email ou senha são inválidos', function(){
