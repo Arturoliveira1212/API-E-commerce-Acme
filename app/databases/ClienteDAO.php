@@ -3,7 +3,10 @@
 namespace app\databases;
 
 use app\classes\Cliente;
+use app\classes\Endereco;
+use app\classes\factory\ClassFactory;
 use app\classes\utils\ConversorDados;
+use app\services\EnderecoService;
 
 class ClienteDAO extends DAOEmBDR {
     protected function nomeTabela(){
@@ -50,6 +53,19 @@ class ClienteDAO extends DAOEmBDR {
     }
 
     protected function transformarEmObjeto( array $linhas ){
-        return ConversorDados::converterEmObjeto( Cliente::class, $linhas );
+        /** @var Cliente */
+        $cliente = ConversorDados::converterEmObjeto( Cliente::class, $linhas );
+        $this->preencherEnderecosDoCliente( $cliente );
+
+        return $cliente;
+    }
+
+    private function preencherEnderecosDoCliente( Cliente $cliente ){
+        /** @var EnderecoService */
+        $enderecoService = ClassFactory::makeService( Endereco::class );
+        $enderecosDoCliente = $enderecoService->obterEnderecosDoCliente( $cliente->getId() );
+        if( ! empty( $enderecosDoCliente ) ){
+            $cliente->setEnderecos( $enderecosDoCliente );
+        }
     }
 }

@@ -95,6 +95,7 @@ class Cliente extends Model {
             'email' => $this->getEmail(),
             'cpf' => $this->getCpf(),
             'dataNascimento' => $this->getDataNascimento( 'd/m/Y' ),
+            'enderecos' => $this->getEnderecos()
         ];
     }
 }
