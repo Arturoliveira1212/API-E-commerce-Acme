@@ -2,78 +2,67 @@
 
 namespace app\middlewares;
 
-use app\classes\Administrador;
-use app\classes\Cliente;
+use app\classes\factory\MiddlewareFactory;
 use Slim\Psr7\Response;
 use app\classes\jwt\PayloadJWT;
 use app\classes\http\RespostaHttp;
 use app\classes\http\HttpStatusCode;
+use app\classes\TipoPermissao;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Slim\Routing\RouteContext;
 
 class PermissaoMiddleware {
-    private $papeisPermitidos;
-    private $permissoesNecessarias;
-    private $administradorService;
-    private $clienteService;
+    private $tiposPermissao;
 
-    public function __construct(
-        array $papeisPermitidos,
-        $administradorService,
-        $clienteService,
-        array $permissoesNecessarias = []
-    ){
-        $this->papeisPermitidos = $papeisPermitidos;
-        $this->administradorService = $administradorService;
-        $this->clienteService = $clienteService;
-        $this->permissoesNecessarias = $permissoesNecessarias;
+    public function __construct( $tiposPermissao ){
+        $this->tiposPermissao = $tiposPermissao;
     }
 
     public function __invoke( ServerRequestInterface $request, RequestHandlerInterface $handler ): ResponseInterface {
         /** @var PayloadJWT */
         $payloadJWT = $request->getAttribute('payloadJWT');
         $papel = $payloadJWT->role();
-        $idToken = $payloadJWT->sub();
-        $idUrl = $this->obterIdURL( $request );
 
-        if( ! in_array( $papel, $this->papeisPermitidos ) ){
+        $tipoPermissao = $this->obterTipoPermissaoParaSerExecutado( $papel );
+        if( ! $tipoPermissao instanceof TipoPermissao ){
             return $this->semPermissao();
         }
 
-        if( $papel === 'admin' ){
-            $administrador = $this->administradorService->obterComId( $idToken );
-            if( ! $administrador instanceof Administrador || ! $this->validarPermissoes( $administrador ) ){
-                return $this->semPermissao();
-            }
+        if( ! $this->existeMiddleware( $tipoPermissao->middleware ) ){
+            return $this->semPermissao();
         }
 
-        if( $papel === 'cliente' ){
-            $cliente = $this->clienteService->obterComId( $idToken );
-            if( ! $cliente instanceof Cliente || $cliente->getId() != $idUrl ){
-                return $this->semPermissao();
-            }
+        $resultado = call_user_func_array( [ MiddlewareFactory::class, $tipoPermissao->middleware ], $tipoPermissao->parametrosMiddleware );
+
+        if( ! $this->chamadaMiddlewareEhValida( $resultado ) ){
+            return $this->semPermissao('a');
         }
 
-        return $handler->handle( $request );
+        return $resultado( $request, $handler );
     }
 
-    private function obterIdURL( ServerRequestInterface $request ){
-        $routeContext = RouteContext::fromRequest( $request );
-        $route = $routeContext->getRoute();
-        $idUrl = $route->getArguments()['id'] ?? 0;
-
-        return intval( $idUrl );
+    private function existeMiddleware( $middleware ){
+        return method_exists( MiddlewareFactory::class, $middleware );
     }
 
-    private function validarPermissoes( Administrador $administrador ): bool {
-        foreach( $this->permissoesNecessarias as $permissao ){
-            if( ! $administrador->possuiPermissao( $permissao ) ){
-                return false;
+    private function chamadaMiddlewareEhValida( $resultado ){
+        return is_callable( $resultado );
+    }
+
+    private function obterTipoPermissaoParaSerExecutado( string $papel ){
+        $tipo = null;
+
+        if( ! empty( $this->tiposPermissao ) ){
+            foreach( $this->tiposPermissao as $tipoPermissao ){
+                if( $tipoPermissao instanceof TipoPermissao && $tipoPermissao->tipo == $papel ){
+                    $tipo = $tipoPermissao;
+                    break;
+                }
             }
         }
-        return true;
+
+        return $tipo;
     }
 
     private function semPermissao( string $mensagem = 'Você não tem permissão para realizar essa ação.' ){

@@ -15,16 +15,6 @@ describe( 'AutenticacaoMiddleware', function(){
         $this->payloadJWT = Mockery::mock( PayloadJWT::class );
     });
 
-    function validarErroMiddleware( $response, int $status, array $respostaEmArrayEsperada ){
-        $respostaEmArray = json_decode( $response->getBody(), true );
-
-        expect( $response )->toBeAnInstanceOf( Response::class );
-        expect( $response->getStatusCode() )->toEqual( $status );
-        expect( $respostaEmArray )->toBeA( 'array' );
-        expect( $respostaEmArray)->toContainKeys( array_keys( $respostaEmArrayEsperada ) );
-        expect( $respostaEmArray )->toEqual( $respostaEmArrayEsperada );
-    }
-
     it( 'Retorna erro(401) quando o token não é enviado', function(){
         $this->request->shouldReceive('getHeaderLine')->with('Authorization')->andReturn('');
         $response = $this->middleware( $this->request, $this->handler );

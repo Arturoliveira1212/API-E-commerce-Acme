@@ -1,11 +1,12 @@
 <?php
 
-use app\classes\Administrador;
-use app\classes\GerenciadorRecurso;
-use app\classes\factory\MiddlewareFactory;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
+use app\classes\Administrador;
+use app\classes\TipoPermissao;
+use app\classes\GerenciadorRecurso;
 use Slim\Routing\RouteCollectorProxy;
+use app\classes\factory\MiddlewareFactory;
 
 $app->group( '/administradores', function( RouteCollectorProxy $group ){
     $corpoRequisicaoSalvarAdministrador = [
@@ -28,27 +29,39 @@ $app->group( '/administradores', function( RouteCollectorProxy $group ){
         return GerenciadorRecurso::executar( Administrador::class, 'novo', $request, $response, $args );
     } )
         ->add( MiddlewareFactory::corpoRequisicao( $corpoRequisicaoSalvarAdministrador ) )
-        ->add( MiddlewareFactory::permissao( [ 'admin' ], [ 'Cadastrar Administrador' ] ) )
+        ->add( MiddlewareFactory::permissao(
+                new TipoPermissao( 'admin', 'permissaoAdministrador', [ 'Cadastrar Administrador' ] ),
+            )
+        )
         ->add( MiddlewareFactory::autenticacao() );
 
     $group->post( '/{id}/permissoes', function( Request $request, Response $response, $args ){
         return GerenciadorRecurso::executar( Administrador::class, 'salvarPermissoes', $request, $response, $args );
     })
         ->add( MiddlewareFactory::corpoRequisicao( $corpoRequisicaoSalvarPermissoes ) )
-        ->add( MiddlewareFactory::permissao( [ 'admin' ], [ 'Adicionar Permissão para Administrador' ] ) )
+        ->add( MiddlewareFactory::permissao(
+                new TipoPermissao( 'admin', 'permissaoAdministrador', [ 'Adicionar Permissão para Administrador' ] ),
+            )
+        )
         ->add( MiddlewareFactory::autenticacao() );
 
     $group->put( '/{id}', function( Request $request, Response $response, $args ){
         return GerenciadorRecurso::executar( Administrador::class, 'editar', $request, $response, $args );
     } )
         ->add( MiddlewareFactory::corpoRequisicao( $corpoRequisicaoSalvarAdministrador ) )
-        ->add( MiddlewareFactory::permissao( [ 'admin' ], [ 'Editar Administrador' ] ) )
+        ->add( MiddlewareFactory::permissao(
+                new TipoPermissao( 'admin', 'permissaoAdministrador', [ 'Editar Administrador' ] ),
+            )
+        )
         ->add( MiddlewareFactory::autenticacao() );
 
     $group->delete( '/{id}', function( Request $request, Response $response, $args ){
         return GerenciadorRecurso::executar( Administrador::class, 'excluirComId', $request, $response, $args );
     } )
-        ->add( MiddlewareFactory::permissao( [ 'admin' ], [ 'Excluir Administrador' ] ) )
+        ->add( MiddlewareFactory::permissao(
+                new TipoPermissao( 'admin', 'permissaoAdministrador', [ 'Excluir Administrador' ] ),
+            )
+        )
         ->add( MiddlewareFactory::autenticacao() );
 
     // ROTAS PÚBLICAS
