@@ -1,6 +1,6 @@
 <?php
 
-namespace app\databases;
+namespace app\dao;
 
 interface BancoDados {
     public function executar( string $comando, array $parametros = [] );

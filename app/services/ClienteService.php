@@ -9,7 +9,7 @@ use app\traits\Autenticavel;
 use app\classes\jwt\TokenJWT;
 use app\traits\Criptografavel;
 use app\classes\utils\Validador;
-use app\databases\BancoDadosRelacional;
+use app\dao\BancoDadosRelacional;
 use app\exceptions\NaoAutorizadoException;
 use DateTime;
 

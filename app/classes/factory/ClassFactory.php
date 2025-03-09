@@ -3,12 +3,12 @@
 namespace app\classes\factory;
 
 use InvalidArgumentException;
-use app\databases\BancoDadosRelacional;
+use app\dao\BancoDadosRelacional;
 
 abstract class ClassFactory {
     const CAMINHO_CONTROLLER = 'app\\controllers\\';
     const CAMINHO_SERVICE = 'app\\services\\';
-    const CAMINHO_DAO = 'app\\databases\\';
+    const CAMINHO_DAO = 'app\\dao\\';
 
     /**
      * Método responsável por fabricar intâncias de controllers.

@@ -1,7 +1,7 @@
 <?php
 
 use app\classes\Endereco;
-use app\databases\DAOEmBDR;
+use app\dao\DAOEmBDR;
 use app\services\ClienteService;
 use app\services\EnderecoService;
 use app\exceptions\ServiceException;

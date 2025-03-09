@@ -5,7 +5,7 @@ namespace app\services;
 use app\services\Service;
 use app\classes\Categoria;
 use app\classes\utils\Validador;
-use app\databases\BancoDadosRelacional;
+use app\dao\BancoDadosRelacional;
 
 class CategoriaService extends Service {
 

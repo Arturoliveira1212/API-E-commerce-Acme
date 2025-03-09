@@ -7,8 +7,8 @@ use app\classes\Endereco;
 use app\services\Service;
 use app\classes\utils\Validador;
 use app\classes\factory\ClassFactory;
-use app\databases\BancoDadosRelacional;
-use app\databases\EnderecoDAO;
+use app\dao\BancoDadosRelacional;
+use app\dao\EnderecoDAO;
 use app\exceptions\NaoEncontradoException;
 
 class EnderecoService extends Service {

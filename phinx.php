@@ -2,7 +2,7 @@
 
 require 'bootstrap.php';
 
-use app\databases\PDOSingleton;
+use app\dao\PDOSingleton;
 
 $pdo = PDOSingleton::get();
 

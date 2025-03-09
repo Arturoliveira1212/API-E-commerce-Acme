@@ -1,6 +1,6 @@
 <?php
 
-namespace app\databases;
+namespace app\dao;
 
 use app\classes\Administrador;
 use app\classes\utils\ConversorDados;

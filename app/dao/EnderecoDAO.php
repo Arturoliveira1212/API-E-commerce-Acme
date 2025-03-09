@@ -1,9 +1,9 @@
 <?php
 
-namespace app\databases;
+namespace app\dao;
 
 use app\classes\Endereco;
-use app\databases\DAOEmBDR;
+use app\dao\DAOEmBDR;
 use app\classes\utils\ConversorDados;
 
 class EnderecoDAO extends DAOEmBDR {

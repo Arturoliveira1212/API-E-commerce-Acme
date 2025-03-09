@@ -1,6 +1,6 @@
 <?php
 
-use app\databases\DAOEmBDR;
+use app\dao\DAOEmBDR;
 use app\exceptions\ServiceException;
 use app\classes\Administrador;
 use app\classes\jwt\TokenJWT;

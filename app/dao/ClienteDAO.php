@@ -1,6 +1,6 @@
 <?php
 
-namespace app\databases;
+namespace app\dao;
 
 use app\classes\Cliente;
 use app\classes\Endereco;

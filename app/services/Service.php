@@ -3,8 +3,8 @@
 namespace app\services;
 
 use app\classes\Model;
-use app\databases\BancoDadosRelacional;
-use app\databases\DAO;
+use app\dao\BancoDadosRelacional;
+use app\dao\DAO;
 use app\exceptions\NaoEncontradoException;
 use app\exceptions\ServiceException;
 
