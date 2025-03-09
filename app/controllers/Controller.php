@@ -26,7 +26,7 @@ abstract class Controller {
     abstract protected function criar( array $dados );
 
     public function novo( array $dados, $args ){
-        $idRecursoPai = intval( $args['idRecursoPai'] ) ?? null;
+        $idRecursoPai = isset( $args['id'] ) ? intval( $args['id'] ) : null;
         $objeto = $this->criar( $dados );
         $this->getService()->salvar( $objeto, $idRecursoPai );
 

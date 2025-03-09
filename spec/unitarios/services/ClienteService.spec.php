@@ -14,14 +14,6 @@ describe( 'ClienteService', function () {
     });
 
     describe( 'Salvar', function(){
-        function validarErroSalvar( $e, $campo, $mensagemEsperada ){
-            $erro = json_decode( $e->getMessage(), true );
-            expect($erro)->not->toBeEmpty();
-            expect($erro)->toHaveLength(1);
-            expect($erro)->toContainKey($campo);
-            expect($erro[$campo])->toEqual($mensagemEsperada);
-        }
-
         it('Lança exceção ao enviar nome vazio para cliente', function() {
             allow( $this->service )->toReceive('obterComEmail')->andReturn( [] );
             allow( $this->service )->toReceive('obterComCpf')->andReturn( [] );

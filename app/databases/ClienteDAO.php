@@ -21,7 +21,10 @@ class ClienteDAO extends DAOEmBDR {
     }
 
     protected function parametros( $cliente ){
-        return ConversorDados::converterEmArray( $cliente );
+        $parametros = ConversorDados::converterEmArray( $cliente );
+        unset( $parametros['enderecos'] );
+
+        return $parametros;
     }
 
     protected function obterQuery( array $restricoes, array &$parametros ){

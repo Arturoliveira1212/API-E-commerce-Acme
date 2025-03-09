@@ -12,7 +12,7 @@ class EnderecoDAO extends DAOEmBDR {
     }
 
     protected function adicionarNovo( $endereco, ?int $idRecursoPai = null ){
-        $comando = "INSERT INTO {$this->nomeTabela()} ( id, logradouro, cidade, bairro, numero, cep, complemento ) VALUES ( :id, :logradouro, :cidade, :bairro, :numero, :cep, :complemento )";
+        $comando = "INSERT INTO {$this->nomeTabela()} ( id, idCliente, logradouro, cidade, bairro, numero, cep, complemento ) VALUES ( :id, :idCliente, :logradouro, :cidade, :bairro, :numero, :cep, :complemento )";
 
         $parametros = $this->parametros( $endereco );
         $parametros['idCliente'] = $idRecursoPai;

@@ -82,4 +82,15 @@ class EnderecoService extends Service {
             $erro['complemento'] = 'O complemento deve ter no máximo ' . self::TAMANHO_MAXIMO_COMPLEMENTO . ' caracteres.';
         }
     }
+
+    public function obterEnderecosDoCliente( int $idCliente ){
+        if( ! $this->clienteDoEnderecoExiste( $idCliente ) ){
+            throw new NaoEncontradoException( 'Recurso não encontrado.' );
+        }
+
+        $restricoes = [ 'idCliente' => $idCliente ];
+        $clientes = $this->obterComRestricoes( $restricoes );
+
+        return $clientes;
+    }
 }

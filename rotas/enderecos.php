@@ -11,7 +11,6 @@ $corpoRequisicaoSalvarEndereco = [
     'logradouro' => 'string',
     'cidade' => 'string',
     'bairro' => 'string',
-    'numero' => 'string',
     'cep' => 'string',
 ];
 
@@ -38,13 +37,13 @@ $app->group( '/enderecos', function( RouteCollectorProxy $group ) use ( $corpoRe
     } );
 });
 
-$app->post( '/clientes/{idRecursoPai}/enderecos', function( Request $request, Response $response, $args ){
+$app->post( '/clientes/{id}/enderecos', function( Request $request, Response $response, $args ){
     return GerenciadorRecurso::executar( Endereco::class, 'novo', $request, $response, $args );
 } )
     ->add( MiddlewareFactory::corpoRequisicao( $corpoRequisicaoSalvarEndereco ) )
     ->add( MiddlewareFactory::permissao( [ 'admin', 'cliente' ], [ 'Cadastrar Endereço Endereço' ] ) )
     ->add( MiddlewareFactory::autenticacao() );
 
-$app->get( '/clientes/{idRecursoPai}/enderecos', function( Request $request, Response $response, $args ){
+$app->get( '/clientes/{id}/enderecos', function( Request $request, Response $response, $args ){
     return GerenciadorRecurso::executar( Endereco::class, 'obterEnderecosDoCliente', $request, $response, $args );
 } );

@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\classes\Endereco;
 use app\controllers\Controller;
 use app\classes\http\HttpStatusCode;
+use app\services\EnderecoService;
 
 class EnderecoController extends Controller {
     protected function criar( array $dados ){
@@ -12,12 +13,15 @@ class EnderecoController extends Controller {
         $camposSimples = [ 'id', 'logradouro', 'cidade', 'bairro', 'numero', 'cep', 'complemento' ];
         $this->povoarSimples( $endereco, $camposSimples, $dados );
 
-        return new $endereco;
+        return $endereco;
     }
 
     public function obterEnderecosDoCliente( array $dados, $args ){
-        $restricoes = [ 'idCliente' => $args['idRecursoPai'] ];
-        $enderecos = $this->getService()->obterComRestricoes( $restricoes );
+        $idCliente = isset( $args['id'] ) ? intval( $args['id'] ) : null;
+
+        /** @var EnderecoService */
+        $enderecoService = $this->getService();
+        $enderecos = $enderecoService->obterEnderecosDoCliente( $idCliente );
 
         return $this->resposta( HttpStatusCode::OK, [
             'message' => 'Sucesso ao obter os dados.',
