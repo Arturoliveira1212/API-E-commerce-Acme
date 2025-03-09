@@ -49,4 +49,17 @@ class EnderecoDAO extends DAOEmBDR {
     protected function transformarEmObjeto( array $linhas ){
         return ConversorDados::converterEmObjeto( Endereco::class, $linhas );
     }
+
+    public function obterIdClienteDoEndereco( int $idEndereco ){
+        $comando = 'SELECT idCliente FROM endereco
+            WHERE id = :id
+            AND ativo = :ativo';
+        $parametros = [
+            'id' => $idEndereco,
+            'ativo' => 1
+        ];
+        $resultado = $this->getBancoDados()->consultar( $comando, $parametros );
+
+        return $resultado[0]['idCliente'] ?? null;
+    }
 }

@@ -11,8 +11,16 @@ class Cliente extends Model {
     private string $cpf = '';
     private string $senha = '';
     private ?DateTime $dataNascimento = null;
+    private array $enderecos = [];
 
-    public function __construct( int $id = 0, string $nome = '', string $email = '', string $cpf = '', string $senha = '', ?DateTime $dataNascimento = null ){
+    public function __construct(
+        int $id = 0,
+        string $nome = '',
+        string $email = '',
+        string $cpf = '',
+        string $senha = '',
+        ?DateTime $dataNascimento = null
+    ){
         $this->setId( $id );
         $this->setNome( $nome );
         $this->setEmail( $email );
@@ -70,6 +78,14 @@ class Cliente extends Model {
 
     public function setDataNascimento( ?DateTime $dataNascimento ){
         $this->dataNascimento = $dataNascimento;
+    }
+
+    public function getEnderecos(){
+        return $this->enderecos;
+    }
+
+    public function setEnderecos( array $enderecos ){
+        $this->enderecos = $enderecos;
     }
 
     public function emArray() :array {

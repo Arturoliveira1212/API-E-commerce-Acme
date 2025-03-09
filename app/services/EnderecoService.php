@@ -8,6 +8,7 @@ use app\services\Service;
 use app\classes\utils\Validador;
 use app\classes\factory\ClassFactory;
 use app\databases\BancoDadosRelacional;
+use app\databases\EnderecoDAO;
 use app\exceptions\NaoEncontradoException;
 
 class EnderecoService extends Service {
@@ -92,5 +93,14 @@ class EnderecoService extends Service {
         $clientes = $this->obterComRestricoes( $restricoes );
 
         return $clientes;
+    }
+
+    public function enderecoPertenceACliente( Cliente $cliente, int $idEndereco ){
+        /** @var EnderecoDAO */
+        $enderecoDAO = $this->getDao();
+        $idCliente = $enderecoDAO->obterIdClienteDoEndereco( $idEndereco );
+        $enderecoPertenceACliente = $idCliente == $cliente->getId();
+
+        return $enderecoPertenceACliente;
     }
 }

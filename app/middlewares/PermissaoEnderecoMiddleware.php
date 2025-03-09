@@ -7,16 +7,19 @@ use Slim\Psr7\Response;
 use app\classes\jwt\PayloadJWT;
 use app\classes\http\RespostaHttp;
 use app\classes\http\HttpStatusCode;
+use app\services\ClienteService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Routing\RouteContext;
 
-class PermissaoClienteMiddleware {
+class PermissaoEnderecoMiddleware {
     private $clienteService;
+    private $enderecoService;
 
-    public function __construct( $clienteService ){
+    public function __construct( $clienteService, $enderecoService ){
         $this->clienteService = $clienteService;
+        $this->enderecoService = $enderecoService;
     }
 
     public function __invoke( ServerRequestInterface $request, RequestHandlerInterface $handler ): ResponseInterface {
@@ -26,7 +29,7 @@ class PermissaoClienteMiddleware {
         $idUrl = $this->obterIdURL( $request );
 
         $cliente = $this->clienteService->obterComId( $idToken );
-        if( ! $cliente instanceof Cliente || $cliente->getId() != $idUrl ){
+        if( ! $cliente instanceof Cliente || ! $this->enderecoService->enderecoPertenceACliente( $cliente, $idUrl ) ){
             return $this->semPermissao();
         }
 
