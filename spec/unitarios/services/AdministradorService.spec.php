@@ -74,7 +74,7 @@ describe( 'AdministradorService', function () {
         });
 
         it('Lança exceção ao enviar email inválido para administrador', function() {
-            $administrador = new Administrador( 0, 'Artur Alves', 'aaaa', 12345678 );
+            $administrador = new Administrador( 0, 'Artur Alves', 'aaaaaa', 12345678 );
 
             try {
                 $this->service->salvar( $administrador );

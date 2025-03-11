@@ -15,14 +15,6 @@ describe( 'EnderecoService', function () {
     });
 
     describe( 'Salvar', function(){
-        function validarErroSalvar( $e, $campo, $mensagemEsperada ){
-            $erro = json_decode( $e->getMessage(), true );
-            expect($erro)->not->toBeEmpty();
-            expect($erro)->toHaveLength(1);
-            expect($erro)->toContainKey($campo);
-            expect($erro[$campo])->toEqual($mensagemEsperada);
-        }
-
         it('Lança exceção ao enviar cliente inexistente para endereço', function() {
             allow($this->service)->toReceive('clienteDoEnderecoExiste')->andReturn( false );
 

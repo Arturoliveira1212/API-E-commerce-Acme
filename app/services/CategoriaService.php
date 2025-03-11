@@ -8,10 +8,9 @@ use app\classes\utils\Validador;
 use app\dao\BancoDadosRelacional;
 
 class CategoriaService extends Service {
-
-    const TAMANHO_MINIMO_NOME = 1;
+    const TAMANHO_MINIMO_NOME = 2;
     const TAMANHO_MAXIMO_NOME = 100;
-    const TAMANHO_MINIMO_DESCRICAO = 1;
+    const TAMANHO_MINIMO_DESCRICAO = 5;
     const TAMANHO_MAXIMO_DESCRICAO = 500;
 
     protected function validar( $categoria, array &$erro = [] ){

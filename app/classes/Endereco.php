@@ -5,8 +5,8 @@ namespace app\classes;
 class Endereco extends Model {
     private int $id = 0;
     private string $logradouro = '';
-    private string $cidade = '';
-    private string $bairro = '';
+    private string $cidade = ''; // TO DO => Tratar cidade como objeto.
+    private string $bairro = ''; // TO DO => Tratar bairro como objeto.
     private string $numero = 'SN';
     private string $cep = '';
     private string $complemento = '';

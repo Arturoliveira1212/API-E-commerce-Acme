@@ -17,9 +17,9 @@ class ClienteService extends Service {
     use Criptografavel;
     use Autenticavel;
 
-    const TAMANHO_MINIMO_NOME = 1;
+    const TAMANHO_MINIMO_NOME = 2;
     const TAMANHO_MAXIMO_NOME = 100;
-    const TAMANHO_MINIMO_EMAIL = 1;
+    const TAMANHO_MINIMO_EMAIL = 5;
     const TAMANHO_MAXIMO_EMAIL = 200;
     const TAMANHO_CPF = 14;
     const TAMANHO_SENHA = 8;

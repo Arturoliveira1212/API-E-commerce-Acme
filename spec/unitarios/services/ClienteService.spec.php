@@ -72,7 +72,7 @@ describe( 'ClienteService', function () {
             allow( $this->service )->toReceive('obterComEmail')->andReturn( [] );
             allow( $this->service )->toReceive('obterComCpf')->andReturn( [] );
 
-            $cliente = new Cliente( 0, 'Artur Alves', 'aaa', '775.832.150-05', 12345678, new DateTime( '2003-11-28' ) );
+            $cliente = new Cliente( 0, 'Artur Alves', 'aaaaa', '775.832.150-05', 12345678, new DateTime( '2003-11-28' ) );
 
             try {
                 $this->service->salvar( $cliente );

@@ -60,12 +60,12 @@ abstract class Controller {
 
     public function obterComId( array $dados, $args ){
         $id = intval( $args['id'] );
-        $objetos = $this->getService()->obterComId( $id );
+        $objeto = $this->getService()->obterComId( $id );
 
         return $this->resposta( HttpStatusCode::OK, [
             'message' => 'Sucesso ao obter os dados.',
             'data' => [
-                $objetos
+                $objeto
             ]
         ] );
     }
