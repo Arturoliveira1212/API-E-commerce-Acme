@@ -15,8 +15,8 @@ use app\exceptions\NaoEncontradoException;
 abstract class GerenciadorRecurso {
     public static function executar( string $controller, string $metodo, Request $request, Response $response, $args ){
         try {
-            $corpoRequisicao = self::limparArray( (array) $request->getParsedBody() );
-            $parametros = self::limparArray( (array) $request->getQueryParams() );
+            $corpoRequisicao = (array) $request->getParsedBody();
+            $parametros = (array) $request->getQueryParams();
             $payloadJWT = $request->getAttribute('payloadJWT');
 
             $controller = ClassFactory::makeController( $controller );
@@ -44,19 +44,5 @@ abstract class GerenciadorRecurso {
         } finally {
             return $resposta;
         }
-    }
-
-    private static function limparArray( array $array ){
-        $arrayLimpo = [];
-
-        foreach( $array as $chave => $valor ){
-            if( is_array( $valor ) ){
-                $arrayLimpo[ $chave ] = self::limparArray( $valor );
-            } else {
-                $arrayLimpo[ $chave ] = htmlspecialchars( strip_tags( trim( $valor ) ) );
-            }
-        }
-
-        return $arrayLimpo;
     }
 }
