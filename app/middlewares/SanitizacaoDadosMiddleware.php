@@ -24,8 +24,27 @@ class SanitizacaoDadosMiddleware {
     }
 
     private function limparArray( array &$array ){
-        array_walk_recursive( $array, function( &$value ){
-            $value = htmlspecialchars( strip_tags( trim( $value ) ) );
-        });
+        $novoArray = [];
+
+        foreach( $array as $chave => $valor ){
+            $this->limparValor( $chave );
+            if ($chave === '') {
+                continue;
+            }
+
+            if( is_array( $valor ) ){
+                $this->limparArray( $valor );
+            } else {
+                $this->limparValor( $valor );
+            }
+
+            $novoArray[ $chave ] = $valor;
+        }
+
+        $array = $novoArray;
+    }
+
+    private function limparValor( &$valor ){
+        $valor = htmlspecialchars( strip_tags( trim( $valor ) ) );
     }
 }
