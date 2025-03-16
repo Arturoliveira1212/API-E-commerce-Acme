@@ -7,7 +7,6 @@ use Slim\Psr7\Response;
 use app\classes\jwt\PayloadJWT;
 use app\classes\http\RespostaHttp;
 use app\classes\http\HttpStatusCode;
-use app\services\ClienteService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;

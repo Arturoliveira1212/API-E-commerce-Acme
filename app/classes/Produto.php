@@ -13,7 +13,6 @@ class Produto extends Model {
     private string $descricao = '';
     private ?Categoria $categoria = null;
     private ?DateTime $dataCadastro = null;
-    private float $pesoEmGramas = 0.0;
 
     public function __construct(
         int $id = 0,
@@ -22,8 +21,7 @@ class Produto extends Model {
         string $cor = '',
         float $preco = 0.0,
         string $descricao = '',
-        ?Categoria $categoria = null,
-        float $pesoEmGramas = 0.0
+        ?Categoria $categoria = null
     ){
         $this->setId( $id );
         $this->setNome( $nome );
@@ -32,7 +30,6 @@ class Produto extends Model {
         $this->setPreco( $preco );
         $this->setDescricao( $descricao );
         $this->setCategoria( $categoria );
-        $this->setPesoEmGramas( $pesoEmGramas );
     }
 
     public function getId(){
@@ -102,14 +99,6 @@ class Produto extends Model {
         $this->dataCadastro = $dataCadastro;
     }
 
-    public function getPesoEmGramas(){
-        return $this->pesoEmGramas;
-    }
-
-    public function setPesoEmGramas( float $pesoEmGramas ){
-        $this->pesoEmGramas = $pesoEmGramas;
-    }
-
     public function emArray() :array {
         return [
             'id' => $this->getId(),
@@ -119,8 +108,7 @@ class Produto extends Model {
             'preco' => $this->getPreco(),
             'descricao' => $this->getDescricao(),
             'categoria' => $this->getCategoria() instanceof Categoria ? $this->getCategoria()->emArray() : null,
-            'dataCadastro' => $this->getDataCadastro()->format('Y-m-d H:i:s'),
-            'pesoEmGramas' => $this->getPesoEmGramas(),
+            'dataCadastro' => $this->getDataCadastro()->format('Y-m-d H:i:s')
         ];
     }
 }

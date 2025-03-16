@@ -17,7 +17,6 @@ final class CriaTabelaProduto extends AbstractMigration {
                 descricao VARCHAR(300) NOT NULL,
                 idCategoria INT NOT NULL,
                 dataCadastro DATETIME NOT NULL,
-                pesoEmGramas DECIMAL(10,2) NOT NULL DEFAULT 0.00,
                 ativo TINYINT(1) DEFAULT 1,
                 CONSTRAINT fk__id_categoria FOREIGN KEY (idCategoria) REFERENCES categoria(id)
                     ON DELETE CASCADE ON UPDATE CASCADE

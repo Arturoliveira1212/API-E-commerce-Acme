@@ -47,6 +47,13 @@ abstract class Service {
         return $this->getDao()->desativarComId( $id );
     }
 
+    /**
+     * Método responsável por excluir o objeto pelo id.
+     *
+     * @param integer $id
+     * @return int
+     * @throws NaoEncontradoException
+     */
     public function excluirComId( int $id ){
         $existe = $this->existe( 'id', $id );
         if( ! $existe ){
@@ -60,6 +67,13 @@ abstract class Service {
         return $this->getDao()->existe( $campo, $valor );
     }
 
+    /**
+     * Método responsável por obter o objeto pelo id.
+     *
+     * @param integer $id
+     * @return Model
+     * @throws NaoEncontradoException
+     */
     public function obterComId( int $id ){
         $objeto = $this->getDao()->obterComId( $id );
         if( ! $objeto instanceof Model ){

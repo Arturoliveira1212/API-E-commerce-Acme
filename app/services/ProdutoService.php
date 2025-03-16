@@ -19,8 +19,6 @@ class ProdutoService extends Service {
     const PRECO_MAXIMO = 10000;
     const TAMANHO_MINIMO_DESCRICAO = 3;
     const TAMANHO_MAXIMO_DESCRICAO = 300;
-    const PESO_MINIMO = 1;
-    const PESO_MAXIMO = 1000000000;
 
     protected function validar( $produto, array &$erro = [] ){
         $this->validarNome( $produto, $erro );
@@ -29,7 +27,6 @@ class ProdutoService extends Service {
         $this->validarPreco( $produto, $erro );
         $this->validarDescricao( $produto, $erro );
         $this->validarCategoria( $produto, $erro );
-        $this->validarPesoEmGramas( $produto, $erro );
     }
 
     private function validarNome( Produto $produto, array &$erro ){
@@ -117,12 +114,6 @@ class ProdutoService extends Service {
     private function validarCategoria( Produto $produto, array &$erro ){
         if( ! $produto->getCategoria() instanceof Categoria ){
             $erro['categoria'] = 'Categoria não encontrada.';
-        }
-    }
-
-    private function validarPesoEmGramas( Produto $produto, array &$erro ){
-        if( $produto->getPesoEmGramas() < self::PRECO_MINIMO || $produto->getPesoEmGramas() > self::PRECO_MAXIMO ){
-            $erro['pesoEmGramas'] = 'O peso deve estar entre ' . self::PRECO_MINIMO . 'g e ' . self::PRECO_MAXIMO . 'g.';
         }
     }
 

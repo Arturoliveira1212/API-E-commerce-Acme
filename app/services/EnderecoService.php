@@ -90,9 +90,9 @@ class EnderecoService extends Service {
         }
 
         $restricoes = [ 'idCliente' => $idCliente ];
-        $clientes = $this->obterComRestricoes( $restricoes );
+        $enderecos = $this->obterComRestricoes( $restricoes );
 
-        return $clientes;
+        return $enderecos;
     }
 
     public function enderecoPertenceACliente( Cliente $cliente, int $idEndereco ){

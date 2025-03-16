@@ -27,14 +27,13 @@ describe( 'ProdutoService', function () {
         $this->precoProdutoValido = 11.50;
         $this->descricaoProdutoValida = 'Descrição de Produto Teste';
         $this->categoriaProdutoValida = new Categoria( 1, 'Categoria teste', 'Descrição teste' );
-        $this->pesoEmGramasValido = 1000;
 
         describe( 'Nome', function(){
             it('Lança exceção ao enviar nome vazio para produto', function() {
                 allow( $this->service )->toReceive('nomeJaCadastrado')->andReturn( false );
                 allow( $this->service )->toReceive('referenciaJaCadastrada')->andReturn( false );
 
-                $produto = new Produto( 0, '', $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida, $this->pesoEmGramasValido );
+                $produto = new Produto( 0, '', $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida );
 
                 try {
                     $this->service->salvar( $produto );
@@ -48,7 +47,7 @@ describe( 'ProdutoService', function () {
                 allow( $this->service )->toReceive('referenciaJaCadastrada')->andReturn( false );
 
                 $nomeMenorQueOPermitido = str_repeat('a', ProdutoService::TAMANHO_MINIMO_NOME - 1);
-                $produto = new Produto( 0, $nomeMenorQueOPermitido, $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida, $this->pesoEmGramasValido );
+                $produto = new Produto( 0, $nomeMenorQueOPermitido, $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida );
 
                 try {
                     $this->service->salvar( $produto );
@@ -62,7 +61,7 @@ describe( 'ProdutoService', function () {
                 allow( $this->service )->toReceive('referenciaJaCadastrada')->andReturn( false );
 
                 $nomeMaiorQueOPermitido = str_repeat('a', ProdutoService::TAMANHO_MAXIMO_NOME + 1);
-                $produto = new Produto( 0, $nomeMaiorQueOPermitido, $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida, $this->pesoEmGramasValido );
+                $produto = new Produto( 0, $nomeMaiorQueOPermitido, $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida );
 
                 try {
                     $this->service->salvar( $produto );
@@ -77,7 +76,7 @@ describe( 'ProdutoService', function () {
                 allow( $this->service )->toReceive('obterComNome')->andReturn( new Produto( 1, $nomeJaCadastrado ) );
                 allow( $this->service )->toReceive('referenciaJaCadastrada')->andReturn( false );
 
-                $produto = new Produto( 0, $nomeJaCadastrado, $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida, $this->pesoEmGramasValido );
+                $produto = new Produto( 0, $nomeJaCadastrado, $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida );
 
                 try {
                     $this->service->salvar( $produto );
@@ -93,7 +92,7 @@ describe( 'ProdutoService', function () {
                 allow( $this->service )->toReceive('obterComNome')->andReturn( new Produto( 1, $nomeJaCadastrado ) );
                 allow( $this->service )->toReceive('referenciaJaCadastrada')->andReturn( false );
 
-                $produto = new Produto( 3, $nomeJaCadastrado, $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida, $this->pesoEmGramasValido );
+                $produto = new Produto( 3, $nomeJaCadastrado, $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida );
 
                 try {
                     $this->service->salvar( $produto );
@@ -111,7 +110,7 @@ describe( 'ProdutoService', function () {
                 allow( $this->service )->toReceive('obterComNome')->andReturn( new Produto( 1, $nomeJaCadastrado ) );
                 allow( $this->service )->toReceive('referenciaJaCadastrada')->andReturn( false );
 
-                $produto = new Produto( 1, $nomeJaCadastrado, $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida, $this->pesoEmGramasValido );
+                $produto = new Produto( 1, $nomeJaCadastrado, $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida );
 
                 expect( function() use ( $produto ){
                     $this->service->salvar( $produto );
@@ -124,7 +123,7 @@ describe( 'ProdutoService', function () {
                 allow( $this->service )->toReceive('nomeJaCadastrado')->andReturn( false );
                 allow( $this->service )->toReceive('referenciaJaCadastrada')->andReturn( false );
 
-                $produto = new Produto( 0, $this->nomeProdutoValido, '', $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida, $this->pesoEmGramasValido );
+                $produto = new Produto( 0, $this->nomeProdutoValido, '', $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida );
 
                 try {
                     $this->service->salvar( $produto );
@@ -138,7 +137,7 @@ describe( 'ProdutoService', function () {
                 allow( $this->service )->toReceive('referenciaJaCadastrada')->andReturn( false );
 
                 $referenciaDiferenteDoPermitido = str_repeat('a', ProdutoService::TAMANHO_REFERENCIA + 1);
-                $produto = new Produto( 0, $this->nomeProdutoValido, $referenciaDiferenteDoPermitido, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida, $this->pesoEmGramasValido );
+                $produto = new Produto( 0, $this->nomeProdutoValido, $referenciaDiferenteDoPermitido, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida );
 
                 try {
                     $this->service->salvar( $produto );
@@ -153,7 +152,7 @@ describe( 'ProdutoService', function () {
                 allow( $this->service )->toReceive('obterComReferencia')->andReturn( new Produto( 1, $referenciaJaCadastrada ) );
                 allow( $this->service )->toReceive('nomeJaCadastrado')->andReturn( false );
 
-                $produto = new Produto( 0,  $this->nomeProdutoValido, $referenciaJaCadastrada, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida, $this->pesoEmGramasValido );
+                $produto = new Produto( 0,  $this->nomeProdutoValido, $referenciaJaCadastrada, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida );
 
                 try {
                     $this->service->salvar( $produto );
@@ -169,7 +168,7 @@ describe( 'ProdutoService', function () {
                 allow( $this->service )->toReceive('obterComReferencia')->andReturn( new Produto( 1, $referenciaJaCadastrada ) );
                 allow( $this->service )->toReceive('nomeJaCadastrado')->andReturn( false );
 
-                $produto = new Produto( 3, $this->nomeProdutoValido, $referenciaJaCadastrada, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida, $this->pesoEmGramasValido );
+                $produto = new Produto( 3, $this->nomeProdutoValido, $referenciaJaCadastrada, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida );
 
                 try {
                     $this->service->salvar( $produto );
@@ -187,7 +186,7 @@ describe( 'ProdutoService', function () {
                 allow( $this->service )->toReceive('obterComNome')->andReturn( new Produto( 1, $referenciaJaCadastrada ) );
                 allow( $this->service )->toReceive('referenciaJaCadastrada')->andReturn( false );
 
-                $produto = new Produto( 1, $this->nomeProdutoValido, $referenciaJaCadastrada, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida, $this->pesoEmGramasValido );
+                $produto = new Produto( 1, $this->nomeProdutoValido, $referenciaJaCadastrada, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida );
 
                 expect( function() use ( $produto ){
                     $this->service->salvar( $produto );
@@ -200,7 +199,7 @@ describe( 'ProdutoService', function () {
                 allow( $this->service )->toReceive('nomeJaCadastrado')->andReturn( false );
                 allow( $this->service )->toReceive('referenciaJaCadastrada')->andReturn( false );
 
-                $produto = new Produto( 0, $this->nomeProdutoValido, $this->referenciaProdutoValida, '', $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida, $this->pesoEmGramasValido );
+                $produto = new Produto( 0, $this->nomeProdutoValido, $this->referenciaProdutoValida, '', $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida );
 
                 try {
                     $this->service->salvar( $produto );
@@ -214,7 +213,7 @@ describe( 'ProdutoService', function () {
                 allow( $this->service )->toReceive('referenciaJaCadastrada')->andReturn( false );
 
                 $corMenorQueOPermitido = str_repeat('a', ProdutoService::TAMANHO_MINIMO_COR - 1);
-                $produto = new Produto( 0, $this->nomeProdutoValido, $this->referenciaProdutoValida, $corMenorQueOPermitido, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida, $this->pesoEmGramasValido );
+                $produto = new Produto( 0, $this->nomeProdutoValido, $this->referenciaProdutoValida, $corMenorQueOPermitido, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida );
 
                 try {
                     $this->service->salvar( $produto );
@@ -228,7 +227,7 @@ describe( 'ProdutoService', function () {
                 allow( $this->service )->toReceive('referenciaJaCadastrada')->andReturn( false );
 
                 $corMaiorQueOPermitido = str_repeat('a', ProdutoService::TAMANHO_MAXIMO_COR + 1);
-                $produto = new Produto( 0, $this->nomeProdutoValido, $this->referenciaProdutoValida, $corMaiorQueOPermitido, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida, $this->pesoEmGramasValido );
+                $produto = new Produto( 0, $this->nomeProdutoValido, $this->referenciaProdutoValida, $corMaiorQueOPermitido, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida );
 
                 try {
                     $this->service->salvar( $produto );
@@ -244,7 +243,7 @@ describe( 'ProdutoService', function () {
                 allow( $this->service )->toReceive('referenciaJaCadastrada')->andReturn( false );
 
                 $precoMenorQueOPermitido = ProdutoService::PRECO_MINIMO - 1;
-                $produto = new Produto( 0, $this->nomeProdutoValido, $this->referenciaProdutoValida, $this->corProdutoValida, $precoMenorQueOPermitido, $this->descricaoProdutoValida, $this->categoriaProdutoValida, $this->pesoEmGramasValido );
+                $produto = new Produto( 0, $this->nomeProdutoValido, $this->referenciaProdutoValida, $this->corProdutoValida, $precoMenorQueOPermitido, $this->descricaoProdutoValida, $this->categoriaProdutoValida );
 
                 try {
                     $this->service->salvar( $produto );
@@ -258,7 +257,7 @@ describe( 'ProdutoService', function () {
                 allow( $this->service )->toReceive('referenciaJaCadastrada')->andReturn( false );
 
                 $precoMaiorQueOPermitido = ProdutoService::PRECO_MAXIMO + 1;
-                $produto = new Produto( 0, $this->nomeProdutoValido, $this->referenciaProdutoValida, $this->corProdutoValida, $precoMaiorQueOPermitido, $this->descricaoProdutoValida, $this->categoriaProdutoValida, $this->pesoEmGramasValido );
+                $produto = new Produto( 0, $this->nomeProdutoValido, $this->referenciaProdutoValida, $this->corProdutoValida, $precoMaiorQueOPermitido, $this->descricaoProdutoValida, $this->categoriaProdutoValida );
 
                 try {
                     $this->service->salvar( $produto );
@@ -273,7 +272,7 @@ describe( 'ProdutoService', function () {
                 allow( $this->service )->toReceive('nomeJaCadastrado')->andReturn( false );
                 allow( $this->service )->toReceive('referenciaJaCadastrada')->andReturn( false );
 
-                $produto = new Produto( 0, $this->nomeProdutoValido, $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, '', $this->categoriaProdutoValida, $this->pesoEmGramasValido );
+                $produto = new Produto( 0, $this->nomeProdutoValido, $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, '', $this->categoriaProdutoValida );
 
                 try {
                     $this->service->salvar( $produto );
@@ -287,7 +286,7 @@ describe( 'ProdutoService', function () {
                 allow( $this->service )->toReceive('referenciaJaCadastrada')->andReturn( false );
 
                 $descricaoMenorQueOPermitido = str_repeat('a', ProdutoService::TAMANHO_MINIMO_DESCRICAO - 1);
-                $produto = new Produto( 0, $this->nomeProdutoValido, $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, $descricaoMenorQueOPermitido, $this->categoriaProdutoValida, $this->pesoEmGramasValido );
+                $produto = new Produto( 0, $this->nomeProdutoValido, $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, $descricaoMenorQueOPermitido, $this->categoriaProdutoValida );
 
                 try {
                     $this->service->salvar( $produto );
@@ -301,7 +300,7 @@ describe( 'ProdutoService', function () {
                 allow( $this->service )->toReceive('referenciaJaCadastrada')->andReturn( false );
 
                 $descricaoMaiorQueOPermitido = str_repeat('a', ProdutoService::TAMANHO_MAXIMO_DESCRICAO + 1);
-                $produto = new Produto( 0, $this->nomeProdutoValido, $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, $descricaoMaiorQueOPermitido, $this->categoriaProdutoValida, $this->pesoEmGramasValido );
+                $produto = new Produto( 0, $this->nomeProdutoValido, $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, $descricaoMaiorQueOPermitido, $this->categoriaProdutoValida );
 
                 try {
                     $this->service->salvar( $produto );
@@ -316,42 +315,12 @@ describe( 'ProdutoService', function () {
                 allow( $this->service )->toReceive('nomeJaCadastrado')->andReturn( false );
                 allow( $this->service )->toReceive('referenciaJaCadastrada')->andReturn( false );
 
-                $produto = new Produto( 0, $this->nomeProdutoValido, $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, null, $this->pesoEmGramasValido );
+                $produto = new Produto( 0, $this->nomeProdutoValido, $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, null );
 
                 try {
                     $this->service->salvar( $produto );
                 } catch( ServiceException $e ){
                     validarErroSalvar( $e, 'categoria', 'Categoria não encontrada.' );
-                }
-            });
-        } );
-
-        describe( 'Peso em Gramas', function(){
-            it('Lança exceção ao enviar peso menor que o permitido para produto', function() {
-                allow( $this->service )->toReceive('nomeJaCadastrado')->andReturn( false );
-                allow( $this->service )->toReceive('referenciaJaCadastrada')->andReturn( false );
-
-                $pesoMenorQueOPermitido = ProdutoService::PESO_MINIMO - 1;
-                $produto = new Produto( 0, $this->nomeProdutoValido, $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida, $pesoMenorQueOPermitido );
-
-                try {
-                    $this->service->salvar( $produto );
-                } catch( ServiceException $e ){
-                    validarErroSalvar( $e, 'pesoEmGramas', 'O peso deve estar entre ' . ProdutoService::PRECO_MINIMO . 'g e ' . ProdutoService::PRECO_MAXIMO . 'g.' );
-                }
-            });
-
-            it('Lança exceção ao enviar peso maior que o permitido para produto', function() {
-                allow( $this->service )->toReceive('nomeJaCadastrado')->andReturn( false );
-                allow( $this->service )->toReceive('referenciaJaCadastrada')->andReturn( false );
-
-                $pesoMaiorQueOPermitido = ProdutoService::PESO_MAXIMO + 1;
-                $produto = new Produto( 0, $this->nomeProdutoValido, $this->referenciaProdutoValida, $this->corProdutoValida, $this->precoProdutoValido, $this->descricaoProdutoValida, $this->categoriaProdutoValida, $pesoMaiorQueOPermitido );
-
-                try {
-                    $this->service->salvar( $produto );
-                } catch( ServiceException $e ){
-                    validarErroSalvar( $e, 'pesoEmGramas', 'O peso deve estar entre ' . ProdutoService::PRECO_MINIMO . 'g e ' . ProdutoService::PRECO_MAXIMO . 'g.' );
                 }
             });
         } );

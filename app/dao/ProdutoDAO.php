@@ -13,12 +13,12 @@ class ProdutoDAO extends DAOEmBDR {
     }
 
     protected function adicionarNovo( $produto, ?int $idRecursoPai = null ){
-        $comando = "INSERT INTO {$this->nomeTabela()} (id, nome, referencia, cor, preco, descricao, idCategoria, dataCadastro, pesoEmGramas) VALUES (:id, :nome, :referencia, :cor, :preco, :descricao, :idCategoria, NOW(), :pesoEmGramas)";
+        $comando = "INSERT INTO {$this->nomeTabela()} (id, nome, referencia, cor, preco, descricao, idCategoria, dataCadastro) VALUES (:id, :nome, :referencia, :cor, :preco, :descricao, :idCategoria, NOW())";
         $this->getBancoDados()->executar( $comando, $this->parametros( $produto ) );
     }
 
     protected function atualizar( $produto ){
-        $comando = "UPDATE {$this->nomeTabela()} SET nome = :nome, referencia = :referencia, cor = :cor, preco = :preco, descricao = :descricao, idCategoria = :idCategoria, pesoEmGramas = :pesoEmGramas WHERE id = :id";
+        $comando = "UPDATE {$this->nomeTabela()} SET nome = :nome, referencia = :referencia, cor = :cor, preco = :preco, descricao = :descricao, idCategoria = :idCategoria WHERE id = :id";
         $this->getBancoDados()->executar( $comando, $this->parametros( $produto ) );
     }
 

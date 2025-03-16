@@ -14,7 +14,7 @@ use app\services\ProdutoService;
 class ProdutoController extends Controller {
     protected function criar( array $dados ){
         $produto = new Produto();
-        $camposSimples = [ 'id', 'nome', 'referencia', 'cor', 'preco', 'descricao', 'pesoEmGramas' ];
+        $camposSimples = [ 'id', 'nome', 'referencia', 'cor', 'preco', 'descricao' ];
         $this->povoarSimples( $produto, $camposSimples, $dados );
 
         if( isset( $dados['categoria'] ) ){

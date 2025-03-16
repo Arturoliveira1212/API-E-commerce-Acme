@@ -37,9 +37,9 @@ abstract class Controller {
 
     public function editar( array $dados, $args ){
         $id = intval( $args['id'] );
-        $dados['id'] = $id;
 
         $objeto = $this->criar( $dados );
+        $objeto->setId( $id );
         $this->getService()->salvar( $objeto );
 
         return $this->resposta( HttpStatusCode::OK, [

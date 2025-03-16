@@ -28,7 +28,11 @@ class SemeadorPermissao extends AbstractSeed {
                 (  'Excluir Endereço' ),
                 (  'Cadastrar Produto' ),
                 (  'Editar Produto' ),
-                (  'Excluir Produto' );
+                (  'Excluir Produto' ),
+                (  'Cadastrar Item' ),
+                (  'Editar Item' ),
+                (  'Excluir Item' ),
+                (  'Movimentar Estoque Item' );
         SQL;
         $this->execute( $sql );
     }

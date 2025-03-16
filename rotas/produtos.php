@@ -15,8 +15,7 @@ $app->group( '/produtos', function( RouteCollectorProxy $group ){
         'cor' => 'string',
         'preco' => 'float',
         'descricao' => 'string',
-        'categoria' => 'int',
-        'pesoEmGramas' => 'float'
+        'categoria' => 'int'
     ];
 
     // ROTAS PRIVADAS
