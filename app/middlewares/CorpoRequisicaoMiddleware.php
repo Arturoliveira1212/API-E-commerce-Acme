@@ -28,7 +28,8 @@ class CorpoRequisicaoMiddleware {
             ] );
         }
 
-        $erros = $this->validarCampos( $corpoRequisicao );
+        $erros = [];
+        $corpoRequisicaoValidado = $this->validarCampos( $corpoRequisicao, $erros );
         if( ! empty( $erros ) ){
             return $this->corpoRequisicaoInvalido( [
                 'message' => 'O corpo da requisição é inválido.',
@@ -37,6 +38,8 @@ class CorpoRequisicaoMiddleware {
                 ]
             ] );
         }
+
+        $request = $request->withParsedBody( $corpoRequisicaoValidado );
 
         return $handler->handle( $request );
     }
@@ -49,24 +52,28 @@ class CorpoRequisicaoMiddleware {
         return strpos( $contentType, $this->formato ) !== false;
     }
 
-    private function validarCampos( array $corpoRequisicao ){
-        $erros = [];
+    private function validarCampos( array $corpoRequisicao, array &$erros = [] ){
+        $corpoRequisicaoValidado = [];
 
         foreach( $this->campos as $campo => $tipo ){
             if( ! isset( $corpoRequisicao[ $campo ] ) ){
                 $erros[ $campo ] = "Campo {$campo} não foi enviado.";
             } else if( ! $this->tipoValido( $corpoRequisicao[ $campo ], $tipo ) ){
                 $erros[ $campo ] = "Campo {$campo} deve ser do tipo {$tipo}.";
+            } else {
+                $corpoRequisicaoValidado[ $campo ] = $corpoRequisicao[ $campo ];
             }
         }
 
-        return $erros;
+        return $corpoRequisicaoValidado;
     }
 
     private function tipoValido( $valor, $tipo ){
         switch( $tipo ){
             case 'string':
                 return is_string( $valor );
+            case 'numeric':
+                return is_numeric( $valor );
             case 'int':
                 return is_int( $valor );
             case 'float':

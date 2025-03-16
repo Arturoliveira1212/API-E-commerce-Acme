@@ -74,7 +74,7 @@ describe( 'CorpoRequisicaoMiddleware', function() {
         ] );
     });
 
-    it( 'Deve continuar a execução quando o token é válido', function(){
+    it( 'Deve continuar a execução quando o corpo da requisição é válido', function(){
         $middleware = new CorpoRequisicaoMiddleware( 'application/json', [ 'nome' => 'string' ] );
 
         $this->request->shouldReceive('getHeaderLine')->with('Content-Type')->andReturn('application/json');
