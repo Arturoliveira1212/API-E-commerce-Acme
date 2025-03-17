@@ -81,6 +81,7 @@ describe( 'CorpoRequisicaoMiddleware', function() {
         $this->request->shouldReceive('getParsedBody')->andReturn( [ 'nome' => 'Artur Alves' ] );
 
         $this->handler->shouldReceive('handle')->with( $this->request )->andReturn( new Response() );
+        $this->request->shouldReceive('withParsedBody')->with(['nome' => 'Artur Alves'])->andReturnSelf();
 
         $response = $middleware( $this->request, $this->handler );
         expect( $response->getStatusCode() )->toEqual( HttpStatusCode::OK );
