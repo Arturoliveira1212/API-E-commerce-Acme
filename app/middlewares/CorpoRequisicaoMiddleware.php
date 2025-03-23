@@ -22,7 +22,7 @@ class CorpoRequisicaoMiddleware {
         $contentType = $request->getHeaderLine('Content-Type');
         $corpoRequisicao = $request->getParsedBody();
 
-        if( ! $this->validarFormato( $contentType ) || empty( $corpoRequisicao ) ){
+        if( empty( $corpoRequisicao ) ||  ! $this->validarFormato( $contentType ) ){
             return $this->corpoRequisicaoInvalido( [
                 'message' => 'O corpo da requisição deve ser em JSON válido.'
             ] );

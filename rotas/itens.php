@@ -10,8 +10,8 @@ use Slim\Routing\RouteCollectorProxy;
 
 $corpoRequisicaoSalvarItem = [
     'tamanho' => 'string',
-    'estoque' => 'int',
-    'pesoEmGramas' => 'float'
+    'estoque' => 'numeric',
+    'pesoEmGramas' => 'numeric'
 ];
 
 $app->group( '/itens', function( RouteCollectorProxy $group ){
