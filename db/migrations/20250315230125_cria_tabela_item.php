@@ -11,6 +11,7 @@ final class CriaTabelaItem extends AbstractMigration {
             CREATE TABLE item (
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 idProduto INT NOT NULL,
+                sku VARCHAR(8) NOT NULL,
                 tamanho VARCHAR(4) NOT NULL,
                 estoque INT NOT NULL,
                 pesoEmGramas DECIMAL(10,2) NOT NULL DEFAULT 0.00,
