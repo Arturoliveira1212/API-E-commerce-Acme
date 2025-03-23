@@ -2,8 +2,7 @@
 
 namespace app\classes\utils;
 
-class Validador {
-
+abstract class Validador {
     /**
      * Método responsável por validar o tamanho do texto.
      *

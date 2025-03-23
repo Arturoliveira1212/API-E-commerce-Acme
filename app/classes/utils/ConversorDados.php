@@ -6,7 +6,7 @@ use DateTime;
 use ReflectionClass;
 use app\classes\Model;
 
-class ConversorDados {
+abstract class ConversorDados {
 
     public static function converterEmObjeto( string $nomeClasse, array $dados ){
         $classe = new $nomeClasse();
