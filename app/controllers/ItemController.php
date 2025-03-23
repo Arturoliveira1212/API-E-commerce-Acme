@@ -11,7 +11,7 @@ use app\services\ItemService;
 class ItemController extends Controller {
     protected function criar( array $dados ){
         $item = new Item();
-        $camposSimples = [ 'id', 'tamanho', 'estoque', 'pesoEmGramas' ];
+        $camposSimples = [ 'id', 'sku', 'tamanho', 'estoque', 'pesoEmGramas' ];
         $this->povoarSimples( $item, $camposSimples, $dados );
 
         return $item;

@@ -26,13 +26,15 @@ class ItemDAO extends DAOEmBDR {
     private function salvarItem( Item $item, ?int $idRecursoPai = null ){
         $this->getBancoDados()->executarComTransacao( function() use( $item, $idRecursoPai ){
             $this->adicionarNovo( $item, $idRecursoPai );
+            $item->setId( $this->getBancoDados()->ultimoIdInserido() );
+
             $this->atualizarEstoque( $item, $item->getEstoque(), OperacaoEstoque::ADICIONAR );
             $this->registrarMovimentacaoEstoque( $item, $item->getEstoque(), OperacaoEstoque::ADICIONAR );
         } );
     }
 
     protected function adicionarNovo( $item, ?int $idRecursoPai = null ){
-        $comando = "INSERT INTO {$this->nomeTabela()} ( id, idProduto, tamanho, estoque, pesoEmGramas ) VALUES ( :id, :idProduto, :tamanho, :estoque, :pesoEmGramas )";
+        $comando = "INSERT INTO {$this->nomeTabela()} ( id, idProduto, sku, tamanho, estoque, pesoEmGramas ) VALUES ( :id, :idProduto, :sku, :tamanho, :estoque, :pesoEmGramas )";
 
         $parametros = $this->parametros( $item );
         $parametros['idProduto'] = $idRecursoPai;
@@ -51,8 +53,9 @@ class ItemDAO extends DAOEmBDR {
         return $this->getBancoDados()->executar( $comando, $parametros );
     }
 
+    // TO DO => Criar DAO própria para MovimentacaoEstoque
     public function registrarMovimentacaoEstoque( Item $item, int $quantidade, int $operacaoEstoque ){
-        $comando = 'INSERT INTO movimentacao_estoque_item ( id, idItem, operacao, quantidade ) VALUES( id:, :idItem, :operacao, :quantidade )';
+        $comando = 'INSERT INTO movimentacao_estoque_item ( idItem, operacao, quantidade ) VALUES( :idItem, :operacao, :quantidade )';
         $parametros = [
             'idItem' => $item->getId(),
             'operacao' => $operacaoEstoque,
@@ -63,8 +66,12 @@ class ItemDAO extends DAOEmBDR {
     }
 
     protected function atualizar( $item, ?int $idRecursoPai = null ){
-        $comando = "UPDATE {$this->nomeTabela()} SET tamanho = :tamanho, pesoEmGramas = :pesoEmGramas WHERE id = :id";
-        $this->getBancoDados()->executar( $comando, $this->parametros( $item ) );
+        $comando = "UPDATE {$this->nomeTabela()} SET sku = :sku, tamanho = :tamanho, pesoEmGramas = :pesoEmGramas WHERE id = :id";
+
+        $parametros = $this->parametros( $item );
+        unset( $parametros['estoque'] );
+
+        $this->getBancoDados()->executar( $comando, $parametros );
     }
 
     protected function parametros( $item ){
@@ -79,9 +86,9 @@ class ItemDAO extends DAOEmBDR {
         $join = '';
         $orderBy = '';
 
-        if( isset( $restricoes['idProduto'] ) ){
-            $where .= " AND {$nomeTabela}.idProduto = :idProduto ";
-            $parametros['idProduto'] = $restricoes['idProduto'];
+        if( isset( $restricoes['sku'] ) ){
+            $where .= " AND {$nomeTabela}.sku = :sku ";
+            $parametros['sku'] = $restricoes['sku'];
         }
 
         $comando = $select . $join . $where . $orderBy;

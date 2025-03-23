@@ -9,6 +9,7 @@ use Slim\Psr7\Response;
 use Slim\Routing\RouteCollectorProxy;
 
 $corpoRequisicaoSalvarItem = [
+    'sku' => 'string',
     'tamanho' => 'string',
     'estoque' => 'numeric',
     'pesoEmGramas' => 'numeric'
@@ -16,8 +17,9 @@ $corpoRequisicaoSalvarItem = [
 
 $app->group( '/itens', function( RouteCollectorProxy $group ){
     $corpoRequisicaoEditarItem = [
+        'sku' => 'string',
         'tamanho' => 'string',
-        'pesoEmGramas' => 'float'
+        'pesoEmGramas' => 'numeric'
     ];
 
     $corpoRequisicaoMovimentarEstoqueItem = [

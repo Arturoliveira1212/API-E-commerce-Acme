@@ -4,17 +4,20 @@ namespace app\classes;
 
 class Item extends Model {
     private int $id = 0;
+    private string $sku = '';
     private string $tamanho = ''; // TO DO => Tratar tamanho como objeto.
     private int $estoque = 0;
     private float $pesoEmGramas = 0.0;
 
     public function __construct(
         int $id = 0,
+        string $sku = '',
         string $tamanho = '',
         int $estoque = 0,
         float $pesoEmGramas = 0.0
     ){
         $this->setId( $id );
+        $this->setSku( $sku );
         $this->setTamanho( $tamanho );
         $this->setEstoque( $estoque );
         $this->setPesoEmGramas( $pesoEmGramas );
@@ -26,6 +29,14 @@ class Item extends Model {
 
     public function setId( int $id ){
         $this->id = $id;
+    }
+
+    public function getSku(){
+        return $this->sku;
+    }
+
+    public function setSku( string $sku ){
+        $this->sku = $sku;
     }
 
     public function getTamanho(){
