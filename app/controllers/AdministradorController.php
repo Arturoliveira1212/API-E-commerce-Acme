@@ -9,7 +9,6 @@ use app\classes\jwt\TokenJWT;
 use app\services\AdministradorService;
 
 class AdministradorController extends Controller {
-
     protected function criar( array $dados ){
         $administrador = new Administrador();
         $camposSimples = [ 'id', 'nome', 'email', 'senha' ];

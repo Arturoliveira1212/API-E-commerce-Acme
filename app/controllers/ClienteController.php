@@ -8,7 +8,6 @@ use app\services\ClienteService;
 use app\classes\http\HttpStatusCode;
 
 class ClienteController extends Controller {
-
     protected function criar( array $dados ){
         $cliente = new Cliente();
         $camposSimples = [ 'id', 'nome', 'email', 'cpf', 'senha' ];
