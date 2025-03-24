@@ -2,6 +2,7 @@
 
 namespace app\services;
 
+use app\classes\enum\OperacaoEstoque;
 use app\dao\ItemDAO;
 use app\classes\Produto;
 use app\services\Service;
@@ -10,6 +11,7 @@ use app\exceptions\ServiceException;
 use app\classes\factory\ClassFactory;
 use app\classes\Item;
 use app\exceptions\NaoEncontradoException;
+use Throwable;
 
 class ItemService extends Service {
     const TAMANHO_SKU = 8;
@@ -18,8 +20,31 @@ class ItemService extends Service {
     ];
     const PESO_MINIMO = 1;
     const PESO_MAXIMO = 1000000000;
-    const ESTOQUE_MINIMO = 1;
+    const ESTOQUE_MINIMO = 0;
     const ESTOQUE_MAXIMO = 10000000;
+    const QUANTIDADE_MINIMA = 1;
+    const QUANTIDADE_MAXIMA = 10000000;
+
+    public function salvar( $item, ?int $idRecursoPai = null ){
+        $deveRegistrarAtualizacaoEstoque = $item->getId() == BancoDadosRelacional::ID_INEXISTENTE && $item->getEstoque() > 0;
+
+        $this->preSalvar( $item, $idRecursoPai );
+        $retorno = $this->getDao()->salvar( $item, $idRecursoPai );
+
+        if( $deveRegistrarAtualizacaoEstoque ){
+            $this->registrarMovimentacaoEstoque( $item );
+        }
+
+        return $retorno;
+    }
+
+    private function registrarMovimentacaoEstoque( Item $item ){
+        try {
+            /** @var ItemDAO */
+            $itemDAO = $this->getDao();
+            $itemDAO->registrarMovimentacaoEstoque( $item, $this->getPayloadJWT()->sub(), $item->getEstoque(), OperacaoEstoque::ADICIONAR );
+        } catch( Throwable $th ){}
+    }
 
     protected function preSalvar( $item, ?int $idRecursoPai = null ){
         if( $item->getId() == BancoDadosRelacional::ID_INEXISTENTE && ! $this->produtoDoItemExiste( $idRecursoPai ) ){
@@ -100,19 +125,37 @@ class ItemService extends Service {
         $item = $this->obterComId( $idItem );
 
         $erro = [];
-        $this->validarMovimentacaoEstoque( $quantidade, $operacaoEstoque, $erro );
+        $this->validarMovimentacaoEstoque( $item, $quantidade, $operacaoEstoque, $erro );
         if( ! empty( $erro ) ){
             throw new ServiceException( json_encode( $erro ) );
         }
 
         /** @var ItemDAO */
         $itemDAO = $this->getDao();
-        $itemDAO->movimentarEstoque( $item, $quantidade, $operacaoEstoque );
+        $retorno = $itemDAO->atualizarEstoque( $item, $quantidade, $operacaoEstoque );
+        $this->registrarMovimentacaoEstoque( $item );
+
+        return $retorno;
     }
 
-    private function validarMovimentacaoEstoque( int $quantidade, int $operacaoEstoque, array &$erro = [] ){
-        $this->validarQuantidade( $quantidade, $erro );
+    private function validarMovimentacaoEstoque( Item $item, int $quantidade, int $operacaoEstoque, array &$erro = [] ){
         $this->validarOperacaoEstoque( $operacaoEstoque, $erro );
+        $this->validarQuantidade( $item, $quantidade, $operacaoEstoque, $erro );
+    }
+
+    private function validarOperacaoEstoque( int $operacaoEstoque, array &$erro ){
+        if( ! OperacaoEstoque::ehValido( $operacaoEstoque ) ){
+            $erro['operacao'] = 'Operação inválida.';
+        }
+    }
+
+    private function validarQuantidade( Item $item, int $quantidade, int $operacaoEstoque, array &$erro ){
+        $estoqueAtual = $item->getEstoque();
+        if( $quantidade < self::QUANTIDADE_MINIMA || $quantidade > self::QUANTIDADE_MAXIMA ){
+            $erro['quantidade'] = 'A quantidade deve estar entre ' . self::QUANTIDADE_MINIMA . ' e ' . self::QUANTIDADE_MAXIMA . ' unidades.';
+        } else if( $operacaoEstoque == OperacaoEstoque::REMOVER && $quantidade > $estoqueAtual ){
+            $erro['quantidade'] = 'O item não possui estoque disponível para a remoção.';
+        }
     }
 
     public function obterItensDoProduto( int $idProduto ){

@@ -25,9 +25,10 @@ abstract class Controller {
 
     abstract protected function criar( array $dados );
 
-    public function novo( array $dados, $args ){
+    public function novo( array $dados, $args, $parametros, $payloadJWT ){
         $idRecursoPai = isset( $args['id'] ) ? intval( $args['id'] ) : null;
         $objeto = $this->criar( $dados );
+        $this->getService()->setPayloadJWT( $payloadJWT );
         $this->getService()->salvar( $objeto, $idRecursoPai );
 
         return $this->resposta( HttpStatusCode::CREATED, [

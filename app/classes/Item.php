@@ -2,6 +2,9 @@
 
 namespace app\classes;
 
+use app\classes\Model;
+use app\dao\BancoDadosRelacional;
+
 class Item extends Model {
     private int $id = 0;
     private string $sku = '';
@@ -63,9 +66,14 @@ class Item extends Model {
         $this->pesoEmGramas = $pesoEmGramas;
     }
 
+    public function deveRegistrarAtualizacaoEstoque(){
+        return $this->getId() == BancoDadosRelacional::ID_INEXISTENTE && $this->getEstoque() > 0;
+    }
+
     public function emArray() :array {
         return [
             'id' => $this->getId(),
+            'sku' => $this->getSku(),
             'tamanho' => $this->getTamanho(),
             'estoque' => $this->getEstoque(),
             'pesoEmGramas' => $this->getPesoEmGramas()

@@ -11,10 +11,14 @@ final class CriaTabelaMovimentacaoEstoqueItem extends AbstractMigration {
             CREATE TABLE movimentacao_estoque_item (
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 idItem INT NOT NULL,
+                idAdministrador INT NOT NULL,
                 operacao INT NOT NULL,
                 quantidade INT NOT NULL,
+                data DATETIME NOT NULL,
                 ativo TINYINT(1) DEFAULT 1,
                 CONSTRAINT fk__id_item FOREIGN KEY (idItem) REFERENCES item(id)
+                    ON DELETE CASCADE ON UPDATE CASCADE,
+                CONSTRAINT fk__id_movimentacao_administrador FOREIGN KEY (idAdministrador) REFERENCES administrador(id)
                     ON DELETE CASCADE ON UPDATE CASCADE
             ) ENGINE=INNODB;
         SQL;

@@ -2,14 +2,22 @@
 
 namespace app\classes\enum;
 
-class OperacaoEstoque extends Enum {
+class OperacaoEstoque implements Enum {
     const ADICIONAR = 1;
 	const REMOVER = 2;
 
+    public static function ehValido( $enum ){
+        return array_key_exists( $enum, self::toArray() );
+    }
+
+    public static function quantidadeOpcoes(){
+        return count( self::toArray() );
+    }
+
     public static function toArray(){
         return [
-			self::ADICIONAR => 'Estoque adicionado',
-			self::REMOVER => 'Esoque removido',
+			self::ADICIONAR => 'ADICIONAR',
+			self::REMOVER => 'REMOVER',
         ];
     }
 
@@ -17,7 +25,11 @@ class OperacaoEstoque extends Enum {
         return self::toArray()[$operacaoEstoque];
     }
 
-    public static function toEnum( $conteudo) {
-        return (int) array_search( $conteudo, self::toArray() );
+    public static function toEnum( $conteudo ){
+        foreach( self::toArray() as $operacao => $conteudoOperacao ){
+            if( $conteudoOperacao == $conteudo ){
+                return $operacao;
+            }
+        }
     }
 }

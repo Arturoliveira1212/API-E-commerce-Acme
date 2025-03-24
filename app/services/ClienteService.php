@@ -64,13 +64,13 @@ class ClienteService extends Service {
 
     private function emailPertenceAOutroCliente( Cliente $cliente ){
         $clienteCadastrado = $this->obterComEmail( $cliente->getEmail() );
-        $existeAdministrador = $clienteCadastrado instanceof Cliente;
+        $existeCliente = $clienteCadastrado instanceof Cliente;
 
-        if( $existeAdministrador && $cliente->getId() == BancoDadosRelacional::ID_INEXISTENTE ){
+        if( $existeCliente && $cliente->getId() == BancoDadosRelacional::ID_INEXISTENTE ){
             return true;
         }
 
-        if( $existeAdministrador && $cliente->getId() != BancoDadosRelacional::ID_INEXISTENTE && $cliente->getId() != $clienteCadastrado->getId() ){
+        if( $existeCliente && $cliente->getId() != BancoDadosRelacional::ID_INEXISTENTE && $cliente->getId() != $clienteCadastrado->getId() ){
             return true;
         }
 

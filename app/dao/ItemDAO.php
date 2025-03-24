@@ -13,23 +13,24 @@ class ItemDAO extends DAOEmBDR {
         return 'item';
     }
 
-    public function salvar( $objeto, ?int $idRecursoPai = null ){
-        if( $objeto->getId() == BancoDadosRelacional::ID_INEXISTENTE ){
-            $this->salvarItem( $objeto, $idRecursoPai );
+    public function salvar( $item, ?int $idRecursoPai = null ){
+        if( $item->deveRegistrarAtualizacaoEstoque() ){
+            $this->salvarItemComEstoque( $item, $idRecursoPai );
+        } else if( $item->getId() == BancoDadosRelacional::ID_INEXISTENTE ){
+            $this->adicionarNovo( $item, $idRecursoPai );
         } else {
-            $this->atualizar( $objeto );
+            $this->atualizar( $item );
         }
 
         return $this->getBancoDados()->ultimoIdInserido();
     }
 
-    private function salvarItem( Item $item, ?int $idRecursoPai = null ){
+    private function salvarItemComEstoque( Item $item, ?int $idRecursoPai = null ){
         $this->getBancoDados()->executarComTransacao( function() use( $item, $idRecursoPai ){
             $this->adicionarNovo( $item, $idRecursoPai );
             $item->setId( $this->getBancoDados()->ultimoIdInserido() );
 
             $this->atualizarEstoque( $item, $item->getEstoque(), OperacaoEstoque::ADICIONAR );
-            $this->registrarMovimentacaoEstoque( $item, $item->getEstoque(), OperacaoEstoque::ADICIONAR );
         } );
     }
 
@@ -54,12 +55,13 @@ class ItemDAO extends DAOEmBDR {
     }
 
     // TO DO => Criar DAO própria para MovimentacaoEstoque
-    public function registrarMovimentacaoEstoque( Item $item, int $quantidade, int $operacaoEstoque ){
-        $comando = 'INSERT INTO movimentacao_estoque_item ( idItem, operacao, quantidade ) VALUES( :idItem, :operacao, :quantidade )';
+    public function registrarMovimentacaoEstoque( Item $item, int $idAdministrador, int $quantidade, int $operacaoEstoque ){
+        $comando = 'INSERT INTO movimentacao_estoque_item ( idItem, idAdministrador, operacao, quantidade, data ) VALUES( :idItem, :idAdministrador, :operacao, :quantidade, NOW() )';
         $parametros = [
             'idItem' => $item->getId(),
             'operacao' => $operacaoEstoque,
-            'quantidade' => $quantidade
+            'quantidade' => $quantidade,
+            'idAdministrador' => $idAdministrador
         ];
 
         return $this->getBancoDados()->executar( $comando, $parametros );
@@ -97,12 +99,5 @@ class ItemDAO extends DAOEmBDR {
 
     protected function transformarEmObjeto( array $linhas ){
         return ConversorDados::converterEmObjeto( Item::class, $linhas );
-    }
-
-    public function movimentarEstoque( Item $item, int $quantidade, int $operacaoEstoque ){
-        $this->getBancoDados()->executarComTransacao( function() use ( $item, $quantidade, $operacaoEstoque ){
-            $this->atualizarEstoque( $item, $quantidade, $operacaoEstoque );
-            $this->registrarMovimentacaoEstoque( $item, $quantidade, $operacaoEstoque );
-        } );
     }
 }

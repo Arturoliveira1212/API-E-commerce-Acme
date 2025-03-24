@@ -2,6 +2,7 @@
 
 namespace app\services;
 
+use app\classes\jwt\PayloadJWT;
 use app\classes\Model;
 use app\dao\BancoDadosRelacional;
 use app\dao\DAO;
@@ -10,6 +11,7 @@ use app\exceptions\ServiceException;
 
 abstract class Service {
     protected DAO $dao;
+    protected ?PayloadJWT $payloadJWT;
 
     public function __construct( DAO $dao ){
         $this->setDao( $dao );
@@ -21,6 +23,14 @@ abstract class Service {
 
     protected function setDao( DAO $dao ){
         $this->dao = $dao;
+    }
+
+    public function getPayloadJWT(){
+        return $this->payloadJWT;
+    }
+
+    public function setPayloadJWT( ?PayloadJWT $payloadJWT ){
+        $this->payloadJWT = $payloadJWT;
     }
 
     abstract protected function validar( Model $objeto, array &$erro = [] );
