@@ -1,8 +1,10 @@
 <?php
 
+use app\classes\enum\OperacaoEstoque;
 use app\dao\DAOEmBDR;
 use app\exceptions\ServiceException;
 use app\classes\Item;
+use app\exceptions\NaoEncontradoException;
 use app\services\ItemService;
 
 describe( 'ItemService', function () {
@@ -11,11 +13,12 @@ describe( 'ItemService', function () {
         $this->service = new ItemService( $this->dao );
     });
 
+    $this->skuItemValido = str_repeat( '1', ItemService::TAMANHO_SKU );
+    $this->tamanhoItemValido = ItemService::TAMANHOS_DISPONIVEIS[0];
+    $this->estoqueItemValido = ItemService::ESTOQUE_MINIMO;
+    $this->pesoEmGramasItemValido = rand( ItemService::PESO_MINIMO, ItemService::PESO_MAXIMO );
+
     describe( 'Salvar', function(){
-        $this->skuItemValido = str_repeat( '1', ItemService::TAMANHO_SKU );
-        $this->tamanhoItemValido = ItemService::TAMANHOS_DISPONIVEIS[0];
-        $this->estoqueItemValido = ItemService::ESTOQUE_MINIMO;
-        $this->pesoEmGramasItemValido = rand( ItemService::PESO_MINIMO, ItemService::PESO_MAXIMO );
 
         describe( 'Sku', function(){
             it('Lança exceção ao enviar sku vazio para item', function() {
@@ -209,5 +212,62 @@ describe( 'ItemService', function () {
                 }
             });
         } );
+    });
+
+    describe( 'Movimentar Estoque', function(){
+        it('Lança exceção ao enviar idItem inválido', function() {
+            $this->dao->shouldReceive('obterComId')->andReturn( [] );
+
+            expect( function(){
+                $this->service->movimentarEstoque( 1, 10, OperacaoEstoque::ADICIONAR );
+            })->toThrow( new NaoEncontradoException( 'Recurso não encontrado.' ) );
+        });
+
+        it('Lança exceção ao enviar operação estoque inválida', function() {
+            $item = new Item( 1, $this->skuItemValido, $this->tamanhoItemValido, $this->estoqueItemValido, $this->pesoEmGramasItemValido );
+            $this->dao->shouldReceive('obterComId')->andReturn( $item );
+
+            try {
+                $this->service->movimentarEstoque( $item->getId(), 10, 2332 );
+            } catch( ServiceException $e ){
+                validarErroSalvar( $e, 'operacao', 'Operação inválida.' );
+            }
+        });
+
+        it('Lança exceção ao enviar estoque maior que o permitido', function() {
+            $estoqueMaior = ItemService::ESTOQUE_MAXIMO + 1;
+            $item = new Item( 1, $this->skuItemValido, $this->tamanhoItemValido, $this->estoqueItemValido, $this->pesoEmGramasItemValido );
+            $this->dao->shouldReceive('obterComId')->andReturn( $item );
+
+            try {
+                $this->service->movimentarEstoque( $item->getId(), $estoqueMaior, OperacaoEstoque::ADICIONAR );
+            } catch( ServiceException $e ){
+                validarErroSalvar( $e, 'quantidade', 'A quantidade deve estar entre ' . ItemService::QUANTIDADE_MINIMA . ' e ' . ItemService::QUANTIDADE_MAXIMA . ' unidades.' );
+            }
+        });
+
+        it('Lança exceção ao enviar estoque menor que o permitido', function() {
+            $estoqueMenor = ItemService::ESTOQUE_MINIMO - 1;
+            $item = new Item( 1, $this->skuItemValido, $this->tamanhoItemValido, $this->estoqueItemValido, $this->pesoEmGramasItemValido );
+            $this->dao->shouldReceive('obterComId')->andReturn( $item );
+
+            try {
+                $this->service->movimentarEstoque( $item->getId(), $estoqueMenor, OperacaoEstoque::ADICIONAR );
+            } catch( ServiceException $e ){
+                validarErroSalvar( $e, 'quantidade', 'A quantidade deve estar entre ' . ItemService::QUANTIDADE_MINIMA . ' e ' . ItemService::QUANTIDADE_MAXIMA . ' unidades.' );
+            }
+        });
+
+        it('Lança exceção ao tentar remover quantidade maior do que a presente em estoque', function() {
+            $estoqueMaiorQueODisponivel = $this->estoqueItemValido + 1;
+            $item = new Item( 1, $this->skuItemValido, $this->tamanhoItemValido, $this->estoqueItemValido, $this->pesoEmGramasItemValido );
+            $this->dao->shouldReceive('obterComId')->andReturn( $item );
+
+            try {
+                $this->service->movimentarEstoque( $item->getId(), $estoqueMaiorQueODisponivel, OperacaoEstoque::REMOVER );
+            } catch( ServiceException $e ){
+                validarErroSalvar( $e, 'quantidade', 'O item não possui estoque disponível para a remoção.' );
+            }
+        });
     });
 });
