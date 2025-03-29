@@ -17,13 +17,14 @@ class ItemController extends Controller {
         return $item;
     }
 
-    public function movimentarEstoque( array $dados, $args ){
+    public function movimentarEstoque( array $dados, $args, $parametros, $payloadJWT ){
         $idItem = isset( $args['id'] ) ? intval( $args['id'] ) : 0;
         $quantidade = isset( $dados['quantidade'] ) ? intval( $dados['quantidade'] ) : 0;
         $operacaoEstoque = OperacaoEstoque::toEnum( $dados['operacao'] ?? '' ) ?? 0;
 
         /** @var ItemService */
         $itemService = $this->getService();
+        $itemService->setPayloadJWT( $payloadJWT );
         $itemService->movimentarEstoque( $idItem, $quantidade, $operacaoEstoque );
 
         return $this->resposta( HttpStatusCode::OK, [

@@ -36,11 +36,12 @@ abstract class Controller {
         ] );
     }
 
-    public function editar( array $dados, $args ){
+    public function editar( array $dados, $args, $parametros, $payloadJWT ){
         $id = intval( $args['id'] );
 
         $objeto = $this->criar( $dados );
         $objeto->setId( $id );
+        $this->getService()->setPayloadJWT( $payloadJWT );
         $this->getService()->salvar( $objeto );
 
         return $this->resposta( HttpStatusCode::OK, [
@@ -71,8 +72,9 @@ abstract class Controller {
         ] );
     }
 
-    public function excluirComId( array $dados, $args ){
+    public function excluirComId( array $dados, $args, $parametros, $payloadJWT ){
         $id = intval( $args['id'] );
+        $this->getService()->setPayloadJWT( $payloadJWT );
         $this->getService()->excluirComId( $id );
 
         return $this->resposta( HttpStatusCode::NO_CONTENT );

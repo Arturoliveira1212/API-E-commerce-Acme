@@ -35,17 +35,17 @@ class ItemService extends Service {
 
     protected function posSalvar( $item, int $operacaoObjeto, ?int $idRecursoPai = null ){
         if( $operacaoObjeto == OperacaoObjeto::CADASTRAR ){
-            $this->registrarMovimentacaoEstoque( $item );
+            $this->registrarMovimentacaoEstoque( $item, $item->getEstoque() );
         }
 
         parent::posSalvar( $item, $operacaoObjeto, $idRecursoPai );
     }
 
-    private function registrarMovimentacaoEstoque( Item $item ){
+    private function registrarMovimentacaoEstoque( Item $item, int $quantidade ){
         try {
             /** @var ItemDAO */
             $itemDAO = $this->getDao();
-            $itemDAO->registrarMovimentacaoEstoque( $item, $this->getPayloadJWT()->sub(), $item->getEstoque(), OperacaoEstoque::ADICIONAR );
+            $itemDAO->registrarMovimentacaoEstoque( $item, $this->getPayloadJWT()->sub(), $quantidade, OperacaoEstoque::ADICIONAR );
         } catch( Throwable $th ){}
     }
 
@@ -128,7 +128,7 @@ class ItemService extends Service {
         /** @var ItemDAO */
         $itemDAO = $this->getDao();
         $retorno = $itemDAO->atualizarEstoque( $item, $quantidade, $operacaoEstoque );
-        $this->registrarMovimentacaoEstoque( $item );
+        $this->registrarMovimentacaoEstoque( $item, $quantidade );
 
         return $retorno;
     }
