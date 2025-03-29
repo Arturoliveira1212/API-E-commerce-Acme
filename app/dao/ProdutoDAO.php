@@ -2,9 +2,12 @@
 
 namespace app\dao;
 
-use app\classes\Categoria;
-use app\classes\factory\ClassFactory;
+use app\classes\Item;
+use app\dao\DAOEmBDR;
 use app\classes\Produto;
+use app\classes\Categoria;
+use app\services\ItemService;
+use app\classes\factory\ClassFactory;
 use app\classes\utils\ConversorDados;
 
 class ProdutoDAO extends DAOEmBDR {
@@ -55,6 +58,7 @@ class ProdutoDAO extends DAOEmBDR {
         /** @var Produto */
         $produto = ConversorDados::converterEmObjeto( Produto::class, $linhas );
         $this->preencherCategoria( $produto, intval( $linhas['idCategoria'] ) );
+        $this->preencherItensDoProduto( $produto );
 
         return $produto;
     }
@@ -64,6 +68,15 @@ class ProdutoDAO extends DAOEmBDR {
         $categoriaDAO = ClassFactory::makeDAO( Categoria::class );
         $categoria = $categoriaDAO->obterComId( $idCategoria );
         $produto->setCategoria( $categoria );
+    }
+
+    private function preencherItensDoProduto( Produto $produto ){
+        /** @var ItemService */
+        $itemService = ClassFactory::makeService( Item::class );
+        $itensDoProduto = $itemService->obterItensDoProduto( $produto->getId() );
+        if( ! empty( $itensDoProduto ) ){
+            $produto->setItens( $itensDoProduto );
+        }
     }
 }
 

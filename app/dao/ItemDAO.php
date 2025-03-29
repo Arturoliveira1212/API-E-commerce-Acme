@@ -93,6 +93,11 @@ class ItemDAO extends DAOEmBDR {
             $parametros['sku'] = $restricoes['sku'];
         }
 
+        if( isset( $restricoes['idProduto'] ) ){
+            $where .= " AND {$nomeTabela}.idProduto = :idProduto ";
+            $parametros['idProduto'] = $restricoes['idProduto'];
+        }
+
         $comando = $select . $join . $where . $orderBy;
         return $comando;
     }

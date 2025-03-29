@@ -13,6 +13,7 @@ class Produto extends Model {
     private string $descricao = '';
     private ?Categoria $categoria = null;
     private ?DateTime $dataCadastro = null;
+    private array $itens = [];
 
     public function __construct(
         int $id = 0,
@@ -99,6 +100,14 @@ class Produto extends Model {
         $this->dataCadastro = $dataCadastro;
     }
 
+    public function getItens(){
+        return $this->itens;
+    }
+
+    public function setItens( array $itens ){
+        $this->itens = $itens;
+    }
+
     public function emArray() :array {
         return [
             'id' => $this->getId(),
@@ -108,7 +117,8 @@ class Produto extends Model {
             'preco' => $this->getPreco(),
             'descricao' => $this->getDescricao(),
             'categoria' => $this->getCategoria() instanceof Categoria ? $this->getCategoria()->emArray() : null,
-            'dataCadastro' => $this->getDataCadastro()->format('Y-m-d H:i:s')
+            'dataCadastro' => $this->getDataCadastro()->format('Y-m-d H:i:s'),
+            'itens' => $this->getItens()
         ];
     }
 }
