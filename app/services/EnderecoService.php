@@ -4,10 +4,10 @@ namespace app\services;
 
 use app\classes\Cliente;
 use app\classes\Endereco;
+use app\classes\enum\OperacaoObjeto;
 use app\services\Service;
 use app\classes\utils\Validador;
 use app\classes\factory\ClassFactory;
-use app\dao\BancoDadosRelacional;
 use app\dao\EnderecoDAO;
 use app\exceptions\NaoEncontradoException;
 
@@ -20,12 +20,12 @@ class EnderecoService extends Service {
     const TAMANHO_CEP = 8;
     const TAMANHO_MAXIMO_COMPLEMENTO = 100;
 
-    protected function preSalvar( $endereco, ?int $idRecursoPai = null ){
-        if( $endereco->getId() == BancoDadosRelacional::ID_INEXISTENTE && ! $this->clienteDoEnderecoExiste( $idRecursoPai ) ){
+    protected function preSalvar( $endereco, int $operacaoObjeto, ?int $idRecursoPai = null ){
+        if( $operacaoObjeto == OperacaoObjeto::CADASTRAR && ! $this->clienteDoEnderecoExiste( $idRecursoPai ) ){
             throw new NaoEncontradoException( 'Recurso não encontrado.' );
         }
 
-        parent::preSalvar( $endereco );
+        parent::preSalvar( $endereco, $operacaoObjeto, $idRecursoPai );
     }
 
     private function clienteDoEnderecoExiste( ?int $idCliente = null ){
@@ -35,7 +35,7 @@ class EnderecoService extends Service {
         return $existe;
     }
 
-    protected function validar( $endereco, array &$erro = [] ){
+    protected function validar( $endereco, int $operacaoObjeto, array &$erro = [] ){
         $this->validarLogradouro( $endereco, $erro );
         $this->validarCidade( $endereco, $erro );
         $this->validarNumero( $endereco, $erro );

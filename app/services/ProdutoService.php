@@ -2,11 +2,11 @@
 
 namespace app\services;
 
-use app\classes\Categoria;
 use app\classes\Produto;
 use app\services\Service;
+use app\classes\Categoria;
 use app\classes\utils\Validador;
-use app\dao\BancoDadosRelacional;
+use app\classes\enum\OperacaoObjeto;
 use app\exceptions\NaoEncontradoException;
 
 class ProdutoService extends Service {
@@ -20,35 +20,35 @@ class ProdutoService extends Service {
     const TAMANHO_MINIMO_DESCRICAO = 3;
     const TAMANHO_MAXIMO_DESCRICAO = 300;
 
-    protected function validar( $produto, array &$erro = [] ){
-        $this->validarNome( $produto, $erro );
-        $this->validarReferencia( $produto, $erro );
+    protected function validar( $produto, int $operacaoObjeto, array &$erro = [] ){
+        $this->validarNome( $produto, $operacaoObjeto, $erro );
+        $this->validarReferencia( $produto, $operacaoObjeto, $erro );
         $this->validarCor( $produto, $erro );
         $this->validarPreco( $produto, $erro );
         $this->validarDescricao( $produto, $erro );
         $this->validarCategoria( $produto, $erro );
     }
 
-    private function validarNome( Produto $produto, array &$erro ){
+    private function validarNome( Produto $produto, int $operacaoObjeto, array &$erro ){
         $validacaoTamanhoNome = Validador::validarTamanhoTexto( $produto->getNome(), self::TAMANHO_MINIMO_NOME, self::TAMANHO_MAXIMO_NOME );
         if( $validacaoTamanhoNome == 0 ){
             $erro['nome'] = 'Preencha o nome.';
         } else if( $validacaoTamanhoNome == -1 ){
             $erro['nome'] = 'O nome deve ter entre ' . self::TAMANHO_MINIMO_NOME . ' e ' . self::TAMANHO_MAXIMO_NOME . ' caracteres.';
-        } else if( $this->nomeJaCadastrado( $produto ) ){
+        } else if( $this->nomeJaCadastrado( $produto, $operacaoObjeto ) ){
             $erro['nome'] = 'Produto já cadastrado com esse nome.';
         }
     }
 
-    private function nomeJaCadastrado( Produto $produto ){
+    private function nomeJaCadastrado( Produto $produto, int $operacaoObjeto ){
         try {
             $produtoCadastrado = $this->obterComNome( $produto->getNome() );
 
-            if( $produto->getId() == BancoDadosRelacional::ID_INEXISTENTE ){
+            if( $operacaoObjeto == OperacaoObjeto::CADASTRAR ){
                 return true;
             }
 
-            if( $produto->getId() != BancoDadosRelacional::ID_INEXISTENTE && $produto->getId() != $produtoCadastrado->getId() ){
+            if( $operacaoObjeto == OperacaoObjeto::EDITAR && $produto->getId() != $produtoCadastrado->getId() ){
                 return true;
             }
 
@@ -58,26 +58,26 @@ class ProdutoService extends Service {
         }
     }
 
-    private function validarReferencia( Produto $produto, array &$erro ){
+    private function validarReferencia( Produto $produto, int $operacaoObjeto, array &$erro ){
         $validacaoTamanhoReferencia = Validador::validarTamanhoTexto( $produto->getReferencia(), self::TAMANHO_REFERENCIA, self::TAMANHO_REFERENCIA );
         if( $validacaoTamanhoReferencia == 0 ){
             $erro['referencia'] = 'Preencha a referência.';
         } else if( $validacaoTamanhoReferencia == -1 ){
             $erro['referencia'] = 'A referência deve ter ' . self::TAMANHO_REFERENCIA . ' caracteres.';
-        } else if( $this->referenciaJaCadastrada( $produto ) ){
+        } else if( $this->referenciaJaCadastrada( $produto, $operacaoObjeto ) ){
             $erro['referencia'] = 'Produto já cadastrado com essa referência.';
         }
     }
 
-    private function referenciaJaCadastrada( Produto $produto ){
+    private function referenciaJaCadastrada( Produto $produto, int $operacaoObjeto ){
         try {
             $produtoCadastrado = $this->obterComReferencia( $produto->getReferencia() );
 
-            if( $produto->getId() == BancoDadosRelacional::ID_INEXISTENTE ){
+            if( $operacaoObjeto == OperacaoObjeto::CADASTRAR ){
                 return true;
             }
 
-            if( $produto->getId() != BancoDadosRelacional::ID_INEXISTENTE && $produto->getId() != $produtoCadastrado->getId() ){
+            if( $operacaoObjeto == OperacaoObjeto::EDITAR && $produto->getId() != $produtoCadastrado->getId() ){
                 return true;
             }
 

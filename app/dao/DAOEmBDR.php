@@ -2,6 +2,7 @@
 
 namespace app\dao;
 
+use app\classes\enum\OperacaoObjeto;
 use app\classes\Model;
 
 abstract class DAOEmBDR implements DAO {
@@ -22,10 +23,10 @@ abstract class DAOEmBDR implements DAO {
     abstract protected function obterQuery( array $restricoes, array &$parametros );
     abstract protected function transformarEmObjeto( array $linhas );
 
-    public function salvar( $objeto, ?int $idRecursoPai = null ){
-        if( $objeto->getId() == BancoDadosRelacional::ID_INEXISTENTE ){
+    public function salvar( $objeto, int $operacaoObjeto, ?int $idRecursoPai = null ){
+        if( $operacaoObjeto == OperacaoObjeto::CADASTRAR ){
             $this->adicionarNovo( $objeto, $idRecursoPai );
-        } else {
+        } else if( $operacaoObjeto == OperacaoObjeto::EDITAR ){
             $this->atualizar( $objeto );
         }
 

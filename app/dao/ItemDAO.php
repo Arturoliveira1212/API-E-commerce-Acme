@@ -4,8 +4,8 @@ namespace app\dao;
 
 use app\classes\Item;
 use app\dao\DAOEmBDR;
-use app\dao\BancoDadosRelacional;
 use app\classes\enum\OperacaoEstoque;
+use app\classes\enum\OperacaoObjeto;
 use app\classes\utils\ConversorDados;
 
 class ItemDAO extends DAOEmBDR {
@@ -13,12 +13,12 @@ class ItemDAO extends DAOEmBDR {
         return 'item';
     }
 
-    public function salvar( $item, ?int $idRecursoPai = null ){
-        if( $item->deveRegistrarAtualizacaoEstoque() ){
+    public function salvar( $item, int $operacaoObjeto, ?int $idRecursoPai = null ){
+        if( $operacaoObjeto == OperacaoObjeto::CADASTRAR && $item->getEstoque() > 0 ){
             $this->salvarItemComEstoque( $item, $idRecursoPai );
-        } else if( $item->getId() == BancoDadosRelacional::ID_INEXISTENTE ){
+        } else if( $operacaoObjeto == OperacaoObjeto::CADASTRAR ){
             $this->adicionarNovo( $item, $idRecursoPai );
-        } else {
+        } else if( $operacaoObjeto == OperacaoObjeto::EDITAR ){
             $this->atualizar( $item );
         }
 

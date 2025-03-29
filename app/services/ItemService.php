@@ -3,10 +3,10 @@
 namespace app\services;
 
 use app\classes\enum\OperacaoEstoque;
+use app\classes\enum\OperacaoObjeto;
 use app\dao\ItemDAO;
 use app\classes\Produto;
 use app\services\Service;
-use app\dao\BancoDadosRelacional;
 use app\exceptions\ServiceException;
 use app\classes\factory\ClassFactory;
 use app\classes\Item;
@@ -25,17 +25,20 @@ class ItemService extends Service {
     const QUANTIDADE_MINIMA = 1;
     const QUANTIDADE_MAXIMA = 10000000;
 
-    public function salvar( $item, ?int $idRecursoPai = null ){
-        $deveRegistrarAtualizacaoEstoque = $item->getId() == BancoDadosRelacional::ID_INEXISTENTE && $item->getEstoque() > 0;
+    protected function preSalvar( $item, int $operacaoObjeto, ?int $idRecursoPai = null ){
+        if( $operacaoObjeto == OperacaoObjeto::CADASTRAR && ! $this->produtoDoItemExiste( $idRecursoPai ) ){
+            throw new NaoEncontradoException( 'Recurso não encontrado.' );
+        }
 
-        $this->preSalvar( $item, $idRecursoPai );
-        $retorno = $this->getDao()->salvar( $item, $idRecursoPai );
+        parent::preSalvar( $item, $operacaoObjeto, $idRecursoPai );
+    }
 
-        if( $deveRegistrarAtualizacaoEstoque ){
+    protected function posSalvar( $item, int $operacaoObjeto, ?int $idRecursoPai = null ){
+        if( $operacaoObjeto == OperacaoObjeto::CADASTRAR ){
             $this->registrarMovimentacaoEstoque( $item );
         }
 
-        return $retorno;
+        parent::posSalvar( $item, $operacaoObjeto, $idRecursoPai );
     }
 
     private function registrarMovimentacaoEstoque( Item $item ){
@@ -46,14 +49,6 @@ class ItemService extends Service {
         } catch( Throwable $th ){}
     }
 
-    protected function preSalvar( $item, ?int $idRecursoPai = null ){
-        if( $item->getId() == BancoDadosRelacional::ID_INEXISTENTE && ! $this->produtoDoItemExiste( $idRecursoPai ) ){
-            throw new NaoEncontradoException( 'Recurso não encontrado.' );
-        }
-
-        parent::preSalvar( $item );
-    }
-
     private function produtoDoItemExiste( ?int $idProduto = null ){
         $produtoService = ClassFactory::makeService( Produto::class );
         $existe = $produtoService->existe( 'id', $idProduto );
@@ -61,36 +56,36 @@ class ItemService extends Service {
         return $existe;
     }
 
-    protected function validar( $item, array &$erro = [] ){
-        $this->validarSku( $item, $erro );
+    protected function validar( $item, int $operacaoObjeto, array &$erro = [] ){
+        $this->validarSku( $item, $operacaoObjeto, $erro );
         $this->validarTamanho( $item, $erro );
         $this->validarPesoEmGramas( $item, $erro );
 
-        if( $item->getId() == BancoDadosRelacional::ID_INEXISTENTE ){
+        if( $operacaoObjeto == OperacaoObjeto::CADASTRAR ){
             $this->validarEstoque( $item, $erro );
         }
     }
 
-    private function validarSku( Item $item, array &$erro ){
+    private function validarSku( Item $item, int $operacaoObjeto, array &$erro ){
         if( empty( $item->getSku() ) ){
             $erro['sku'] = 'Preencha o sku.';
         } else if( ! preg_match('/^[a-zA-Z0-9-]{8}$/', $item->getSku() ) ){
             $erro['sku'] = 'O sku deve ter ' . self::TAMANHO_SKU . ' caracteres, sendo eles números e letras.';
-        } else if( $this->skuJaCadastrado( $item ) ){
+        } else if( $this->skuJaCadastrado( $item, $operacaoObjeto ) ){
             $erro['sku'] = 'Item já cadastrado com esse sku.';
         }
     }
 
-    private function skuJaCadastrado( Item $item ){
+    private function skuJaCadastrado( Item $item, int $operacaoObjeto ){
         try {
             $itemCadastrado = $this->obterComSku( $item->getSku() );
             $existeItem = $itemCadastrado instanceof Item;
 
-            if( $existeItem && $item->getId() == BancoDadosRelacional::ID_INEXISTENTE ){
+            if( $existeItem && $operacaoObjeto == OperacaoObjeto::CADASTRAR ){
                 return true;
             }
 
-            if( $existeItem && $item->getId() != BancoDadosRelacional::ID_INEXISTENTE && $item->getId() != $itemCadastrado->getId() ){
+            if( $existeItem &&  $operacaoObjeto == OperacaoObjeto::EDITAR && $item->getId() != $itemCadastrado->getId() ){
                 return true;
             }
 

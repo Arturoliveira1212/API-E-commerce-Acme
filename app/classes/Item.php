@@ -66,10 +66,6 @@ class Item extends Model {
         $this->pesoEmGramas = $pesoEmGramas;
     }
 
-    public function deveRegistrarAtualizacaoEstoque(){
-        return $this->getId() == BancoDadosRelacional::ID_INEXISTENTE && $this->getEstoque() > 0;
-    }
-
     public function emArray() :array {
         return [
             'id' => $this->getId(),

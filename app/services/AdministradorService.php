@@ -6,9 +6,9 @@ use Exception;
 use app\services\Service;
 use app\classes\jwt\TokenJWT;
 use app\classes\Administrador;
+use app\classes\enum\OperacaoObjeto;
 use app\classes\utils\Validador;
 use app\dao\AdministradorDAO;
-use app\dao\BancoDadosRelacional;
 use app\exceptions\NaoAutorizadoException;
 use app\exceptions\NaoEncontradoException;
 use app\exceptions\ServiceException;
@@ -26,20 +26,20 @@ class AdministradorService extends Service {
     const TAMANHO_MAXIMO_EMAIL = 200;
     const TAMANHO_SENHA = 8;
 
-    protected function preSalvar( $administrador, ?int $idRecursoPai = null ){
-        parent::preSalvar( $administrador );
+    protected function preSalvar( $administrador, int $operacaoObjeto, ?int $idRecursoPai = null ){
+        parent::preSalvar( $administrador, $operacaoObjeto, $idRecursoPai );
 
         $senha = $administrador->getSenha();
         $senhaCriptografada = $this->gerarHash( $senha );
         $administrador->setSenha( $senhaCriptografada );
     }
 
-    protected function validar( $administrador, array &$erro = [] ){
+    protected function validar( $administrador, int $operacaoObjeto, array &$erro = [] ){
         if( $this->administradorEhMaster( $administrador ) ){
             $erro['administrador'] = 'Não é possível editar o administrador master.';
         } else {
             $this->validarNome( $administrador, $erro );
-            $this->validarEmail( $administrador, $erro );
+            $this->validarEmail( $administrador, $operacaoObjeto, $erro );
             $this->validarSenha( $administrador, $erro );
         }
     }
@@ -53,7 +53,7 @@ class AdministradorService extends Service {
         }
     }
 
-    private function validarEmail( Administrador $administrador, array &$erro ){
+    private function validarEmail( Administrador $administrador, int $operacaoObjeto, array &$erro ){
         $validacaoTamanhoEmail = Validador::validarTamanhoTexto( $administrador->getEmail(), self::TAMANHO_MINIMO_EMAIL, self::TAMANHO_MAXIMO_EMAIL );
         if( $validacaoTamanhoEmail == 0 ){
             $erro['email'] = 'Preencha o email.';
@@ -61,20 +61,20 @@ class AdministradorService extends Service {
             $erro['email'] = 'O email deve ter entre ' . self::TAMANHO_MINIMO_EMAIL . ' e ' . self::TAMANHO_MAXIMO_EMAIL . ' caracteres.';
         } else if( ! Validador::validarEmail( $administrador->getEmail() ) ){
             $erro['email'] = 'Email inválido.';
-        } else if( $this->emailPertenceAOutroAdministrador( $administrador ) ) {
+        } else if( $this->emailPertenceAOutroAdministrador( $administrador, $operacaoObjeto ) ) {
             $erro['email'] = 'Email já pertence a outro administrador.';
         }
     }
 
-    private function emailPertenceAOutroAdministrador( Administrador $administrador ){
+    private function emailPertenceAOutroAdministrador( Administrador $administrador, int $operacaoObjeto, ){
         $administradorCadastrado = $this->obterComEmail( $administrador->getEmail() );
         $existeAdministrador = $administradorCadastrado instanceof Administrador;
 
-        if( $existeAdministrador && $administrador->getId() == BancoDadosRelacional::ID_INEXISTENTE ){
+        if( $existeAdministrador && $operacaoObjeto == OperacaoObjeto::CADASTRAR ){
             return true;
         }
 
-        if( $existeAdministrador && $administrador->getId() != BancoDadosRelacional::ID_INEXISTENTE && $administrador->getId() != $administradorCadastrado->getId() ){
+        if( $existeAdministrador && $operacaoObjeto == OperacaoObjeto::EDITAR && $administrador->getId() != $administradorCadastrado->getId() ){
             return true;
         }
 

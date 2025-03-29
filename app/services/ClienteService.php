@@ -4,12 +4,12 @@ namespace app\services;
 
 use Exception;
 use app\classes\Cliente;
+use app\classes\enum\OperacaoObjeto;
 use app\services\Service;
 use app\traits\Autenticavel;
 use app\classes\jwt\TokenJWT;
 use app\traits\Criptografavel;
 use app\classes\utils\Validador;
-use app\dao\BancoDadosRelacional;
 use app\exceptions\NaoAutorizadoException;
 use DateTime;
 
@@ -24,18 +24,18 @@ class ClienteService extends Service {
     const TAMANHO_CPF = 14;
     const TAMANHO_SENHA = 8;
 
-    protected function preSalvar( $cliente, ?int $idRecursoPai = null ){
-        parent::preSalvar( $cliente );
+    protected function preSalvar( $cliente, int $operacaoObjeto, ?int $idRecursoPai = null ){
+        parent::preSalvar( $cliente, $operacaoObjeto, $idRecursoPai );
 
         $senha = $cliente->getSenha();
         $senhaCriptografada = $this->gerarHash( $senha );
         $cliente->setSenha( $senhaCriptografada );
     }
 
-    protected function validar( $cliente, array &$erro = [] ){
+    protected function validar( $cliente, int $operacaoObjeto, array &$erro = [] ){
         $this->validarNome( $cliente, $erro );
-        $this->validarEmail( $cliente, $erro );
-        $this->validarCpf( $cliente, $erro );
+        $this->validarEmail( $cliente, $operacaoObjeto, $erro );
+        $this->validarCpf( $cliente, $operacaoObjeto, $erro );
         $this->validarSenha( $cliente, $erro );
         $this->validarDataNascimento( $cliente, $erro );
     }
@@ -49,7 +49,7 @@ class ClienteService extends Service {
         }
     }
 
-    private function validarEmail( Cliente $cliente, array &$erro ){
+    private function validarEmail( Cliente $cliente, int $operacaoObjeto, array &$erro ){
         $validacaoTamanhoEmail = Validador::validarTamanhoTexto( $cliente->getEmail(), self::TAMANHO_MINIMO_EMAIL, self::TAMANHO_MAXIMO_EMAIL );
         if( $validacaoTamanhoEmail == 0 ){
             $erro['email'] = 'Preencha o email.';
@@ -57,43 +57,43 @@ class ClienteService extends Service {
             $erro['email'] = 'O email deve ter entre ' . self::TAMANHO_MINIMO_EMAIL . ' e ' . self::TAMANHO_MAXIMO_EMAIL . ' caracteres.';
         } else if( ! Validador::validarEmail( $cliente->getEmail() ) ){
             $erro['email'] = 'Email inválido.';
-        } else if( $this->emailPertenceAOutroCliente( $cliente ) ) {
+        } else if( $this->emailPertenceAOutroCliente( $cliente, $operacaoObjeto ) ) {
             $erro['email'] = 'Email já pertence a outro cliente.';
         }
     }
 
-    private function emailPertenceAOutroCliente( Cliente $cliente ){
+    private function emailPertenceAOutroCliente( Cliente $cliente, int $operacaoObjeto, ){
         $clienteCadastrado = $this->obterComEmail( $cliente->getEmail() );
         $existeCliente = $clienteCadastrado instanceof Cliente;
 
-        if( $existeCliente && $cliente->getId() == BancoDadosRelacional::ID_INEXISTENTE ){
+        if( $existeCliente && $operacaoObjeto == OperacaoObjeto::CADASTRAR ){
             return true;
         }
 
-        if( $existeCliente && $cliente->getId() != BancoDadosRelacional::ID_INEXISTENTE && $cliente->getId() != $clienteCadastrado->getId() ){
+        if( $existeCliente && $operacaoObjeto == OperacaoObjeto::EDITAR && $cliente->getId() != $clienteCadastrado->getId() ){
             return true;
         }
 
         return false;
     }
 
-    private function validarCpf( Cliente $cliente, array &$erro ){
+    private function validarCpf( Cliente $cliente, int $operacaoObjeto, array &$erro ){
         if( ! Validador::validarCpf( $cliente->getCpf() ) ){
             $erro['cpf'] = 'CPF inválido. O formato esperado é 123.456.789-09.';
-        } else if( $this->cpfPertenceAOutroCliente( $cliente ) ){
+        } else if( $this->cpfPertenceAOutroCliente( $cliente, $operacaoObjeto ) ){
             $erro['cpf'] = 'CPF já pertence a outro cliente.';
         }
     }
 
-    private function cpfPertenceAOutroCliente( Cliente $cliente ){
+    private function cpfPertenceAOutroCliente( Cliente $cliente, int $operacaoObjeto, ){
         $clienteCadastrado = $this->obterComCpf( $cliente->getCpf() );
         $existeAdministrador = $clienteCadastrado instanceof Cliente;
 
-        if( $existeAdministrador && $cliente->getId() == BancoDadosRelacional::ID_INEXISTENTE ){
+        if( $existeAdministrador && $operacaoObjeto == OperacaoObjeto::CADASTRAR ){
             return true;
         }
 
-        if( $existeAdministrador && $cliente->getId() != BancoDadosRelacional::ID_INEXISTENTE && $cliente->getId() != $clienteCadastrado->getId() ){
+        if( $existeAdministrador && $operacaoObjeto == OperacaoObjeto::EDITAR && $cliente->getId() != $clienteCadastrado->getId() ){
             return true;
         }
 

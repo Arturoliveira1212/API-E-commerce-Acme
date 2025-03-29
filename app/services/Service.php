@@ -2,6 +2,7 @@
 
 namespace app\services;
 
+use app\classes\enum\OperacaoObjeto;
 use app\classes\jwt\PayloadJWT;
 use app\classes\Model;
 use app\dao\BancoDadosRelacional;
@@ -33,25 +34,31 @@ abstract class Service {
         $this->payloadJWT = $payloadJWT;
     }
 
-    abstract protected function validar( Model $objeto, array &$erro = [] );
+    abstract protected function validar( Model $objeto, int $operacaoObjeto, array &$erro = [] );
 
-    protected function preSalvar( $objeto, ?int $idRecursoPai = null ){
+    protected function preSalvar( $objeto, int $operacaoObjeto, ?int $idRecursoPai = null ){
         $id = $objeto->getId();
-        if( $id != BancoDadosRelacional::ID_INEXISTENTE && ! $this->existe( 'id', $id ) ){
+        if( $operacaoObjeto == OperacaoObjeto::EDITAR && ! $this->existe( 'id', $id ) ){
             throw new NaoEncontradoException( 'Recurso não encontrado.' );
         }
 
         $erro = [];
-        $this->validar( $objeto, $erro );
+        $this->validar( $objeto, $operacaoObjeto, $erro );
         if( ! empty( $erro ) ){
             throw new ServiceException( json_encode( $erro ) );
         }
     }
 
-    public function salvar( Model $objeto, ?int $idRecursoPai = null ){
-        $this->preSalvar( $objeto, $idRecursoPai );
-        return $this->getDao()->salvar( $objeto, $idRecursoPai );
+    public function salvar( $objeto, ?int $idRecursoPai = null ){
+        $operacaoObjeto = $objeto->getId() == BancoDadosRelacional::ID_INEXISTENTE ? OperacaoObjeto::CADASTRAR : OperacaoObjeto::EDITAR;
+        $this->preSalvar( $objeto, $operacaoObjeto, $idRecursoPai );
+        $retorno =  $this->getDao()->salvar( $objeto, $operacaoObjeto, $idRecursoPai );
+        $this->posSalvar( $objeto, $operacaoObjeto, $idRecursoPai );
+
+        return $retorno;
     }
+
+    protected function posSalvar( $objeto, int $operacaoObjeto, ?int $idRecursoPai = null ){}
 
     public function desativarComId( int $id ){
         return $this->getDao()->desativarComId( $id );
