@@ -11,6 +11,8 @@ class SemeadorPermissaoAdministrador extends AbstractSeed {
     }
 
     public function run(): void {
+        $this->execute( 'DELETE FROM permissao_administrador' );
+
         $ps = $this->query( 'SELECT id FROM permissao WHERE ativo = 1' );
         $permissoes = $ps->fetchAll( PDO::FETCH_ASSOC );
 

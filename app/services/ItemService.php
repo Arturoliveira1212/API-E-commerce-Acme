@@ -16,7 +16,7 @@ use Throwable;
 class ItemService extends Service {
     const TAMANHO_SKU = 8;
     const TAMANHOS_DISPONIVEIS = [
-        'PP', 'P', 'M', 'G', 'GG', 'XG'
+        'PP', 'P', 'M', 'G', 'GG', 'XG', 'U', '38', '39', '40', '41', '42'
     ];
     const PESO_MINIMO = 1;
     const PESO_MAXIMO = 1000000000;

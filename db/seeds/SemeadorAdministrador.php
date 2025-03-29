@@ -15,14 +15,10 @@ class SemeadorAdministrador extends AbstractSeed {
     public function run(): void {
         $senhaCriptografada = $this->gerarHash( '12345678' );
         $sql = <<<SQL
-            INSERT INTO administrador ( id, nome, email, senha ) VALUES
-                ( :id, :nome, :email, :senha );
+            DELETE FROM administrador;
+            INSERT INTO administrador (id, nome, email, senha) VALUES
+                (1, 'Admin Master', 'admin@gmail.com', '$senhaCriptografada');
         SQL;
-        $this->execute( $sql, [
-            'id' => 1,
-            'nome' => 'Admin Master',
-            'email' => 'admin@gmail.com',
-            'senha' => $senhaCriptografada
-        ] );
+        $this->execute( $sql );
     }
 }
