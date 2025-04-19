@@ -8,7 +8,8 @@ use app\classes\jwt\TokenJWT;
 use app\classes\jwt\PayloadJWT;
 use Throwable;
 
-trait Autenticavel {
+trait Autenticavel
+{
     /**
      * Método responsável por gerar um token JWT.
      *
@@ -19,13 +20,14 @@ trait Autenticavel {
      * @param string $algoritimoCriptografia Por padrão é HS256
      * @return TokenJWT Token JWT gerado
      */
-    public function gerarToken( string $id, string $nome, string $papel, int $duracaoEmSegundos = 3600, string $algoritimoCriptografia = 'HS256' ){
+    public function gerarToken(string $id, string $nome, string $papel, int $duracaoEmSegundos = 3600, string $algoritimoCriptografia = 'HS256')
+    {
         $criadoEm = time();
         $expiraEm = $criadoEm + $duracaoEmSegundos;
 
-        $payloadJWT = new PayloadJWT( $id, $nome, $papel, $criadoEm, $expiraEm );
-        $token =  JWT::encode( $payloadJWT->toArray(), $_ENV['SECRET_KEY_JWT'], $algoritimoCriptografia );
-        $tokenJWT = new TokenJWT( $token, $duracaoEmSegundos );
+        $payloadJWT = new PayloadJWT($id, $nome, $papel, $criadoEm, $expiraEm);
+        $token =  JWT::encode($payloadJWT->toArray(), $_ENV['SECRET_KEY_JWT'], $algoritimoCriptografia);
+        $tokenJWT = new TokenJWT($token, $duracaoEmSegundos);
 
         return $tokenJWT;
     }
@@ -37,13 +39,14 @@ trait Autenticavel {
      * @param string $algoritimoCriptografia Por padrão é HS256
      * @return PayloadJWT|null Retorna o payload do token ou null em caso de erro
      */
-    public function decodificarToken( string $token, string $algoritimoCriptografia = 'HS256' ){
+    public function decodificarToken(string $token, string $algoritimoCriptografia = 'HS256')
+    {
         try {
-            $payload = JWT::decode( $token, new Key( $_ENV['SECRET_KEY_JWT'], $algoritimoCriptografia ) );
-            $payloadJWT = new PayloadJWT( $payload->sub, $payload->name, $payload->role, $payload->iat, $payload->exp );
+            $payload = JWT::decode($token, new Key($_ENV['SECRET_KEY_JWT'], $algoritimoCriptografia));
+            $payloadJWT = new PayloadJWT($payload->sub, $payload->name, $payload->role, $payload->iat, $payload->exp);
 
             return $payloadJWT;
-        } catch( Throwable $e ){
+        } catch (Throwable $e) {
             return null;
         }
     }

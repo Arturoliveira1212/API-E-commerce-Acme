@@ -5,7 +5,8 @@ namespace app\classes;
 use app\classes\Model;
 use app\dao\BancoDadosRelacional;
 
-class Item extends Model {
+class Item extends Model
+{
     private int $id = 0;
     private string $sku = '';
     private string $tamanho = ''; // TO DO => Tratar tamanho como objeto.
@@ -18,55 +19,66 @@ class Item extends Model {
         string $tamanho = '',
         int $estoque = 0,
         float $pesoEmGramas = 0.0
-    ){
-        $this->setId( $id );
-        $this->setSku( $sku );
-        $this->setTamanho( $tamanho );
-        $this->setEstoque( $estoque );
-        $this->setPesoEmGramas( $pesoEmGramas );
+    ) {
+        $this->setId($id);
+        $this->setSku($sku);
+        $this->setTamanho($tamanho);
+        $this->setEstoque($estoque);
+        $this->setPesoEmGramas($pesoEmGramas);
     }
 
-    public function getId(){
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function setId( int $id ){
+    public function setId(int $id)
+    {
         $this->id = $id;
     }
 
-    public function getSku(){
+    public function getSku()
+    {
         return $this->sku;
     }
 
-    public function setSku( string $sku ){
+    public function setSku(string $sku)
+    {
         $this->sku = $sku;
     }
 
-    public function getTamanho(){
+    public function getTamanho()
+    {
         return $this->tamanho;
     }
 
-    public function setTamanho( string $tamanho ){
+    public function setTamanho(string $tamanho)
+    {
         $this->tamanho = $tamanho;
     }
 
-    public function getEstoque(){
+    public function getEstoque()
+    {
         return $this->estoque;
     }
 
-    public function setEstoque( int $estoque ){
+    public function setEstoque(int $estoque)
+    {
         $this->estoque = $estoque;
     }
 
-    public function getPesoEmGramas(){
+    public function getPesoEmGramas()
+    {
         return $this->pesoEmGramas;
     }
 
-    public function setPesoEmGramas( float $pesoEmGramas ){
+    public function setPesoEmGramas(float $pesoEmGramas)
+    {
         $this->pesoEmGramas = $pesoEmGramas;
     }
 
-    public function emArray() :array {
+    public function emArray(): array
+    {
         return [
             'id' => $this->getId(),
             'sku' => $this->getSku(),

@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 use Phinx\Seed\AbstractSeed;
 
-class SemeadorPermissao extends AbstractSeed {
-
-    public function getDependencies(): array {
+class SemeadorPermissao extends AbstractSeed
+{
+    public function getDependencies(): array
+    {
         return [];
     }
 
-    public function run(): void {
+    public function run(): void
+    {
         $sql = <<<SQL
             DELETE FROM permissao;
             INSERT INTO permissao ( id, descricao ) VALUES
@@ -35,6 +37,6 @@ class SemeadorPermissao extends AbstractSeed {
                 (19, 'Excluir Item'),
                 (20, 'Movimentar Estoque Item');
         SQL;
-        $this->execute( $sql );
+        $this->execute($sql);
     }
 }

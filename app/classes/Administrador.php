@@ -2,7 +2,8 @@
 
 namespace app\classes;
 
-class Administrador extends Model {
+class Administrador extends Model
+{
     private int $id = 0;
     private string $nome = '';
     private string $email = '';
@@ -15,59 +16,71 @@ class Administrador extends Model {
         string $email = '',
         string $senha = '',
         array $permissoes = []
-    ){
-        $this->setId( $id );
-        $this->setNome( $nome );
-        $this->setEmail( $email );
-        $this->setSenha( $senha );
-        $this->setPermissoes( $permissoes );
+    ) {
+        $this->setId($id);
+        $this->setNome($nome);
+        $this->setEmail($email);
+        $this->setSenha($senha);
+        $this->setPermissoes($permissoes);
     }
 
-    public function getId(){
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function setId( int $id ){
+    public function setId(int $id)
+    {
         $this->id = $id;
     }
 
-    public function getNome(){
+    public function getNome()
+    {
         return $this->nome;
     }
 
-    public function setNome( string $nome ){
+    public function setNome(string $nome)
+    {
         $this->nome = $nome;
     }
 
-    public function getEmail(){
+    public function getEmail()
+    {
         return $this->email;
     }
 
-    public function setEmail( string $email ){
+    public function setEmail(string $email)
+    {
         $this->email = $email;
     }
 
-    public function getSenha(){
+    public function getSenha()
+    {
         return $this->senha;
     }
 
-    public function setSenha( string $senha ){
+    public function setSenha(string $senha)
+    {
         $this->senha = $senha;
     }
 
-    public function getPermissoes(){
+    public function getPermissoes()
+    {
         return $this->permissoes;
     }
 
-    public function setPermissoes( array $permissoes ){
+    public function setPermissoes(array $permissoes)
+    {
         $this->permissoes = $permissoes;
     }
 
-    public function possuiPermissao( string $permissao ){
-        return in_array( $permissao, $this->getPermissoes() );
+    public function possuiPermissao(string $permissao)
+    {
+        return in_array($permissao, $this->getPermissoes());
     }
 
-    public function emArray() :array {
+    public function emArray(): array
+    {
         return [
             'id' => $this->getId(),
             'nome' => $this->getNome(),

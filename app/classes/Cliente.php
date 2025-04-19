@@ -4,7 +4,8 @@ namespace app\classes;
 
 use DateTime;
 
-class Cliente extends Model {
+class Cliente extends Model
+{
     private int $id = 0;
     private string $nome = '';
     private string $email = '';
@@ -20,81 +21,96 @@ class Cliente extends Model {
         string $cpf = '',
         string $senha = '',
         ?DateTime $dataNascimento = null
-    ){
-        $this->setId( $id );
-        $this->setNome( $nome );
-        $this->setEmail( $email );
-        $this->setCpf( $cpf );
-        $this->setSenha( $senha );
-        $this->setDataNascimento( $dataNascimento );
+    ) {
+        $this->setId($id);
+        $this->setNome($nome);
+        $this->setEmail($email);
+        $this->setCpf($cpf);
+        $this->setSenha($senha);
+        $this->setDataNascimento($dataNascimento);
     }
 
-    public function getId(){
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function setId( int $id ){
+    public function setId(int $id)
+    {
         $this->id = $id;
     }
 
-    public function getNome(){
+    public function getNome()
+    {
         return $this->nome;
     }
 
-    public function setNome( string $nome ){
+    public function setNome(string $nome)
+    {
         $this->nome = $nome;
     }
 
-    public function getEmail(){
+    public function getEmail()
+    {
         return $this->email;
     }
 
-    public function setEmail( string $email ){
+    public function setEmail(string $email)
+    {
         $this->email = $email;
     }
 
-    public function getCpf(){
+    public function getCpf()
+    {
         return $this->cpf;
     }
 
-    public function setCpf( string $cpf ){
+    public function setCpf(string $cpf)
+    {
         $this->cpf = $cpf;
     }
 
-    public function getSenha(){
+    public function getSenha()
+    {
         return $this->senha;
     }
 
-    public function setSenha( string $senha ){
+    public function setSenha(string $senha)
+    {
         $this->senha = $senha;
     }
 
-    public function getDataNascimento( string $formato = '' ){
-        if( ! empty( $formato ) && $this->dataNascimento instanceof DateTime ){
-            return $this->dataNascimento->format( $formato );
+    public function getDataNascimento(string $formato = '')
+    {
+        if (! empty($formato) && $this->dataNascimento instanceof DateTime) {
+            return $this->dataNascimento->format($formato);
         }
         return $this->dataNascimento;
     }
 
-    public function setDataNascimento( ?DateTime $dataNascimento ){
+    public function setDataNascimento(?DateTime $dataNascimento)
+    {
         $this->dataNascimento = $dataNascimento;
     }
 
-    public function getEnderecos(){
+    public function getEnderecos()
+    {
         return $this->enderecos;
     }
 
-    public function setEnderecos( array $enderecos ){
+    public function setEnderecos(array $enderecos)
+    {
         $this->enderecos = $enderecos;
     }
 
-    public function emArray() :array {
+    public function emArray(): array
+    {
         return [
             'id' => $this->getId(),
             'nome' => $this->getNome(),
             'email' => $this->getEmail(),
             'cpf' => $this->getCpf(),
-            'dataNascimento' => $this->getDataNascimento( 'd/m/Y' ),
+            'dataNascimento' => $this->getDataNascimento('d/m/Y'),
             'enderecos' => $this->getEnderecos()
         ];
     }

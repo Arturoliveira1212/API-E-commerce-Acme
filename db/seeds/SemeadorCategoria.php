@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 use Phinx\Seed\AbstractSeed;
 
-class SemeadorCategoria extends AbstractSeed {
-
-    public function getDependencies(): array {
+class SemeadorCategoria extends AbstractSeed
+{
+    public function getDependencies(): array
+    {
         return [];
     }
 
-    public function run(): void {
+    public function run(): void
+    {
         $sql = <<<SQL
             DELETE FROM categoria;
 
@@ -19,6 +21,6 @@ class SemeadorCategoria extends AbstractSeed {
                 (2, 'Roupas', 'Vestuário masculino, feminino e infantil.', 1),
                 (3, 'Livros', 'Livros e materiais de estudo.', 1);
         SQL;
-        $this->execute( $sql );
+        $this->execute($sql);
     }
 }

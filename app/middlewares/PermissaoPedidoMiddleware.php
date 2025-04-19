@@ -12,15 +12,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Routing\RouteContext;
 
-class PermissaoEnderecoMiddleware
+class PermissaoPedidoMiddleware
 {
     private $clienteService;
-    private $enderecoService;
 
-    public function __construct($clienteService, $enderecoService)
+    public function __construct($clienteService)
     {
         $this->clienteService = $clienteService;
-        $this->enderecoService = $enderecoService;
     }
 
     public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -28,23 +26,13 @@ class PermissaoEnderecoMiddleware
         /** @var PayloadJWT */
         $payloadJWT = $request->getAttribute('payloadJWT');
         $idToken = $payloadJWT->sub();
-        $idUrl = $this->obterIdURL($request);
 
         $cliente = $this->clienteService->obterComId($idToken);
-        if (! $cliente instanceof Cliente || ! $this->enderecoService->enderecoPertenceACliente($cliente, $idUrl)) {
+        if (! $cliente instanceof Cliente) {
             return $this->semPermissao();
         }
 
         return $handler->handle($request);
-    }
-
-    private function obterIdURL(ServerRequestInterface $request)
-    {
-        $routeContext = RouteContext::fromRequest($request);
-        $route = $routeContext->getRoute();
-        $idUrl = $route->getArguments()['id'] ?? 0;
-
-        return intval($idUrl);
     }
 
     private function semPermissao(string $mensagem = 'Você não tem permissão para realizar essa ação.')

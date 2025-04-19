@@ -1,11 +1,13 @@
 <?php
 
-namespace app\classes\enum;
+use app\classes\enum\Enum;
 
-class OperacaoEstoque implements Enum
+class StatusPedido implements Enum
 {
-    public const ADICIONAR = 1;
-    public const REMOVER = 2;
+    public const AGUARDANDO_PAGAMENTO = 1;
+    public const PAGO = 2;
+    public const CANCELADO = 3;
+    public const ENTREGUE = 4;
 
     public static function ehValido($enum)
     {
@@ -20,8 +22,10 @@ class OperacaoEstoque implements Enum
     public static function toArray()
     {
         return [
-            self::ADICIONAR => 'ADICIONAR',
-            self::REMOVER => 'REMOVER',
+            self::AGUARDANDO_PAGAMENTO => 'AGUARDANDO PAGAMENTO',
+            self::PAGO => 'PAGO',
+            self::CANCELADO => 'CANCELADO',
+            self::ENTREGUE => 'ENTREGUE',
         ];
     }
 

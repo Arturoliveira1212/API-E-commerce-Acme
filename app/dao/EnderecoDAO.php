@@ -6,30 +6,36 @@ use app\classes\Endereco;
 use app\dao\DAOEmBDR;
 use app\classes\utils\ConversorDados;
 
-class EnderecoDAO extends DAOEmBDR {
-    protected function nomeTabela(){
+class EnderecoDAO extends DAOEmBDR
+{
+    protected function nomeTabela()
+    {
         return 'endereco';
     }
 
-    protected function adicionarNovo( $endereco, ?int $idRecursoPai = null ){
+    protected function adicionarNovo($endereco, ?int $idRecursoPai = null)
+    {
         $comando = "INSERT INTO {$this->nomeTabela()} ( id, idCliente, logradouro, cidade, bairro, numero, cep, complemento ) VALUES ( :id, :idCliente, :logradouro, :cidade, :bairro, :numero, :cep, :complemento )";
 
-        $parametros = $this->parametros( $endereco );
+        $parametros = $this->parametros($endereco);
         $parametros['idCliente'] = $idRecursoPai;
 
-        $this->getBancoDados()->executar( $comando, $parametros );
+        $this->getBancoDados()->executar($comando, $parametros);
     }
 
-    protected function atualizar( $endereco, ?int $idRecursoPai = null ){
+    protected function atualizar($endereco, ?int $idRecursoPai = null)
+    {
         $comando = "UPDATE {$this->nomeTabela()} SET logradouro = :logradouro, cidade = :cidade, bairro = :bairro, numero = :numero, cep = :cep, complemento = :complemento WHERE id = :id";
-        $this->getBancoDados()->executar( $comando, $this->parametros( $endereco ) );
+        $this->getBancoDados()->executar($comando, $this->parametros($endereco));
     }
 
-    protected function parametros( $endereco ){
-        return ConversorDados::converterEmArray( $endereco );
+    protected function parametros($endereco)
+    {
+        return ConversorDados::converterEmArray($endereco);
     }
 
-    protected function obterQuery( array $restricoes, array &$parametros ){
+    protected function obterQuery(array $restricoes, array &$parametros)
+    {
         $nomeTabela = $this->nomeTabela();
 
         $select = "SELECT * FROM {$nomeTabela}";
@@ -37,7 +43,7 @@ class EnderecoDAO extends DAOEmBDR {
         $join = '';
         $orderBy = '';
 
-        if( isset( $restricoes['idCliente'] ) ){
+        if (isset($restricoes['idCliente'])) {
             $where .= " AND {$nomeTabela}.idCliente = :idCliente ";
             $parametros['idCliente'] = $restricoes['idCliente'];
         }
@@ -46,11 +52,13 @@ class EnderecoDAO extends DAOEmBDR {
         return $comando;
     }
 
-    protected function transformarEmObjeto( array $linhas ){
-        return ConversorDados::converterEmObjeto( Endereco::class, $linhas );
+    protected function transformarEmObjeto(array $linhas)
+    {
+        return ConversorDados::converterEmObjeto(Endereco::class, $linhas);
     }
 
-    public function obterIdClienteDoEndereco( int $idEndereco ){
+    public function obterIdClienteDoEndereco(int $idEndereco)
+    {
         $comando = 'SELECT idCliente FROM endereco
             WHERE id = :id
             AND ativo = :ativo';
@@ -58,7 +66,7 @@ class EnderecoDAO extends DAOEmBDR {
             'id' => $idEndereco,
             'ativo' => 1
         ];
-        $resultado = $this->getBancoDados()->consultar( $comando, $parametros );
+        $resultado = $this->getBancoDados()->consultar($comando, $parametros);
 
         return $resultado[0]['idCliente'] ?? null;
     }

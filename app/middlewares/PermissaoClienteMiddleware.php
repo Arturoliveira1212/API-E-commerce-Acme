@@ -12,38 +12,43 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Routing\RouteContext;
 
-class PermissaoClienteMiddleware {
+class PermissaoClienteMiddleware
+{
     private $clienteService;
 
-    public function __construct( $clienteService ){
+    public function __construct($clienteService)
+    {
         $this->clienteService = $clienteService;
     }
 
-    public function __invoke( ServerRequestInterface $request, RequestHandlerInterface $handler ): ResponseInterface {
+    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
         /** @var PayloadJWT */
         $payloadJWT = $request->getAttribute('payloadJWT');
         $idToken = $payloadJWT->sub();
-        $idUrl = $this->obterIdURL( $request );
+        $idUrl = $this->obterIdURL($request);
 
-        $cliente = $this->clienteService->obterComId( $idToken );
-        if( ! $cliente instanceof Cliente || $cliente->getId() != $idUrl ){
+        $cliente = $this->clienteService->obterComId($idToken);
+        if (! $cliente instanceof Cliente || $cliente->getId() != $idUrl) {
             return $this->semPermissao();
         }
 
-        return $handler->handle( $request );
+        return $handler->handle($request);
     }
 
-    private function obterIdURL( ServerRequestInterface $request ){
-        $routeContext = RouteContext::fromRequest( $request );
+    private function obterIdURL(ServerRequestInterface $request)
+    {
+        $routeContext = RouteContext::fromRequest($request);
         $route = $routeContext->getRoute();
         $idUrl = $route->getArguments()['id'] ?? 0;
 
-        return intval( $idUrl );
+        return intval($idUrl);
     }
 
-    private function semPermissao( string $mensagem = 'Você não tem permissão para realizar essa ação.' ){
-        return RespostaHttp::enviarResposta( new Response(), HttpStatusCode::FORBIDDEN, [
+    private function semPermissao(string $mensagem = 'Você não tem permissão para realizar essa ação.')
+    {
+        return RespostaHttp::enviarResposta(new Response(), HttpStatusCode::FORBIDDEN, [
             'message' => $mensagem
-        ] );
+        ]);
     }
 }

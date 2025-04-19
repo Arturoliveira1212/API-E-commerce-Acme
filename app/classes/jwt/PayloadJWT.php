@@ -2,7 +2,8 @@
 
 namespace app\classes\jwt;
 
-class PayloadJWT {
+class PayloadJWT
+{
     /** Id do usuário */
     private int $sub;
     /** Nome do usuário */
@@ -14,7 +15,8 @@ class PayloadJWT {
     /** Expiração */
     private int $exp;
 
-    public function __construct( int $sub, ?string $name, ?string $role, int $iat, int $exp ){
+    public function __construct(int $sub, ?string $name, ?string $role, int $iat, int $exp)
+    {
         $this->sub = $sub;
         $this->name = $name;
         $this->role = $role;
@@ -22,7 +24,8 @@ class PayloadJWT {
         $this->exp = $exp;
     }
 
-    public function toArray(){
+    public function toArray()
+    {
         return [
             'sub'  => $this->sub,
             'name' => $this->name,
@@ -32,22 +35,27 @@ class PayloadJWT {
         ];
     }
 
-    public function sub(){
+    public function sub()
+    {
         return $this->sub;
     }
 
-    public function name(){
+    public function name()
+    {
         return $this->name;
     }
 
-    public function role(){
+    public function role()
+    {
         return $this->role;
     }
 
-    public function iat(){
+    public function iat()
+    {
         return $this->iat;
     }
-    public function exp(){
+    public function exp()
+    {
         return $this->exp;
     }
 }

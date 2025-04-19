@@ -4,25 +4,27 @@ namespace app\classes\http;
 
 use Slim\Psr7\Response;
 
-abstract class RespostaHttp {
-    const HEADERS_PADRAO = [
+abstract class RespostaHttp
+{
+    public const HEADERS_PADRAO = [
         'Content-Type' => 'application/json'
     ];
 
-    public static function enviarResposta( Response $response, int $status = HttpStatusCode::OK, array $data = [], array $headers = [] ){
-        $headers = array_merge( self::HEADERS_PADRAO, $headers );
+    public static function enviarResposta(Response $response, int $status = HttpStatusCode::OK, array $data = [], array $headers = [])
+    {
+        $headers = array_merge(self::HEADERS_PADRAO, $headers);
 
-        foreach( $headers as $key => $value ){
-            $response = $response->withHeader( $key, $value );
+        foreach ($headers as $key => $value) {
+            $response = $response->withHeader($key, $value);
         }
 
-        if( ! empty( $data ) ){
-            $response->getBody()->write( json_encode( [
-                'sucess' => HttpStatusCode::statusEhSucesso( $status ),
+        if (! empty($data)) {
+            $response->getBody()->write(json_encode([
+                'sucess' => HttpStatusCode::statusEhSucesso($status),
                 ... $data
-            ] ) );
+            ]));
         }
 
-        return $response->withStatus( $status );
+        return $response->withStatus($status);
     }
 }

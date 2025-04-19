@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 use Phinx\Seed\AbstractSeed;
 
-class SemeadorEndereco extends AbstractSeed {
-
-    public function getDependencies(): array {
+class SemeadorEndereco extends AbstractSeed
+{
+    public function getDependencies(): array
+    {
         return [ 'SemeadorCliente' ];
     }
 
-    public function run(): void {
+    public function run(): void
+    {
         $sql = <<<SQL
             DELETE FROM endereco;
             INSERT INTO endereco (id, idCliente, logradouro, cidade, bairro, numero, cep, complemento) VALUES
@@ -27,6 +29,6 @@ class SemeadorEndereco extends AbstractSeed {
                 (11, 3, 'Rua das Laranjeiras', 'Florianópolis', 'Trindade', '33', '88036010', 'Casa azul');
 
         SQL;
-        $this->execute( $sql );
+        $this->execute($sql);
     }
 }

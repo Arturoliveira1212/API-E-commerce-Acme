@@ -5,10 +5,11 @@ namespace app\classes\factory;
 use InvalidArgumentException;
 use app\dao\BancoDadosRelacional;
 
-abstract class ClassFactory {
-    const CAMINHO_CONTROLLER = 'app\\controllers\\';
-    const CAMINHO_SERVICE = 'app\\services\\';
-    const CAMINHO_DAO = 'app\\dao\\';
+abstract class ClassFactory
+{
+    public const CAMINHO_CONTROLLER = 'app\\controllers\\';
+    public const CAMINHO_SERVICE = 'app\\services\\';
+    public const CAMINHO_DAO = 'app\\dao\\';
 
     /**
      * Método responsável por fabricar intâncias de controllers.
@@ -17,14 +18,15 @@ abstract class ClassFactory {
      * @throws InvalidArgumentException
      * @return Controller
      */
-    public static function makeController( string $classe ){
-        $nomeController = substr( strrchr( $classe, '\\' ), 1 );
+    public static function makeController(string $classe)
+    {
+        $nomeController = substr(strrchr($classe, '\\'), 1);
         $controller = self::CAMINHO_CONTROLLER . $nomeController . 'Controller';
-        if( ! class_exists( $controller ) ){
-            throw new InvalidArgumentException( "Controller $controller não encontrado." );
+        if (! class_exists($controller)) {
+            throw new InvalidArgumentException("Controller $controller não encontrado.");
         }
 
-        return new $controller( self::makeService( $classe ) );
+        return new $controller(self::makeService($classe));
     }
 
     /**
@@ -34,14 +36,15 @@ abstract class ClassFactory {
      * @throws InvalidArgumentException
      * @return Service
      */
-    public static function makeService( string $classe ){
-        $nomeService = substr( strrchr( $classe, '\\' ), 1 );
+    public static function makeService(string $classe)
+    {
+        $nomeService = substr(strrchr($classe, '\\'), 1);
         $service = self::CAMINHO_SERVICE . $nomeService . 'Service';
-        if( ! class_exists( $service ) ){
-            throw new InvalidArgumentException( "Service $service não encontrado." );
+        if (! class_exists($service)) {
+            throw new InvalidArgumentException("Service $service não encontrado.");
         }
 
-        return new $service( self::makeDAO( $classe ) );
+        return new $service(self::makeDAO($classe));
     }
 
     /**
@@ -51,13 +54,14 @@ abstract class ClassFactory {
      * @throws InvalidArgumentException
      * @return DAO
      */
-    public static function makeDAO( string $classe ){
-        $nomeDAO = substr( strrchr( $classe, '\\' ), 1 );
+    public static function makeDAO(string $classe)
+    {
+        $nomeDAO = substr(strrchr($classe, '\\'), 1);
         $DAO = self::CAMINHO_DAO . $nomeDAO . 'DAO';
-        if( ! class_exists( $DAO ) ){
-            throw new InvalidArgumentException( "DAO $classe não encontrado." );
+        if (! class_exists($DAO)) {
+            throw new InvalidArgumentException("DAO $classe não encontrado.");
         }
 
-        return new $DAO( new BancoDadosRelacional() );
+        return new $DAO(new BancoDadosRelacional());
     }
 }

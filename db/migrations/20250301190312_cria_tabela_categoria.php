@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 use Phinx\Migration\AbstractMigration;
 
-final class CriaTabelaCategoria extends AbstractMigration {
-
-    public function up(): void {
+final class CriaTabelaCategoria extends AbstractMigration
+{
+    public function up(): void
+    {
         $sql = <<<'SQL'
             CREATE TABLE categoria (
                 id INT PRIMARY KEY AUTO_INCREMENT,
@@ -15,10 +16,11 @@ final class CriaTabelaCategoria extends AbstractMigration {
                 ativo TINYINT(1) DEFAULT 1
             ) ENGINE=INNODB;
         SQL;
-        $this->execute( $sql );
+        $this->execute($sql);
     }
 
-    public function down(): void {
-        $this->execute( 'DROP TABLE categoria' );
+    public function down(): void
+    {
+        $this->execute('DROP TABLE categoria');
     }
 }

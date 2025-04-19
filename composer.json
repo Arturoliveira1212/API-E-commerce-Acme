@@ -8,13 +8,14 @@
     },
     "autoload": {
         "psr-4": {
-            "app\\" : "app"
+            "app\\": "app"
         }
     },
     "require-dev": {
         "robmorgan/phinx": "^0.16.6",
         "kahlan/kahlan": "^6.0",
-        "mockery/mockery": "^1.6"
+        "mockery/mockery": "^1.6",
+        "friendsofphp/php-cs-fixer": "^3.75"
     },
     "scripts": {
         "phinx": "vendor/bin/phinx",

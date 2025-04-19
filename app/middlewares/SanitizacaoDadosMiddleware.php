@@ -7,20 +7,22 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class SanitizacaoDadosMiddleware {
-    public function __invoke( ServerRequestInterface $request, RequestHandlerInterface $handler ): ResponseInterface {
+class SanitizacaoDadosMiddleware
+{
+    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
         $corpoRequisicao = $request->getParsedBody();
-        if( is_array( $corpoRequisicao ) ){
-            $corpoRequisicaoLimpo = Sanitizador::limparArray( $corpoRequisicao );
-            $request = $request->withParsedBody( $corpoRequisicaoLimpo );
+        if (is_array($corpoRequisicao)) {
+            $corpoRequisicaoLimpo = Sanitizador::limparArray($corpoRequisicao);
+            $request = $request->withParsedBody($corpoRequisicaoLimpo);
         }
 
         $parametros = $request->getQueryParams();
-        if( is_array( $parametros ) ){
-            $parametrosLimpos = Sanitizador::limparArray( $parametros );
-            $request = $request->withQueryParams( $parametrosLimpos );
+        if (is_array($parametros)) {
+            $parametrosLimpos = Sanitizador::limparArray($parametros);
+            $request = $request->withQueryParams($parametrosLimpos);
         }
 
-        return $handler->handle( $request );
+        return $handler->handle($request);
     }
 }

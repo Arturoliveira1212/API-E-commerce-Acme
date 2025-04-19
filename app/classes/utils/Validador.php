@@ -2,7 +2,8 @@
 
 namespace app\classes\utils;
 
-abstract class Validador {
+abstract class Validador
+{
     /**
      * Método responsável por validar o tamanho do texto.
      *
@@ -11,11 +12,12 @@ abstract class Validador {
      * @param integer $tamanhoMaximo
      * @return integer  -1 => Tamanho fora dos limites | 0 => Texto vazio | 1 => Tamanho ok
      */
-    public static function validarTamanhoTexto( string $texto, int $tamanhoMinimo, int $tamanhoMaximo ){
-        $tamanhoTexto = mb_strlen( $texto );
-        if( $tamanhoTexto == 0 ){
+    public static function validarTamanhoTexto(string $texto, int $tamanhoMinimo, int $tamanhoMaximo)
+    {
+        $tamanhoTexto = mb_strlen($texto);
+        if ($tamanhoTexto == 0) {
             return 0;
-        } elseif( $tamanhoTexto > $tamanhoMaximo || $tamanhoTexto < $tamanhoMinimo ){
+        } elseif ($tamanhoTexto > $tamanhoMaximo || $tamanhoTexto < $tamanhoMinimo) {
             return -1;
         }
 
@@ -28,7 +30,8 @@ abstract class Validador {
      * @param string $email
      * @return boolean
      */
-    public static function validarEmail( string $email ){
+    public static function validarEmail(string $email)
+    {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return false;
         }
@@ -52,9 +55,10 @@ abstract class Validador {
      * @param string $cpf
      * @return boolean
      */
-    public static function validarCPF( string $cpf ){
+    public static function validarCPF(string $cpf)
+    {
         $formatoCpf = '/^[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}$/';
-        if( ! preg_match( $formatoCpf, $cpf ) ){
+        if (! preg_match($formatoCpf, $cpf)) {
             return false;
         }
 
@@ -85,7 +89,8 @@ abstract class Validador {
     }
 
     // Valida Data (Formato: dd/mm/yyyy)
-    public static function validarData(string $data): bool {
+    public static function validarData(string $data): bool
+    {
         $partes = explode('/', $data);
         if (count($partes) != 3) {
             return false;
@@ -96,32 +101,38 @@ abstract class Validador {
     }
 
     // Valida se é um número inteiro
-    public static function validarInteiro($valor): bool {
+    public static function validarInteiro($valor): bool
+    {
         return is_int($valor) || (is_string($valor) && preg_match('/^\d+$/', $valor));
     }
 
     // Valida se é um valor numérico (float)
-    public static function validarNumero($valor): bool {
+    public static function validarNumero($valor): bool
+    {
         return is_numeric($valor);
     }
 
     // Valida se o campo está vazio
-    public static function validarNaoVazio($valor): bool {
+    public static function validarNaoVazio($valor): bool
+    {
         return !empty($valor);
     }
 
     // Valida se o valor é um array
-    public static function validarArray($valor): bool {
+    public static function validarArray($valor): bool
+    {
         return is_array($valor);
     }
 
     // Valida CPF ou CNPJ (exemplo simples)
-    public static function validarCPFouCNPJ(string $documento): bool {
+    public static function validarCPFouCNPJ(string $documento): bool
+    {
         return self::validarCPF($documento) || self::validarCNPJ($documento);
     }
 
     // Valida CNPJ
-    public static function validarCNPJ(string $cnpj): bool {
+    public static function validarCNPJ(string $cnpj): bool
+    {
         $cnpj = preg_replace('/\D/', '', $cnpj);
         if (strlen($cnpj) != 14) {
             return false;

@@ -2,7 +2,8 @@
 
 namespace app\classes\http;
 
-abstract class HttpStatusCode {
+abstract class HttpStatusCode
+{
     public const OK = 200;
     public const CREATED = 201;
     public const ACCEPTED = 202;
@@ -26,7 +27,8 @@ abstract class HttpStatusCode {
     public const SERVICE_UNAVAILABLE = 503;
     public const GATEWAY_TIMEOUT = 504;
 
-    public static function statusSucesso(){
+    public static function statusSucesso()
+    {
         return [
             self::OK,
             self::CREATED,
@@ -35,7 +37,8 @@ abstract class HttpStatusCode {
         ];
     }
 
-    public static function statusEhSucesso( int $status ){
-        return in_array( $status, self::statusSucesso() );
+    public static function statusEhSucesso(int $status)
+    {
+        return in_array($status, self::statusSucesso());
     }
 }

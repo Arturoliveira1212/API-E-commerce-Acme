@@ -12,35 +12,37 @@ use app\classes\factory\ClassFactory;
 use app\exceptions\NaoAutorizadoException;
 use app\exceptions\NaoEncontradoException;
 
-abstract class GerenciadorRecurso {
-    public static function executar( string $controller, string $metodo, Request $request, Response $response, $args ){
+abstract class GerenciadorRecurso
+{
+    public static function executar(string $controller, string $metodo, Request $request, Response $response, $args)
+    {
         try {
             $corpoRequisicao = (array) $request->getParsedBody();
             $parametros = (array) $request->getQueryParams();
             $payloadJWT = $request->getAttribute('payloadJWT');
 
-            $controller = ClassFactory::makeController( $controller );
-            $retorno = $controller->$metodo( $corpoRequisicao, $args, $parametros, $payloadJWT );
-            $resposta = RespostaHttp::enviarResposta( $response, $retorno['status'] ?? HttpStatusCode::OK, $retorno['data'] ?? [] );
-        } catch( NaoEncontradoException $e ){
-            $resposta = RespostaHttp::enviarResposta( $response, HttpStatusCode::NOT_FOUND, [
+            $controller = ClassFactory::makeController($controller);
+            $retorno = $controller->$metodo($corpoRequisicao, $args, $parametros, $payloadJWT);
+            $resposta = RespostaHttp::enviarResposta($response, $retorno['status'] ?? HttpStatusCode::OK, $retorno['data'] ?? []);
+        } catch (NaoEncontradoException $e) {
+            $resposta = RespostaHttp::enviarResposta($response, HttpStatusCode::NOT_FOUND, [
                 'message' => $e->getMessage()
-            ] );
-        } catch( ServiceException $e ){
-            $resposta = RespostaHttp::enviarResposta( $response, HttpStatusCode::BAD_REQUEST, [
+            ]);
+        } catch (ServiceException $e) {
+            $resposta = RespostaHttp::enviarResposta($response, HttpStatusCode::BAD_REQUEST, [
                 'message' => 'Os dados enviados são inválidos.',
                 'data' => [
-                    'erros' => json_decode( $e->getMessage(), true )
+                    'erros' => json_decode($e->getMessage(), true)
                 ]
-            ] );
-        } catch( NaoAutorizadoException $e ){
-            $resposta = RespostaHttp::enviarResposta( $response, HttpStatusCode::UNAUTHORIZED, [
+            ]);
+        } catch (NaoAutorizadoException $e) {
+            $resposta = RespostaHttp::enviarResposta($response, HttpStatusCode::UNAUTHORIZED, [
                 'message' => $e->getMessage()
-            ] );
-        } catch( Throwable $e ){
-            $resposta = RespostaHttp::enviarResposta( $response, HttpStatusCode::INTERNAL_SERVER_ERROR, [
+            ]);
+        } catch (Throwable $e) {
+            $resposta = RespostaHttp::enviarResposta($response, HttpStatusCode::INTERNAL_SERVER_ERROR, [
                 'message' => 'Houve um erro interno.' . $e
-            ] );
+            ]);
         } finally {
             return $resposta;
         }

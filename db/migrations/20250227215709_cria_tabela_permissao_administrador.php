@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 use Phinx\Migration\AbstractMigration;
 
-final class CriaTabelaPermissaoAdministrador extends AbstractMigration {
-
-    public function up(): void {
+final class CriaTabelaPermissaoAdministrador extends AbstractMigration
+{
+    public function up(): void
+    {
         $sql = <<<'SQL'
             CREATE TABLE permissao_administrador (
                 id INT PRIMARY KEY AUTO_INCREMENT,
@@ -19,10 +20,11 @@ final class CriaTabelaPermissaoAdministrador extends AbstractMigration {
                     ON DELETE CASCADE ON UPDATE CASCADE
             ) ENGINE=INNODB;
         SQL;
-        $this->execute( $sql );
+        $this->execute($sql);
     }
 
-    public function down(): void {
-        $this->execute( 'DROP TABLE permissao_administrador' );
+    public function down(): void
+    {
+        $this->execute('DROP TABLE permissao_administrador');
     }
 }

@@ -11,31 +11,34 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class AutenticacaoMiddleware {
+class AutenticacaoMiddleware
+{
     use Autenticavel;
 
-    public function __invoke( ServerRequestInterface $request, RequestHandlerInterface $handler ): ResponseInterface {
+    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
         $autorization = $request->getHeaderLine('Authorization');
-        if( ! $autorization || ! preg_match( '/^Bearer\s(\S+)/', $autorization, $matches ) ){
-            return $this->administradorNaoAutenticado( 'Token de autenticação não foi enviado.' );
+        if (! $autorization || ! preg_match('/^Bearer\s(\S+)/', $autorization, $matches)) {
+            return $this->administradorNaoAutenticado('Token de autenticação não foi enviado.');
         }
 
         $token = $matches[1];
 
-        $payloadJWT = $this->decodificarToken( $token );
+        $payloadJWT = $this->decodificarToken($token);
 
-        if( ! $payloadJWT instanceof PayloadJWT ){
+        if (! $payloadJWT instanceof PayloadJWT) {
             return $this->administradorNaoAutenticado();
         }
 
-        $request = $request->withAttribute( 'payloadJWT', $payloadJWT );
+        $request = $request->withAttribute('payloadJWT', $payloadJWT);
 
-        return $handler->handle( $request );
+        return $handler->handle($request);
     }
 
-    private function administradorNaoAutenticado( string $mensagem = 'Token de autenticação inválido.' ){
-        return RespostaHttp::enviarResposta( new Response(), HttpStatusCode::UNAUTHORIZED, [
+    private function administradorNaoAutenticado(string $mensagem = 'Token de autenticação inválido.')
+    {
+        return RespostaHttp::enviarResposta(new Response(), HttpStatusCode::UNAUTHORIZED, [
             'message' => $mensagem
-        ] );
+        ]);
     }
 }

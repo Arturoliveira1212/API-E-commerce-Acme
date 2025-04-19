@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 use Phinx\Seed\AbstractSeed;
 
-class SemeadorProduto extends AbstractSeed {
-
-    public function getDependencies(): array {
+class SemeadorProduto extends AbstractSeed
+{
+    public function getDependencies(): array
+    {
         return [ 'SemeadorCategoria' ];
     }
 
-    public function run(): void {
+    public function run(): void
+    {
         $sql = <<<SQL
             DELETE FROM produto;
             INSERT INTO produto (id, nome, referencia, cor, preco, descricao, idCategoria, dataCadastro) VALUES
@@ -23,6 +25,6 @@ class SemeadorProduto extends AbstractSeed {
                 (7, 'Livro de Programação', 'LIV009', 'Capa preta', 89.90, 'Livro sobre fundamentos de programação e algoritmos', 3, '2025-03-29 18:00:00'),
                 (8, 'Livro de História', 'LIV010', 'Capa azul', 39.90, 'Livro sobre história do Brasil, edição 2025', 3, '2025-03-29 19:00:00');
         SQL;
-        $this->execute( $sql );
+        $this->execute($sql);
     }
 }

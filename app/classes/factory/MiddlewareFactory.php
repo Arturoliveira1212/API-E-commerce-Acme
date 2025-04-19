@@ -12,29 +12,42 @@ use app\middlewares\CorpoRequisicaoMiddleware;
 use app\middlewares\PermissaoClienteMiddleware;
 use app\middlewares\PermissaoEnderecoMiddleware;
 use app\middlewares\PermissaoAdministradorMiddleware;
+use app\middlewares\PermissaoPedidoMiddleware;
 
-class MiddlewareFactory {
-    public static function permissao( ...$tiposPermissao ){
-        return new PermissaoMiddleware( $tiposPermissao );
+class MiddlewareFactory
+{
+    public static function permissao(...$tiposPermissao)
+    {
+        return new PermissaoMiddleware($tiposPermissao);
     }
 
-    public static function permissaoAdministrador( array $permissoesNecessarias ){
-        return new PermissaoAdministradorMiddleware( $permissoesNecessarias, ClassFactory::makeService( Administrador::class ) );
+    public static function permissaoAdministrador(array $permissoesNecessarias)
+    {
+        return new PermissaoAdministradorMiddleware($permissoesNecessarias, ClassFactory::makeService(Administrador::class));
     }
 
-    public static function permissaoCliente(){
-        return new PermissaoClienteMiddleware( ClassFactory::makeService( Cliente::class ) );
+    public static function permissaoCliente()
+    {
+        return new PermissaoClienteMiddleware(ClassFactory::makeService(Cliente::class));
     }
 
-    public static function permissaoEndereco(){
-        return new PermissaoEnderecoMiddleware( ClassFactory::makeService( Cliente::class ), ClassFactory::makeService( Endereco::class ) );
+    public static function permissaoEndereco()
+    {
+        return new PermissaoEnderecoMiddleware(ClassFactory::makeService(Cliente::class), ClassFactory::makeService(Endereco::class));
     }
 
-    public static function autenticacao(){
+    public static function permissaoPedido()
+    {
+        return new PermissaoPedidoMiddleware(ClassFactory::makeService(Cliente::class));
+    }
+
+    public static function autenticacao()
+    {
         return new AutenticacaoMiddleware();
     }
 
-    public static function corpoRequisicao( array $schema, string $contentType = 'application/json' ){
-        return new CorpoRequisicaoMiddleware( $contentType, $schema );
+    public static function corpoRequisicao(array $camposObrigatorios = [], array $camposOpcionais = [], string $contentType = 'application/json')
+    {
+        return new CorpoRequisicaoMiddleware($contentType, $camposObrigatorios, $camposOpcionais);
     }
 }

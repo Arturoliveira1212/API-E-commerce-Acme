@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 use Phinx\Seed\AbstractSeed;
 
-class SemeadorItem extends AbstractSeed {
-
-    public function getDependencies(): array {
+class SemeadorItem extends AbstractSeed
+{
+    public function getDependencies(): array
+    {
         return [ 'SemeadorProduto' ];
     }
 
-    public function run(): void {
+    public function run(): void
+    {
         $sql = <<<SQL
             DELETE FROM item;
             INSERT INTO item (id, idProduto, sku, tamanho, estoque, pesoEmGramas) VALUES
@@ -31,6 +33,6 @@ class SemeadorItem extends AbstractSeed {
                 (15, 8, 'SKU00016', 'U', 0, 300.00);
 
         SQL;
-        $this->execute( $sql );
+        $this->execute($sql);
     }
 }

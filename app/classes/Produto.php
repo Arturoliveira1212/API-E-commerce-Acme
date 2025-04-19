@@ -4,7 +4,8 @@ namespace app\classes;
 
 use DateTime;
 
-class Produto extends Model {
+class Produto extends Model
+{
     private int $id = 0;
     private string $nome = '';
     private string $referencia = '';
@@ -23,92 +24,111 @@ class Produto extends Model {
         float $preco = 0.0,
         string $descricao = '',
         ?Categoria $categoria = null
-    ){
-        $this->setId( $id );
-        $this->setNome( $nome );
-        $this->setReferencia( $referencia );
-        $this->setCor( $cor );
-        $this->setPreco( $preco );
-        $this->setDescricao( $descricao );
-        $this->setCategoria( $categoria );
+    ) {
+        $this->setId($id);
+        $this->setNome($nome);
+        $this->setReferencia($referencia);
+        $this->setCor($cor);
+        $this->setPreco($preco);
+        $this->setDescricao($descricao);
+        $this->setCategoria($categoria);
     }
 
-    public function getId(){
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function setId( int $id ){
+    public function setId(int $id)
+    {
         $this->id = $id;
     }
 
-    public function getNome(){
+    public function getNome()
+    {
         return $this->nome;
     }
 
-    public function setNome( string $nome ){
+    public function setNome(string $nome)
+    {
         $this->nome = $nome;
     }
 
-    public function getReferencia(){
+    public function getReferencia()
+    {
         return $this->referencia;
     }
 
-    public function setReferencia( string $referencia ){
+    public function setReferencia(string $referencia)
+    {
         $this->referencia = $referencia;
     }
 
-    public function getCor(){
+    public function getCor()
+    {
         return $this->cor;
     }
 
-    public function setCor( string $cor ){
+    public function setCor(string $cor)
+    {
         $this->cor = $cor;
     }
 
-    public function getPreco( ){
+    public function getPreco()
+    {
         return $this->preco;
     }
 
-    public function setPreco( float $preco ){
+    public function setPreco(float $preco)
+    {
         $this->preco = $preco;
     }
 
-    public function getDescricao( ){
+    public function getDescricao()
+    {
         return $this->descricao;
     }
 
-    public function setDescricao( string $descricao ){
+    public function setDescricao(string $descricao)
+    {
         $this->descricao = $descricao;
     }
 
-    public function getCategoria(){
+    public function getCategoria()
+    {
         return $this->categoria;
     }
 
-    public function setCategoria( ?Categoria $categoria ){
+    public function setCategoria(?Categoria $categoria)
+    {
         $this->categoria = $categoria;
     }
 
-    public function getDataCadastro(){
-        if( ! empty( $formato ) && $this->dataCadastro instanceof DateTime ){
-            return $this->dataCadastro->format( $formato );
+    public function getDataCadastro()
+    {
+        if (! empty($formato) && $this->dataCadastro instanceof DateTime) {
+            return $this->dataCadastro->format($formato);
         }
         return $this->dataCadastro;
     }
 
-    public function setDataCadastro( ?DateTime $dataCadastro ){
+    public function setDataCadastro(?DateTime $dataCadastro)
+    {
         $this->dataCadastro = $dataCadastro;
     }
 
-    public function getItens(){
+    public function getItens()
+    {
         return $this->itens;
     }
 
-    public function setItens( array $itens ){
+    public function setItens(array $itens)
+    {
         $this->itens = $itens;
     }
 
-    public function emArray() :array {
+    public function emArray(): array
+    {
         return [
             'id' => $this->getId(),
             'nome' => $this->getNome(),

@@ -15,7 +15,7 @@ $corpoRequisicaoSalvarItem = [
     'pesoEmGramas' => 'numeric'
 ];
 
-$app->group( '/itens', function( RouteCollectorProxy $group ){
+$app->group('/itens', function (RouteCollectorProxy $group) {
     $corpoRequisicaoEditarItem = [
         'sku' => 'string',
         'tamanho' => 'string',
@@ -27,42 +27,42 @@ $app->group( '/itens', function( RouteCollectorProxy $group ){
         'operacao' => 'string'
     ];
 
-    $group->put( '/{id}', function( Request $request, Response $response, $args ){
-        return GerenciadorRecurso::executar( Item::class, 'editar', $request, $response, $args );
-    } )
-        ->add( MiddlewareFactory::corpoRequisicao( $corpoRequisicaoEditarItem ) )
-        ->add( MiddlewareFactory::permissao( new TipoPermissao( 'admin', 'permissaoAdministrador', [ 'Editar Item' ] ) ) )
-        ->add( MiddlewareFactory::autenticacao() );
+    $group->put('/{id}', function (Request $request, Response $response, $args) {
+        return GerenciadorRecurso::executar(Item::class, 'editar', $request, $response, $args);
+    })
+        ->add(MiddlewareFactory::corpoRequisicao($corpoRequisicaoEditarItem))
+        ->add(MiddlewareFactory::permissao(new TipoPermissao('admin', 'permissaoAdministrador', [ 'Editar Item' ])))
+        ->add(MiddlewareFactory::autenticacao());
 
-    $group->delete( '/{id}', function( Request $request, Response $response, $args ){
-        return GerenciadorRecurso::executar( Item::class, 'excluirComId', $request, $response, $args );
-    } )
-        ->add( MiddlewareFactory::permissao( new TipoPermissao( 'admin', 'permissaoAdministrador', [ 'Excluir Item' ] ) ) )
-        ->add( MiddlewareFactory::autenticacao() );
+    $group->delete('/{id}', function (Request $request, Response $response, $args) {
+        return GerenciadorRecurso::executar(Item::class, 'excluirComId', $request, $response, $args);
+    })
+        ->add(MiddlewareFactory::permissao(new TipoPermissao('admin', 'permissaoAdministrador', [ 'Excluir Item' ])))
+        ->add(MiddlewareFactory::autenticacao());
 
-    $group->get( '', function( Request $request, Response $response, $args ){
-        return GerenciadorRecurso::executar( Item::class, 'obterTodos', $request, $response, $args );
-    } );
+    $group->get('', function (Request $request, Response $response, $args) {
+        return GerenciadorRecurso::executar(Item::class, 'obterTodos', $request, $response, $args);
+    });
 
-    $group->get( '/{id}', function( Request $request, Response $response, $args ){
-        return GerenciadorRecurso::executar( Item::class, 'obterComId', $request, $response, $args );
-    } );
+    $group->get('/{id}', function (Request $request, Response $response, $args) {
+        return GerenciadorRecurso::executar(Item::class, 'obterComId', $request, $response, $args);
+    });
 
-    $group->patch( '/{id}/estoque', function( Request $request, Response $response, $args ){
-        return GerenciadorRecurso::executar( Item::class, 'movimentarEstoque', $request, $response, $args );
-    } )
-        ->add( MiddlewareFactory::corpoRequisicao( $corpoRequisicaoMovimentarEstoqueItem ) )
-        ->add( MiddlewareFactory::permissao( new TipoPermissao( 'admin', 'permissaoAdministrador', [ 'Movimentar Estoque Item' ] ) ) )
-        ->add( MiddlewareFactory::autenticacao() );
+    $group->patch('/{id}/estoque', function (Request $request, Response $response, $args) {
+        return GerenciadorRecurso::executar(Item::class, 'movimentarEstoque', $request, $response, $args);
+    })
+        ->add(MiddlewareFactory::corpoRequisicao($corpoRequisicaoMovimentarEstoqueItem))
+        ->add(MiddlewareFactory::permissao(new TipoPermissao('admin', 'permissaoAdministrador', [ 'Movimentar Estoque Item' ])))
+        ->add(MiddlewareFactory::autenticacao());
 });
 
-$app->post( '/produtos/{id}/itens', function( Request $request, Response $response, $args ){
-    return GerenciadorRecurso::executar( Item::class, 'novo', $request, $response, $args );
-} )
-    ->add( MiddlewareFactory::corpoRequisicao( $corpoRequisicaoSalvarItem ) )
-    ->add( MiddlewareFactory::permissao( new TipoPermissao( 'admin', 'permissaoAdministrador', [ 'Cadastrar Item' ] ) ) )
-    ->add( MiddlewareFactory::autenticacao() );
+$app->post('/produtos/{id}/itens', function (Request $request, Response $response, $args) {
+    return GerenciadorRecurso::executar(Item::class, 'novo', $request, $response, $args);
+})
+    ->add(MiddlewareFactory::corpoRequisicao($corpoRequisicaoSalvarItem))
+    ->add(MiddlewareFactory::permissao(new TipoPermissao('admin', 'permissaoAdministrador', [ 'Cadastrar Item' ])))
+    ->add(MiddlewareFactory::autenticacao());
 
-$app->get( '/produtos/{id}/itens', function( Request $request, Response $response, $args ){
-    return GerenciadorRecurso::executar( Item::class, 'obterItensDoProduto', $request, $response, $args );
-} );
+$app->get('/produtos/{id}/itens', function (Request $request, Response $response, $args) {
+    return GerenciadorRecurso::executar(Item::class, 'obterItensDoProduto', $request, $response, $args);
+});

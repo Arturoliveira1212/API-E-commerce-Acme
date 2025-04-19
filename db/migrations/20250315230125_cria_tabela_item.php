@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 use Phinx\Migration\AbstractMigration;
 
-final class CriaTabelaItem extends AbstractMigration {
-
-    public function up(): void {
+final class CriaTabelaItem extends AbstractMigration
+{
+    public function up(): void
+    {
         $sql = <<<'SQL'
             CREATE TABLE item (
                 id INT PRIMARY KEY AUTO_INCREMENT,
@@ -20,10 +21,11 @@ final class CriaTabelaItem extends AbstractMigration {
                     ON DELETE CASCADE ON UPDATE CASCADE
             ) ENGINE=INNODB;
         SQL;
-        $this->execute( $sql );
+        $this->execute($sql);
     }
 
-    public function down(): void {
-        $this->execute( 'DROP TABLE item' );
+    public function down(): void
+    {
+        $this->execute('DROP TABLE item');
     }
 }

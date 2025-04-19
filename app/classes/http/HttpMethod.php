@@ -2,13 +2,14 @@
 
 namespace app\classes\http;
 
-abstract class HttpMethod {
-    const GET = 'GET';
-    const POST = 'POST';
-    const PUT = 'PUT';
-    const DELETE = 'DELETE';
-    const PATCH = 'PATCH';
-    const HEAD = 'HEAD';
-    const OPTIONS = 'OPTIONS';
-    const TRACE = 'TRACE';
+abstract class HttpMethod
+{
+    public const GET = 'GET';
+    public const POST = 'POST';
+    public const PUT = 'PUT';
+    public const DELETE = 'DELETE';
+    public const PATCH = 'PATCH';
+    public const HEAD = 'HEAD';
+    public const OPTIONS = 'OPTIONS';
+    public const TRACE = 'TRACE';
 }

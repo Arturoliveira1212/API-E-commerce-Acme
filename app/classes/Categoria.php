@@ -2,7 +2,8 @@
 
 namespace app\classes;
 
-class Categoria extends Model {
+class Categoria extends Model
+{
     private int $id = 0;
     private string $nome = '';
     private string $descricao = '';
@@ -11,37 +12,44 @@ class Categoria extends Model {
         int $id = 0,
         string $nome = '',
         string $descricao = ''
-    ){
-        $this->setId( $id );
-        $this->setNome( $nome );
-        $this->setDescricao( $descricao );
+    ) {
+        $this->setId($id);
+        $this->setNome($nome);
+        $this->setDescricao($descricao);
     }
 
-    public function getId(){
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function setId( int $id ){
+    public function setId(int $id)
+    {
         $this->id = $id;
     }
 
-    public function getNome(){
+    public function getNome()
+    {
         return $this->nome;
     }
 
-    public function setNome( string $nome ){
+    public function setNome(string $nome)
+    {
         $this->nome = $nome;
     }
 
-    public function getDescricao(){
+    public function getDescricao()
+    {
         return $this->descricao;
     }
 
-    public function setDescricao( string $descricao ){
+    public function setDescricao(string $descricao)
+    {
         $this->descricao = $descricao;
     }
 
-    public function emArray() :array {
+    public function emArray(): array
+    {
         return [
             'id' => $this->getId(),
             'nome' => $this->getNome(),

@@ -2,20 +2,22 @@
 
 namespace app\classes\utils;
 
-abstract class Sanitizador {
-    public static function limparArray( array $array ){
+abstract class Sanitizador
+{
+    public static function limparArray(array $array)
+    {
         $novoArray = [];
 
-        foreach( $array as $chave => $valor ){
-            self::limparValor( $chave );
+        foreach ($array as $chave => $valor) {
+            self::limparValor($chave);
             if ($chave === '') {
                 continue;
             }
 
-            if( is_array( $valor ) ){
-                self::limparArray( $valor );
-            } else if( ! is_numeric( $valor ) ) {
-                self::limparValor( $valor );
+            if (is_array($valor)) {
+                self::limparArray($valor);
+            } elseif (! is_numeric($valor)) {
+                self::limparValor($valor);
             }
 
             $novoArray[ $chave ] = $valor;
@@ -24,7 +26,8 @@ abstract class Sanitizador {
         return $novoArray;
     }
 
-    public static function limparValor( &$valor ){
-        $valor = htmlspecialchars( strip_tags( trim( $valor ) ) );
+    public static function limparValor(&$valor)
+    {
+        $valor = htmlspecialchars(strip_tags(trim($valor)));
     }
 }

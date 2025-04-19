@@ -4,4 +4,6 @@ namespace app\exceptions;
 
 use Exception;
 
-class RequisicaoMalFormadaException extends Exception {}
+class RequisicaoMalFormadaException extends Exception
+{
+}

@@ -2,10 +2,9 @@
 
 namespace app\classes\enum;
 
-class OperacaoEstoque implements Enum
+class TipoDescontoPedido implements Enum
 {
-    public const ADICIONAR = 1;
-    public const REMOVER = 2;
+    public const DESCONTO_A_VISTA = 1;
 
     public static function ehValido($enum)
     {
@@ -20,8 +19,7 @@ class OperacaoEstoque implements Enum
     public static function toArray()
     {
         return [
-            self::ADICIONAR => 'ADICIONAR',
-            self::REMOVER => 'REMOVER',
+            self::DESCONTO_A_VISTA => 'DESCONTO À VISTA'
         ];
     }
 
